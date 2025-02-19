@@ -36,4 +36,5 @@ public abstract class ProductOption {
 
     @Column
     private Double maximumInterestRate; // 최고 우대 금리
+
 }

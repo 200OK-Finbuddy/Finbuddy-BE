@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface DepositProductRepository extends JpaRepository {
+public interface DepositProductRepository extends JpaRepository<DepositProduct, Long> {
     Optional<DepositProduct> findByNameAndBank(String name, Bank bank);
 }

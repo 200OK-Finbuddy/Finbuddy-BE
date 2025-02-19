@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "product_type", discriminatorType = DiscriminatorType.STRING)
@@ -17,20 +20,24 @@ public abstract class FinancialProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
-    private Long id;
+    protected Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_id", nullable = false)
-    private Bank bank;
+    protected Bank bank;
 
     @Column(nullable = false)
-    private String name;
+    protected String code;
 
-    private String subscriptionMethod;
-    private String maturityInterestRate;
-    private String specialCondition;
-    private String subscriptionRestriction;
-    private String subscriptionTarget;
-    private String additionalNotes;
-    private Long maximumLimit;
+    @Column(nullable = false)
+    protected String name;
+
+    protected String subscriptionMethod;
+    protected String maturityInterestRate;
+    protected String specialCondition;
+    protected String subscriptionRestriction;
+    protected String subscriptionTarget;
+    protected String additionalNotes;
+    protected Long maximumLimit;
+
 }
