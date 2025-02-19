@@ -2,6 +2,7 @@ package com.http200ok.finbuddy.member.domain;
 
 import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.budget.domain.Budget;
+import com.http200ok.finbuddy.notification.domain.Notification;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,10 +36,12 @@ public class Member {
     private String simplePassword;
     private String address;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> accounts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Budget> budgets = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> notifications = new ArrayList<>();
 }

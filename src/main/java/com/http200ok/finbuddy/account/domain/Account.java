@@ -2,13 +2,16 @@ package com.http200ok.finbuddy.account.domain;
 
 import com.http200ok.finbuddy.bank.domain.Bank;
 import com.http200ok.finbuddy.member.domain.Member;
+import com.http200ok.finbuddy.product.domain.DepositProduct;
+import com.http200ok.finbuddy.product.domain.FinancialProduct;
+import com.http200ok.finbuddy.product.domain.ProductOption;
+import com.http200ok.finbuddy.product.domain.SavingProduct;
 import com.http200ok.finbuddy.transaction.domain.Transaction;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.security.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,31 +27,50 @@ public class Account {
     @Column(name = "account_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_id", nullable = false)
     private Bank bank;
 
     @Column(nullable = false, unique = true)
     private String accountNumber;
 
-    @Column(nullable = false)
-    private String accountName;
-
+    /**
+     * CHECKING(보통예금), DEPOSIT(예금), SAVINGS(적금)
+     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AccountType accountType;
 
     @Column(nullable = false)
+    private String accountName;
+
+    @Column(nullable = false)
     private Long balance;
 
     private String password;
+
     private LocalDateTime createdAt;
     private LocalDateTime maturedAt;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    /**
+     * 1) Account - Transaction (1:N)
+     * 2) cascade: Account가 삭제되면 Transaction도 삭제
+     * 3) orphanRemoval: Account가 가진 트랜잭션을 List에서 제거하면 DB에서도 제거
+     */
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions = new ArrayList<>();
+
+    // 상품 참조 (보통예금은 null)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private FinancialProduct product;
+
+    // 선택된 상품 옵션 (보통예금 또는 옵션 선택 안한 경우 null)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_option_id")
+    private ProductOption selectedOption;
 }

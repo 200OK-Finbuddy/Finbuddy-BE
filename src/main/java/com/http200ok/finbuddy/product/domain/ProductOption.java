@@ -1,24 +1,26 @@
-package com.http200ok.finbuddy.product.saving.domain;
+package com.http200ok.finbuddy.product.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "option_type", discriminatorType = DiscriminatorType.STRING)
 @Getter
 @Setter
-@Entity
 @NoArgsConstructor
-public class SavingProductOption {
+public abstract class ProductOption {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "deposit_product_option_id")
+    @Column(name = "product_option_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "saving_product_id", nullable = false)
-    private SavingProduct savingProduct;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private FinancialProduct product;
 
     @Column
     private String interestRateType; // 저축 금리 유형
@@ -34,10 +36,4 @@ public class SavingProductOption {
 
     @Column
     private Double maximumInterestRate; // 최고 우대 금리
-
-    @Column
-    private String reserveType; // 적립 유형
-
-    @Column
-    private String reserveTypeName; // 적립 유형명
 }
