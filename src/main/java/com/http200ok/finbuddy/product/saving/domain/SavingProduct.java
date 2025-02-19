@@ -30,6 +30,6 @@ public class SavingProduct {
     private String subscriptionRestriction;
     private String subscriptionTarget;
     private String additionalNotes;
-    private Double maximumLimit;
+    private Long maximumLimit;
 
 }

@@ -38,11 +38,12 @@ public class Account {
     @Column(nullable = false)
     private String accountName;
 
-//    @Column(nullable = false)
-//    private String accountType;  // 예: "check", "saving"
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AccountType accountType;
 
     @Column(nullable = false)
-    private Double balance;
+    private Long balance;
 
     private String password;
     private LocalDateTime createdAt;

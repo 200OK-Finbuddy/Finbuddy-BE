@@ -26,7 +26,9 @@ public class Budget {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    // enum -> 일, 주, 월 등
-    private String periodType;
-    private Double budget;
+    @Enumerated(EnumType.STRING)
+    @Column
+    private PeriodType periodType;
+
+    private Long budget;
 }

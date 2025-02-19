@@ -28,9 +28,9 @@ public class Transaction {
     private Integer transactionType; // 입금(1) or 출금(2)
 
     @Column(nullable = false)
-    private Double amount;
+    private Long amount;
 
-    private Double balanceAfter;
+    private Long updatedBalance;
 
     private LocalDateTime transactionDate;
 
