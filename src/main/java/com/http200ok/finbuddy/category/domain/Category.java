@@ -1,4 +1,4 @@
-package com.http200ok.finbuddy;
+package com.http200ok.finbuddy.category.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,19 +9,14 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-public class Bank {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "bank_id")
+    @Column(name = "category_id")
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private String code;
-
-    @Column
-    private String logoUrl;
+    @Column(nullable = false, unique = true)
+    private String categoryName;
 }
+

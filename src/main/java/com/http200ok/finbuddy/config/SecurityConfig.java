@@ -1,4 +1,4 @@
-package com.http200ok.finbuddy;
+package com.http200ok.finbuddy.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
