@@ -1,11 +1,15 @@
 package com.http200ok.finbuddy.product.controller;
 
+import com.http200ok.finbuddy.product.domain.DepositProduct;
+import com.http200ok.finbuddy.product.dto.PagedResponseDto;
+import com.http200ok.finbuddy.product.dto.ProductDto;
 import com.http200ok.finbuddy.product.service.DepositProductService;
 import com.http200ok.finbuddy.product.service.SavingProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/products")
@@ -35,5 +39,12 @@ public class ProductController {
     public ResponseEntity<String> fetchSavingData() {
         savingProductService.fetchAndSaveSavingProducts();
         return ResponseEntity.ok("적금 데이터 저장 완료!");
+    }
+
+    // 최신순으로 DepositProduct 목록 반환 (페이징 적용)
+    @GetMapping("/deposits")
+    public ResponseEntity<PagedResponseDto<ProductDto>> getDepositProducts(@RequestParam(value = "page", defaultValue = "0") int page) {
+        PagedResponseDto<ProductDto> depositProducts = depositProductService.getDepositProductsSortedByDisclosureStartDate(page);
+        return ResponseEntity.ok(depositProducts);
     }
 }
