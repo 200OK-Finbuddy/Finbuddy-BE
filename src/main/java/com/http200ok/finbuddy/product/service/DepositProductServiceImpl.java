@@ -100,8 +100,8 @@ public class DepositProductServiceImpl implements DepositProductService {
                         if (optionObj.getString("fin_prdt_cd").equals(obj.getString("fin_prdt_cd"))) {
                             DepositProductOption option = DepositProductOption.createDepositProductOption(
                                     deposit,
+                                    optionObj.optString("intr_rate_type", null),
                                     optionObj.optString("intr_rate_type_nm", null),
-                                    optionObj.optString("rsrv_type_nm", null),
                                     optionObj.optInt("save_trm", 0),
                                     optionObj.optDouble("intr_rate", 0.0),
                                     optionObj.optDouble("intr_rate2", 0.0)

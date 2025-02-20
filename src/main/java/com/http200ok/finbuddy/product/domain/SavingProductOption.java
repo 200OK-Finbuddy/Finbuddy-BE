@@ -19,16 +19,14 @@ public class SavingProductOption extends ProductOption {
     @Column
     private String reserveTypeName;
 
-    public static SavingProductOption createSavingProductOption(
-            SavingProduct savingProduct,
-            String interestRateType,
-            String interestRateTypeName,
-            Integer savingTerm,
-            Double interestRate,
-            Double maximumInterestRate,
-            String reserveType,
-            String reserveTypeName
-    ) {
+    public static SavingProductOption createSavingProductOption(SavingProduct savingProduct,
+                                                                String interestRateType,
+                                                                String interestRateTypeName,
+                                                                Integer savingTerm,
+                                                                Double interestRate,
+                                                                Double maximumInterestRate,
+                                                                String reserveType,
+                                                                String reserveTypeName) {
         SavingProductOption option = new SavingProductOption();
         option.setSavingProduct(savingProduct);
         option.setInterestRateType(interestRateType);
