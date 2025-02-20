@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class ProductDto {
     private Long id;
     private String bankName;
+    private String bankLogoUrl;
     private String code;
     private String name;
     private String subscriptionMethod;
@@ -28,7 +29,8 @@ public class ProductDto {
 
     public ProductDto(Product product) {
         this.id = product.getId();
-        this.bankName = product.getBank().getName(); // Lazy Loading 문제 없이 은행 이름만 가져오기
+        this.bankName = product.getBank().getName();
+        this.bankLogoUrl = product.getBank().getLogoUrl();
         this.code = product.getCode();
         this.name = product.getName();
         this.subscriptionMethod = product.getSubscriptionMethod();

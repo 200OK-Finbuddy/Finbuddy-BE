@@ -1,6 +1,7 @@
 package com.http200ok.finbuddy.product.controller;
 
 import com.http200ok.finbuddy.product.domain.DepositProduct;
+import com.http200ok.finbuddy.product.dto.DepositProductDto;
 import com.http200ok.finbuddy.product.dto.PagedResponseDto;
 import com.http200ok.finbuddy.product.dto.ProductDto;
 import com.http200ok.finbuddy.product.service.DepositProductService;
@@ -46,5 +47,12 @@ public class ProductController {
     public ResponseEntity<PagedResponseDto<ProductDto>> getDepositProducts(@RequestParam(value = "page", defaultValue = "0") int page) {
         PagedResponseDto<ProductDto> depositProducts = depositProductService.getDepositProductsSortedByDisclosureStartDate(page);
         return ResponseEntity.ok(depositProducts);
+    }
+
+    // 상품 ID로 조회하여 은행 이름, 상품 정보, 옵션 리스트 반환
+    @GetMapping("/deposit/{productId}")
+    public ResponseEntity<DepositProductDto> getDepositProductById(@PathVariable("productId") Long productId) {
+        DepositProductDto depositProduct = depositProductService.getDepositProductById(productId);
+        return ResponseEntity.ok(depositProduct);
     }
 }

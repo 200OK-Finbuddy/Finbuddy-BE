@@ -5,6 +5,7 @@ import com.http200ok.finbuddy.bank.repository.BankRepository;
 import com.http200ok.finbuddy.product.domain.DepositProduct;
 import com.http200ok.finbuddy.product.domain.DepositProductOption;
 import com.http200ok.finbuddy.product.domain.Product;
+import com.http200ok.finbuddy.product.dto.DepositProductDto;
 import com.http200ok.finbuddy.product.dto.PagedResponseDto;
 import com.http200ok.finbuddy.product.dto.ProductDto;
 import com.http200ok.finbuddy.product.repository.DepositProductRepository;
@@ -56,6 +57,13 @@ public class DepositProductServiceImpl implements DepositProductService {
         // Product → ProductDto 변환하여 페이징 응답 생성
         Page<ProductDto> dtoPage = products.map(ProductDto::new);
         return new PagedResponseDto<>(dtoPage);
+    }
+
+    @Transactional(readOnly = true)
+    public DepositProductDto getDepositProductById(Long productId) {
+        DepositProduct depositProduct = depositProductRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다. ID: " + productId));
+        return new DepositProductDto(depositProduct);
     }
 
     @Transactional
