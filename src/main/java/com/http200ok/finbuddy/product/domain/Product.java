@@ -5,10 +5,16 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Check;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "product_type", discriminatorType = DiscriminatorType.STRING)
+@Check(constraints = "product_type IN ('DEPOSIT', 'SAVING', 'CHECKING')")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -40,4 +46,8 @@ public abstract class Product {
     protected String additionalNotes;
     protected Long maximumLimit;
 
+    protected LocalDate disclosureSubmissionMonth; // 공시 제출월 (YYYYMM)
+    protected LocalDate disclosureStartDate; // 공시 시작일
+    protected LocalDate disclosureEndDate; // 공시 종료일
+    protected LocalDateTime financialCompanySubmissionDate; // 금융회사 제출일 (YYYYMMDDHH24MI)
 }

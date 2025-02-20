@@ -4,6 +4,9 @@ import com.http200ok.finbuddy.bank.domain.Bank;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,16 +19,19 @@ public class SavingProduct extends Product {
     @OneToMany(mappedBy = "savingProduct", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SavingProductOption> options = new ArrayList<>();
 
-    // 옵션 추가 편의 메소드
+    // 연관관계 메소드
     public void addOption(SavingProductOption option) {
         options.add(option);
         option.setSavingProduct(this);
     }
 
+    // 생성 메소드
     public static SavingProduct createProduct(Bank bank, String code, String name, String subscriptionMethod,
                                               String maturityInterestRate, String specialCondition,
                                               String subscriptionRestriction, String subscriptionTarget,
-                                              String additionalNotes, Long maximumLimit) {
+                                              String additionalNotes, Long maximumLimit,
+                                              LocalDate disclosureSubmissionMonth, LocalDate disclosureStartDate,
+                                              LocalDate disclosureEndDate, LocalDateTime financialCompanySubmissionDate) {
         SavingProduct product = new SavingProduct();
         product.bank = bank;
         product.code = code;
@@ -37,6 +43,10 @@ public class SavingProduct extends Product {
         product.subscriptionTarget = subscriptionTarget;
         product.additionalNotes = additionalNotes;
         product.maximumLimit = maximumLimit;
+        product.disclosureSubmissionMonth = disclosureSubmissionMonth;
+        product.disclosureStartDate = disclosureStartDate;
+        product.disclosureEndDate = disclosureEndDate;
+        product.financialCompanySubmissionDate = financialCompanySubmissionDate;
         return product;
     }
 }

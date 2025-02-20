@@ -14,6 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
 import static org.json.XMLTokener.entity;
 
 @Service
@@ -25,6 +31,10 @@ public class DepositProductServiceImpl implements DepositProductService {
     private static final Dotenv dotenv = Dotenv.load();
     private static final String API_URL = "http://finlife.fss.or.kr/finlifeapi/depositProductsSearch.json?auth="
             + dotenv.get("BANK_API_KEY") + "&topFinGrpNo=020000&pageNo=1";
+
+    // 날짜 포맷터 선언
+    private static final DateTimeFormatter LOCAL_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
+    private static final DateTimeFormatter LOCAL_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
 
     @Autowired
     public DepositProductServiceImpl(DepositProductRepository depositProductRepository, BankRepository bankRepository) {
@@ -91,7 +101,11 @@ public class DepositProductServiceImpl implements DepositProductService {
                             obj.optString("join_deny", null),
                             obj.optString("join_member", null),
                             obj.optString("etc_note", null),
-                            obj.optLong("max_limit", 0)
+                            obj.optLong("max_limit", 0),
+                            parseYearMonthToLocalDate(obj.optString("dcls_month", null)), // 공시 제출월 → LocalDate (YYYY-MM-01)
+                            parseLocalDate(obj.optString("dcls_strt_day", null)), // 공시 시작일
+                            parseLocalDate(obj.optString("dcls_end_day", null)), // 공시 종료일
+                            parseLocalDateTime(obj.optString("fin_co_subm_day", null)) // 금융회사 제출일
                     );
                     depositProductRepository.save(deposit);
 
@@ -114,5 +128,27 @@ public class DepositProductServiceImpl implements DepositProductService {
         } catch (Exception e) {
             System.err.println("API 요청 중 예외 발생: " + e.getMessage());
         }
+    }
+
+    // 날짜 변환 함수 추가
+    private LocalDate parseYearMonthToLocalDate(String dateStr) {
+        return Optional.ofNullable(dateStr)
+                .filter(s -> !s.isEmpty())
+                .map(s -> LocalDate.parse(s + "01", LOCAL_DATE_FORMATTER)) // YYYYMM → YYYYMM01 → LocalDate 변환
+                .orElse(null);
+    }
+
+    private LocalDate parseLocalDate(String dateStr) {
+        return Optional.ofNullable(dateStr)
+                .filter(s -> !s.isEmpty())
+                .map(s -> LocalDate.parse(s, LOCAL_DATE_FORMATTER))
+                .orElse(null);
+    }
+
+    private LocalDateTime parseLocalDateTime(String dateStr) {
+        return Optional.ofNullable(dateStr)
+                .filter(s -> !s.isEmpty())
+                .map(s -> LocalDateTime.parse(s, LOCAL_DATE_TIME_FORMATTER))
+                .orElse(null);
     }
 }
