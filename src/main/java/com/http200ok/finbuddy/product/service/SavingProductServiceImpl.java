@@ -4,6 +4,9 @@ import com.http200ok.finbuddy.bank.domain.Bank;
 import com.http200ok.finbuddy.bank.repository.BankRepository;
 import com.http200ok.finbuddy.product.domain.SavingProduct;
 import com.http200ok.finbuddy.product.domain.SavingProductOption;
+import com.http200ok.finbuddy.product.dto.PagedResponseDto;
+import com.http200ok.finbuddy.product.dto.ProductDto;
+import com.http200ok.finbuddy.product.dto.SavingProductDto;
 import com.http200ok.finbuddy.product.repository.SavingProductRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.json.JSONArray;
@@ -11,6 +14,9 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +49,22 @@ public class SavingProductServiceImpl implements SavingProductService {
         this.savingProductRepository = savingProductRepository;
         this.bankRepository = bankRepository;
         this.restTemplate = new RestTemplate();
+    }
+
+    public PagedResponseDto<ProductDto> getSavingProductsSortedByDisclosureStartDate(int page) {
+        PageRequest pageable = PageRequest.of(page, 5, Sort.by(Sort.Order.desc("disclosureStartDate")));
+        Page<SavingProduct> products = savingProductRepository.findAll(pageable);
+
+        // SavingProduct → ProductDto 변환하여 페이징 응답 생성
+        Page<ProductDto> dtoPage = products.map(ProductDto::new);
+        return new PagedResponseDto<>(dtoPage);
+    }
+
+    @Transactional(readOnly = true)
+    public SavingProductDto getSavingProductById(Long productId) {
+        SavingProduct savingProduct = savingProductRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("적금 상품을 찾을 수 없습니다. ID: " + productId));
+        return new SavingProductDto(savingProduct);
     }
 
     @Transactional
