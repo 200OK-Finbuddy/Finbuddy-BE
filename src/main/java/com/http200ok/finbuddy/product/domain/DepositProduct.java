@@ -12,15 +12,15 @@ import java.util.List;
 @DiscriminatorValue("DEPOSIT")
 @Getter @Setter
 @NoArgsConstructor
-public class DepositProduct extends FinancialProduct {
-    // 예금 특화 필드 추가 가능
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<ProductOption> options = new ArrayList<>();
+public class DepositProduct extends Product {
+
+    @OneToMany(mappedBy = "depositProduct", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DepositProductOption> options = new ArrayList<>();
 
     // 옵션 추가 편의 메소드
-    public void addOption(ProductOption option) {
+    public void addOption(DepositProductOption option) {
         options.add(option);
-        option.setProduct(this);
+        option.setDepositProduct(this);
     }
 
     public static DepositProduct createProduct(Bank bank, String code, String name, String subscriptionMethod,

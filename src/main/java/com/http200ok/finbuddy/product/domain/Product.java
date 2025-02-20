@@ -6,16 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "product_type", discriminatorType = DiscriminatorType.STRING)
 @Getter
 @Setter
 @NoArgsConstructor
-public abstract class FinancialProduct {
+public abstract class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +31,10 @@ public abstract class FinancialProduct {
 
     protected String subscriptionMethod;
     protected String maturityInterestRate;
+
+    @Column(length = 500)
     protected String specialCondition;
+
     protected String subscriptionRestriction;
     protected String subscriptionTarget;
     protected String additionalNotes;

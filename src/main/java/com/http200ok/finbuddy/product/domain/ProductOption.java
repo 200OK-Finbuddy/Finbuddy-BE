@@ -18,10 +18,6 @@ public abstract class ProductOption {
     @Column(name = "product_option_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private FinancialProduct product;
-
     @Column
     private String interestRateType; // 저축 금리 유형
 

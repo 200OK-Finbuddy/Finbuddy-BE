@@ -8,16 +8,19 @@ import lombok.*;
 @Getter @Setter
 @NoArgsConstructor
 public class DepositProductOption extends ProductOption {
-    // 예금 옵션 특화 필드 추가 가능
 
-    public static DepositProductOption createDepositProductOption(FinancialProduct product,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private DepositProduct depositProduct;
+
+    public static DepositProductOption createDepositProductOption(DepositProduct depositProduct,
                                                                   String interestRateType,
                                                                   String interestRateTypeName,
                                                                   Integer savingTerm,
                                                                   Double interestRate,
                                                                   Double maximumInterestRate) {
         DepositProductOption option = new DepositProductOption();
-        option.setProduct(product);
+        option.setDepositProduct(depositProduct);
         option.setInterestRateType(interestRateType);
         option.setInterestRateTypeName(interestRateTypeName);
         option.setSavingTerm(savingTerm);

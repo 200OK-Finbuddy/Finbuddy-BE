@@ -2,10 +2,8 @@ package com.http200ok.finbuddy.account.domain;
 
 import com.http200ok.finbuddy.bank.domain.Bank;
 import com.http200ok.finbuddy.member.domain.Member;
-import com.http200ok.finbuddy.product.domain.DepositProduct;
-import com.http200ok.finbuddy.product.domain.FinancialProduct;
+import com.http200ok.finbuddy.product.domain.Product;
 import com.http200ok.finbuddy.product.domain.ProductOption;
-import com.http200ok.finbuddy.product.domain.SavingProduct;
 import com.http200ok.finbuddy.transaction.domain.Transaction;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -39,7 +37,7 @@ public class Account {
     private String accountNumber;
 
     /**
-     * CHECKING(보통예금), DEPOSIT(예금), SAVINGS(적금)
+     * CHECKING(보통예금), DEPOSIT(예금), SAVING(적금)
      */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -67,7 +65,7 @@ public class Account {
     // 상품 참조 (보통예금은 null)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    private FinancialProduct product;
+    private Product product;
 
     // 선택된 상품 옵션 (보통예금 또는 옵션 선택 안한 경우 null)
     @ManyToOne(fetch = FetchType.LAZY)
