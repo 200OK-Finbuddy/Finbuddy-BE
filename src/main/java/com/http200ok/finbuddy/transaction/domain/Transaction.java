@@ -25,6 +25,9 @@ public class Transaction {
     private Account account;
 
     @Column(nullable = false)
+    private String opponentName;
+
+    @Column(nullable = false)
     private Integer transactionType; // 입금(1) or 출금(2)
 
     @Column(nullable = false)
