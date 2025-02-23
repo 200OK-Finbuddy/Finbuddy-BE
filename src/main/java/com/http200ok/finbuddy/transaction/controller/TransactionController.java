@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/transactions")
 @RequiredArgsConstructor
-@CrossOrigin
 public class TransactionController {
 
     private final TransactionService transactionService;
