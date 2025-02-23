@@ -12,11 +12,13 @@ import java.util.Optional;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    @Query("SELECT DISTINCT a FROM Account a " +
-            "LEFT JOIN FETCH a.transactions t " +
-            "LEFT JOIN FETCH t.category c " +
-            "WHERE a.id = :accountId " +
-            "AND a.member.id = :memberId")
+    @Query("""
+            SELECT DISTINCT a FROM Account a
+            LEFT JOIN FETCH a.transactions t
+            LEFT JOIN FETCH t.category c
+            WHERE a.id = :accountId
+            AND a.member.id = :memberId
+            """)
     Optional<Account> findAccountWithTransactions(
             @Param("accountId") Long accountId,
             @Param("memberId") Long memberId
