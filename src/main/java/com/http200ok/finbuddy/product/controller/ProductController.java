@@ -1,30 +1,28 @@
 package com.http200ok.finbuddy.product.controller;
 
 import com.http200ok.finbuddy.product.domain.DepositProduct;
-import com.http200ok.finbuddy.product.dto.DepositProductDto;
-import com.http200ok.finbuddy.product.dto.PagedResponseDto;
-import com.http200ok.finbuddy.product.dto.ProductDto;
-import com.http200ok.finbuddy.product.dto.SavingProductDto;
+import com.http200ok.finbuddy.product.dto.*;
 import com.http200ok.finbuddy.product.service.DepositProductService;
+import com.http200ok.finbuddy.product.service.ProductService;
 import com.http200ok.finbuddy.product.service.SavingProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/products")
 public class ProductController {
 
     private final DepositProductService depositProductService;
     private final SavingProductService savingProductService;
-
-    public ProductController(DepositProductService depositProductService, SavingProductService savingProductService) {
-        this.depositProductService = depositProductService;
-        this.savingProductService = savingProductService;
-    }
+    private final ProductService productService;
 
     /**
      * 예금 데이터 수집 및 저장
@@ -78,5 +76,11 @@ public class ProductController {
     public ResponseEntity<SavingProductDto> getSavingProductById(@PathVariable("productId") Long productId) {
         SavingProductDto savingProduct = savingProductService.getSavingProductById(productId);
         return ResponseEntity.ok(savingProduct);
+    }
+
+    @GetMapping("/recommendations")
+    public ResponseEntity<List<RecommendedProductDto>> getRecommendedProducts() {
+        List<RecommendedProductDto> response = productService.getTopRecommendedProducts();
+        return ResponseEntity.ok(response);
     }
 }
