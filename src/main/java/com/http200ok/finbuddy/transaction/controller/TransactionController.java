@@ -1,14 +1,11 @@
 package com.http200ok.finbuddy.transaction.controller;
 
+import com.http200ok.finbuddy.category.dto.CategoryExpenseDto;
 import com.http200ok.finbuddy.transaction.dto.CheckingAccountTransactionResponseDto;
 import com.http200ok.finbuddy.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,5 +21,16 @@ public class TransactionController {
     public ResponseEntity<List<CheckingAccountTransactionResponseDto>> getLatestTransactionsForUserCheckingAccounts(@PathVariable("memberId") Long memberId) {
         List<CheckingAccountTransactionResponseDto> transactions = transactionService.getLatestTransactionsForUserCheckingAccounts(memberId);
         return ResponseEntity.ok(transactions);
+    }
+
+    // 카테고리별 지출 금액, 비율 조회
+    @GetMapping("/category-expenses")
+    public ResponseEntity<List<CategoryExpenseDto>> getCategoryExpenses(
+            @RequestParam("memberId") Long memberId,
+            @RequestParam("year") int year,
+            @RequestParam("month") int month
+    ) {
+        List<CategoryExpenseDto> expenses = transactionService.categoryExpensesForMonth(memberId, year, month);
+        return ResponseEntity.ok(expenses);
     }
 }
