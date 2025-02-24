@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Getter
 public class DepositProductDto {
-    private Long id;
+    private Long productId;
     private String bankName;
     private String bankLogoUrl;
     private String code;
@@ -29,7 +29,7 @@ public class DepositProductDto {
     private List<DepositProductOptionDto> options; // 옵션 리스트
 
     public DepositProductDto(DepositProduct depositProduct) {
-        this.id = depositProduct.getId();
+        this.productId = depositProduct.getId();
         this.bankName = depositProduct.getBank().getName();
         this.bankLogoUrl = depositProduct.getBank().getLogoUrl();
         this.code = depositProduct.getCode();

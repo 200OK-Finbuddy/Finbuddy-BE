@@ -44,10 +44,16 @@ public class ProductController {
 
     /**
      * 예금 상품 목록 조회 (페이징 처리) - 최신순
+     * 상품명(name), 은행명(bankName) 검색
      */
     @GetMapping("/deposits")
-    public ResponseEntity<PagedResponseDto<ProductDto>> getDepositProducts(@RequestParam(value = "page", defaultValue = "0") int page) {
-        PagedResponseDto<ProductDto> depositProducts = depositProductService.getDepositProductsSortedByDisclosureStartDate(page);
+    public ResponseEntity<PagedResponseDto<ProductDto>> getDepositProducts(
+            @RequestParam(value = "name", required = false, defaultValue = "") String name,
+            @RequestParam(value = "bankName", required = false, defaultValue = "") String bankName,
+            @RequestParam(value = "page", defaultValue = "0") int page) {
+
+        PagedResponseDto<ProductDto> depositProducts = productService.searchDepositProductsByNameAndBank(name, bankName, page);
+
         return ResponseEntity.ok(depositProducts);
     }
 
@@ -61,11 +67,18 @@ public class ProductController {
     }
 
     /**
-     * 적금 상품 목록 조회 (페이징 처리)
+     * 적금 상품 목록 조회 (페이징 처리) - 최신순
+     * 상품명(name), 은행명(bankName) 검색
      */
     @GetMapping("/savings")
-    public ResponseEntity<PagedResponseDto<ProductDto>> getSavingProducts(@RequestParam(value = "page", defaultValue = "0") int page) {
-        PagedResponseDto<ProductDto> savingProducts = savingProductService.getSavingProductsSortedByDisclosureStartDate(page);
+    public ResponseEntity<PagedResponseDto<ProductDto>> getSavingProducts(
+            @RequestParam(value = "name", required = false, defaultValue = "") String name,
+            @RequestParam(value = "bankName", required = false, defaultValue = "") String bankName,
+            @RequestParam(value = "page", defaultValue = "0") int page) {
+
+        PagedResponseDto<ProductDto> savingProducts =
+                productService.searchSavingProductsByNameAndBank(name, bankName, page);
+
         return ResponseEntity.ok(savingProducts);
     }
 

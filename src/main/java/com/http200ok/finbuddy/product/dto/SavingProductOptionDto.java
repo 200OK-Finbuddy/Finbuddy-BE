@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class SavingProductOptionDto {
-    private Long id;
+    private Long productOptionId;
     private String interestRateType;
     private String interestRateTypeName;
     private Integer savingTerm;
@@ -15,7 +15,7 @@ public class SavingProductOptionDto {
     private String reserveTypeName;
 
     public SavingProductOptionDto(SavingProductOption option) {
-        this.id = option.getId();
+        this.productOptionId = option.getId();
         this.interestRateType = option.getInterestRateType();
         this.interestRateTypeName = option.getInterestRateTypeName();
         this.savingTerm = option.getSavingTerm();

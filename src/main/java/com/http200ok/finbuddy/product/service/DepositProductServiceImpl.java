@@ -50,15 +50,6 @@ public class DepositProductServiceImpl implements DepositProductService {
         this.restTemplate = new RestTemplate();
     }
 
-    public PagedResponseDto<ProductDto> getDepositProductsSortedByDisclosureStartDate(int page) {
-        PageRequest pageable = PageRequest.of(page, 5, Sort.by(Sort.Order.desc("disclosureStartDate")));
-        Page<DepositProduct> products = depositProductRepository.findAllByOrderByDisclosureStartDateDesc(pageable);
-
-        // Product → ProductDto 변환하여 페이징 응답 생성
-        Page<ProductDto> dtoPage = products.map(ProductDto::new);
-        return new PagedResponseDto<>(dtoPage);
-    }
-
     @Transactional(readOnly = true)
     public DepositProductDto getDepositProductById(Long productId) {
         DepositProduct depositProduct = depositProductRepository.findById(productId)
