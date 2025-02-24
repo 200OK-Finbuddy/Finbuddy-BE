@@ -51,15 +51,6 @@ public class SavingProductServiceImpl implements SavingProductService {
         this.restTemplate = new RestTemplate();
     }
 
-    public PagedResponseDto<ProductDto> getSavingProductsSortedByDisclosureStartDate(int page) {
-        PageRequest pageable = PageRequest.of(page, 5, Sort.by(Sort.Order.desc("disclosureStartDate")));
-        Page<SavingProduct> products = savingProductRepository.findAll(pageable);
-
-        // SavingProduct → ProductDto 변환하여 페이징 응답 생성
-        Page<ProductDto> dtoPage = products.map(ProductDto::new);
-        return new PagedResponseDto<>(dtoPage);
-    }
-
     @Transactional(readOnly = true)
     public SavingProductDto getSavingProductById(Long productId) {
         SavingProduct savingProduct = savingProductRepository.findById(productId)

@@ -1,48 +1,45 @@
 package com.http200ok.finbuddy.product.dto;
 
+import com.http200ok.finbuddy.product.domain.DepositProduct;
 import com.http200ok.finbuddy.product.domain.Product;
+import com.http200ok.finbuddy.product.domain.ProductOption;
+import com.http200ok.finbuddy.product.domain.SavingProduct;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 public class ProductDto {
-    private Long id;
+    private Long productId;
     private String bankName;
     private String bankLogoUrl;
-    private String code;
-    private String name;
+    private String productName;
     private String subscriptionMethod;
-    private String maturityInterestRate;
-    private String specialCondition;
-    private String subscriptionRestriction;
-    private String subscriptionTarget;
     private String additionalNotes;
-    private Long maximumLimit;
-    private LocalDate disclosureSubmissionMonth;
-    private LocalDate disclosureStartDate;
-    private LocalDate disclosureEndDate;
-    private LocalDateTime financialCompanySubmissionDate;
+    private Double minInterestRate;
+    private Double maxInterestRate;
 
     public ProductDto(Product product) {
-        this.id = product.getId();
+        this.productId = product.getId();
         this.bankName = product.getBank().getName();
         this.bankLogoUrl = product.getBank().getLogoUrl();
-        this.code = product.getCode();
-        this.name = product.getName();
+        this.productName = product.getName();
         this.subscriptionMethod = product.getSubscriptionMethod();
-        this.maturityInterestRate = product.getMaturityInterestRate();
-        this.specialCondition = product.getSpecialCondition();
-        this.subscriptionRestriction = product.getSubscriptionRestriction();
-        this.subscriptionTarget = product.getSubscriptionTarget();
         this.additionalNotes = product.getAdditionalNotes();
-        this.maximumLimit = product.getMaximumLimit();
-        this.disclosureSubmissionMonth = product.getDisclosureSubmissionMonth();
-        this.disclosureStartDate = product.getDisclosureStartDate();
-        this.disclosureEndDate = product.getDisclosureEndDate();
-        this.financialCompanySubmissionDate = product.getFinancialCompanySubmissionDate();
+
+        // 상품 옵션에서 최소 및 최대 금리 설정
+        List<? extends ProductOption> options = product instanceof DepositProduct
+                ? ((DepositProduct) product).getOptions()
+                : ((SavingProduct) product).getOptions();
+
+        this.minInterestRate = options.stream()
+                .mapToDouble(ProductOption::getInterestRate)
+                .min().orElse(0.0);
+
+        this.maxInterestRate = options.stream()
+                .mapToDouble(ProductOption::getMaximumInterestRate)
+                .max().orElse(0.0);
     }
 }

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Getter
 public class SavingProductDto {
-    private Long id;
+    private Long productId;
     private String bankName;
     private String bankLogoUrl;
     private String code;
@@ -29,7 +29,7 @@ public class SavingProductDto {
     private List<SavingProductOptionDto> options;
 
     public SavingProductDto(SavingProduct savingProduct) {
-        this.id = savingProduct.getId();
+        this.productId = savingProduct.getId();
         this.bankName = savingProduct.getBank().getName();
         this.bankLogoUrl = savingProduct.getBank().getLogoUrl();
         this.code = savingProduct.getCode();
@@ -47,6 +47,6 @@ public class SavingProductDto {
         this.financialCompanySubmissionDate = savingProduct.getFinancialCompanySubmissionDate();
         this.options = savingProduct.getOptions().stream()
                 .map(SavingProductOptionDto::new)
-                .collect(Collectors.toList()); //
+                .collect(Collectors.toList());
     }
 }

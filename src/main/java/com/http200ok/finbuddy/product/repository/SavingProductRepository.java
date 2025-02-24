@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface SavingProductRepository extends JpaRepository<SavingProduct, Long> {
     Optional<SavingProduct> findByNameAndBank(String name, Bank bank);
-    Page<SavingProduct> findAllByOrderByDisclosureStartDateDesc(Pageable pageable);
+    Page<SavingProduct> findByNameContainingAndBank_NameContainingOrderByDisclosureStartDateDesc(String name, String bankName, Pageable pageable);
 
     @Query("""
         SELECT sp FROM SavingProduct sp

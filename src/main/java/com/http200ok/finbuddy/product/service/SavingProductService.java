@@ -6,6 +6,5 @@ import com.http200ok.finbuddy.product.dto.SavingProductDto;
 
 public interface SavingProductService {
     void fetchAndSaveSavingProducts();
-    PagedResponseDto<ProductDto> getSavingProductsSortedByDisclosureStartDate(int page);
     SavingProductDto getSavingProductById(Long productId);
 }

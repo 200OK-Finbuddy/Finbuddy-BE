@@ -4,11 +4,15 @@ import com.http200ok.finbuddy.product.domain.DepositProduct;
 import com.http200ok.finbuddy.product.domain.Product;
 import com.http200ok.finbuddy.product.domain.ProductOption;
 import com.http200ok.finbuddy.product.domain.SavingProduct;
+import com.http200ok.finbuddy.product.dto.PagedResponseDto;
+import com.http200ok.finbuddy.product.dto.ProductDto;
 import com.http200ok.finbuddy.product.dto.RecommendedProductDto;
 import com.http200ok.finbuddy.product.repository.DepositProductRepository;
 import com.http200ok.finbuddy.product.repository.SavingProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +27,34 @@ public class ProductServiceImpl implements ProductService {
 
     private final DepositProductRepository depositProductRepository;
     private final SavingProductRepository savingProductRepository;
+
+    @Override
+    public PagedResponseDto<ProductDto> searchDepositProductsByNameAndBank(
+            String name, String bankName, int page) {
+
+        PageRequest pageable = PageRequest.of(page, 5, Sort.by(Sort.Order.desc("disclosureStartDate")));
+
+        Page<DepositProduct> products = depositProductRepository
+                .findByNameContainingAndBank_NameContainingOrderByDisclosureStartDateDesc(name, bankName, pageable);
+
+        // Product → ProductDto 변환하여 페이징 응답 생성
+        Page<ProductDto> dtoPage = products.map(ProductDto::new);
+        return new PagedResponseDto<>(dtoPage);
+    }
+
+    @Override
+    public PagedResponseDto<ProductDto> searchSavingProductsByNameAndBank(
+            String name, String bankName, int page) {
+
+        PageRequest pageable = PageRequest.of(page, 5, Sort.by(Sort.Order.desc("disclosureStartDate")));
+
+        Page<SavingProduct> products = savingProductRepository
+                .findByNameContainingAndBank_NameContainingOrderByDisclosureStartDateDesc(name, bankName, pageable);
+
+        // Product → ProductDto 변환하여 페이징 응답 생성
+        Page<ProductDto> dtoPage = products.map(ProductDto::new);
+        return new PagedResponseDto<>(dtoPage);
+    }
 
     @Override
     public List<RecommendedProductDto> getTopRecommendedProducts() {
