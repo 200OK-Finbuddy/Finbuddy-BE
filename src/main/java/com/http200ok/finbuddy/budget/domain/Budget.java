@@ -2,16 +2,19 @@ package com.http200ok.finbuddy.budget.domain;
 
 import com.http200ok.finbuddy.member.domain.Member;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Budget {
 
     @Id
@@ -26,9 +29,20 @@ public class Budget {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    @Enumerated(EnumType.STRING)
     @Column
+    @Enumerated(EnumType.STRING)
     private PeriodType periodType;
 
     private Long budget;
+
+    // 생성 메서드
+    public static Budget createBudget(Member member, Long amount, PeriodType periodType, LocalDate startDate, LocalDate endDate) {
+        Budget budget = new Budget();
+        budget.member = member;
+        budget.budget = amount;
+        budget.periodType = periodType;
+        budget.startDate = startDate.atStartOfDay();
+        budget.endDate = endDate.atTime(LocalTime.MAX);
+        return budget;
+    }
 }
