@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface DepositProductRepository extends JpaRepository<DepositProduct, Long> {
     Optional<DepositProduct> findByNameAndBank(String name, Bank bank);
-    Page<DepositProduct> findAllByOrderByDisclosureStartDateDesc(Pageable pageable);
+    Page<DepositProduct> findByNameContainingAndBank_NameContainingOrderByDisclosureStartDateDesc(String name, String bankName, Pageable pageable);
 
     @Query("""
         SELECT DISTINCT dp FROM DepositProduct dp

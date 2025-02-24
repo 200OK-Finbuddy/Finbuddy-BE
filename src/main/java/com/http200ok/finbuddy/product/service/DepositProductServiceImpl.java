@@ -4,19 +4,12 @@ import com.http200ok.finbuddy.bank.domain.Bank;
 import com.http200ok.finbuddy.bank.repository.BankRepository;
 import com.http200ok.finbuddy.product.domain.DepositProduct;
 import com.http200ok.finbuddy.product.domain.DepositProductOption;
-import com.http200ok.finbuddy.product.domain.Product;
 import com.http200ok.finbuddy.product.dto.DepositProductDto;
-import com.http200ok.finbuddy.product.dto.PagedResponseDto;
-import com.http200ok.finbuddy.product.dto.ProductDto;
 import com.http200ok.finbuddy.product.repository.DepositProductRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +18,6 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
