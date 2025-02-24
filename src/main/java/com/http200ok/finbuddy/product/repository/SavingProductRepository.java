@@ -1,7 +1,6 @@
 package com.http200ok.finbuddy.product.repository;
 
 import com.http200ok.finbuddy.bank.domain.Bank;
-import com.http200ok.finbuddy.product.domain.DepositProduct;
 import com.http200ok.finbuddy.product.domain.SavingProduct;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

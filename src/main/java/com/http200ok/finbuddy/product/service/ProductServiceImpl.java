@@ -4,9 +4,7 @@ import com.http200ok.finbuddy.product.domain.DepositProduct;
 import com.http200ok.finbuddy.product.domain.Product;
 import com.http200ok.finbuddy.product.domain.ProductOption;
 import com.http200ok.finbuddy.product.domain.SavingProduct;
-import com.http200ok.finbuddy.product.dto.PagedResponseDto;
-import com.http200ok.finbuddy.product.dto.ProductDto;
-import com.http200ok.finbuddy.product.dto.RecommendedProductDto;
+import com.http200ok.finbuddy.product.dto.*;
 import com.http200ok.finbuddy.product.repository.DepositProductRepository;
 import com.http200ok.finbuddy.product.repository.SavingProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +52,20 @@ public class ProductServiceImpl implements ProductService {
         // Product → ProductDto 변환하여 페이징 응답 생성
         Page<ProductDto> dtoPage = products.map(ProductDto::new);
         return new PagedResponseDto<>(dtoPage);
+    }
+
+    @Override
+    public DepositProductDto getDepositProductById(Long productId) {
+        DepositProduct depositProduct = depositProductRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다. ID: " + productId));
+        return new DepositProductDto(depositProduct);
+    }
+
+    @Override
+    public SavingProductDto getSavingProductById(Long productId) {
+        SavingProduct savingProduct = savingProductRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("적금 상품을 찾을 수 없습니다. ID: " + productId));
+        return new SavingProductDto(savingProduct);
     }
 
     @Override

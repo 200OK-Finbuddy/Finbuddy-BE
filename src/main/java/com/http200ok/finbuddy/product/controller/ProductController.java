@@ -1,14 +1,9 @@
 package com.http200ok.finbuddy.product.controller;
 
-import com.http200ok.finbuddy.product.domain.DepositProduct;
 import com.http200ok.finbuddy.product.dto.*;
-import com.http200ok.finbuddy.product.service.DepositProductService;
+import com.http200ok.finbuddy.product.service.ProductFetchService;
 import com.http200ok.finbuddy.product.service.ProductService;
-import com.http200ok.finbuddy.product.service.SavingProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +15,7 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private final DepositProductService depositProductService;
-    private final SavingProductService savingProductService;
+    private final ProductFetchService productFetchService;
     private final ProductService productService;
 
     /**
@@ -29,7 +23,7 @@ public class ProductController {
      */
     @PostMapping("/deposits/fetch")
     public ResponseEntity<String> fetchDepositData() {
-        depositProductService.fetchAndSaveDepositProducts();
+        productFetchService.fetchAndSaveProducts("deposit");
         return ResponseEntity.ok("예금 데이터 저장 완료!");
     }
 
@@ -38,7 +32,7 @@ public class ProductController {
      */
     @PostMapping("/savings/fetch")
     public ResponseEntity<String> fetchSavingData() {
-        savingProductService.fetchAndSaveSavingProducts();
+        productFetchService.fetchAndSaveProducts("saving");
         return ResponseEntity.ok("적금 데이터 저장 완료!");
     }
 
@@ -62,7 +56,7 @@ public class ProductController {
      */
     @GetMapping("/deposit/{productId}")
     public ResponseEntity<DepositProductDto> getDepositProductById(@PathVariable("productId") Long productId) {
-        DepositProductDto depositProduct = depositProductService.getDepositProductById(productId);
+        DepositProductDto depositProduct = productService.getDepositProductById(productId);
         return ResponseEntity.ok(depositProduct);
     }
 
@@ -87,10 +81,13 @@ public class ProductController {
      */
     @GetMapping("/saving/{productId}")
     public ResponseEntity<SavingProductDto> getSavingProductById(@PathVariable("productId") Long productId) {
-        SavingProductDto savingProduct = savingProductService.getSavingProductById(productId);
+        SavingProductDto savingProduct = productService.getSavingProductById(productId);
         return ResponseEntity.ok(savingProduct);
     }
 
+    /**
+     * 추천 상품 조회
+     */
     @GetMapping("/recommendations")
     public ResponseEntity<List<RecommendedProductDto>> getRecommendedProducts() {
         List<RecommendedProductDto> response = productService.getTopRecommendedProducts();
