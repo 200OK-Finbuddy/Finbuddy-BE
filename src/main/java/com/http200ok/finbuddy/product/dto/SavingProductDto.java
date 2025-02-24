@@ -1,6 +1,7 @@
 package com.http200ok.finbuddy.product.dto;
 
 import com.http200ok.finbuddy.product.domain.SavingProduct;
+import com.http200ok.finbuddy.product.domain.SubscriptionRestriction;
 import lombok.Getter;
 
 import java.util.List;
@@ -29,7 +30,11 @@ public class SavingProductDto {
         this.subscriptionMethod = savingProduct.getSubscriptionMethod();
         this.maturityInterestRate = savingProduct.getMaturityInterestRate();
         this.specialCondition = savingProduct.getSpecialCondition();
-        this.subscriptionRestriction = savingProduct.getSubscriptionRestriction();
+
+        this.subscriptionRestriction = SubscriptionRestriction.getDescriptionByCode(
+                Integer.parseInt(savingProduct.getSubscriptionRestriction())
+        );
+
         this.subscriptionTarget = savingProduct.getSubscriptionTarget();
         this.additionalNotes = savingProduct.getAdditionalNotes();
         this.maximumLimit = savingProduct.getMaximumLimit();
