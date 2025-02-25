@@ -1,5 +1,6 @@
 package com.http200ok.finbuddy.account.domain;
 
+import com.http200ok.finbuddy.autotransfer.domain.AutoTransfer;
 import com.http200ok.finbuddy.bank.domain.Bank;
 import com.http200ok.finbuddy.member.domain.Member;
 import com.http200ok.finbuddy.product.domain.Product;
@@ -61,6 +62,9 @@ public class Account {
      */
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AutoTransfer> autoTransfers = new ArrayList<>();
 
     // 상품 참조 (보통예금은 null)
     @ManyToOne(fetch = FetchType.LAZY)
