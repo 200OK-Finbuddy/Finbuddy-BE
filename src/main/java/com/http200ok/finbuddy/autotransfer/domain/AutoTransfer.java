@@ -36,7 +36,7 @@ public class AutoTransfer {
     @Column(nullable = false)
     private Integer transferDay;
 
-    // 자동이체 상태 (ACTIVE, INACTIVE, CANCELLED)
+    // 자동이체 상태 (ACTIVE, INACTIVE)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AutoTransferStatus status;
@@ -56,4 +56,17 @@ public class AutoTransfer {
         autoTransfer.updatedAt = LocalDateTime.now();
         return autoTransfer;
     }
+
+    // Status 변경 메서드
+    public void toggleActiveStatus() {
+        if (this.status == AutoTransferStatus.ACTIVE) {
+            this.status = AutoTransferStatus.INACTIVE;
+        } else if (this.status == AutoTransferStatus.INACTIVE) {
+            this.status = AutoTransferStatus.ACTIVE;
+        } else {
+            throw new IllegalStateException("취소된 자동이체는 활성화할 수 없습니다.");
+        }
+        this.updatedAt = LocalDateTime.now();
+    }
+
 }

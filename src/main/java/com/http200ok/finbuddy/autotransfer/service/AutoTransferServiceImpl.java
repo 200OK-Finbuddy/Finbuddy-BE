@@ -45,4 +45,14 @@ public class AutoTransferServiceImpl implements AutoTransferService {
     public List<AutoTransfer> getAutoTransfersByMember(Long memberId) {
         return autoTransferRepository.findByAccount_Member_Id(memberId);
     }
+
+    // 자동이체 상태 변경
+    @Override
+    @Transactional
+    public void toggleAutoTransferStatus(Long autoTransferId) {
+        AutoTransfer autoTransfer = autoTransferRepository.findById(autoTransferId)
+                .orElseThrow(() -> new EntityNotFoundException("자동이체 정보가 없습니다."));
+
+        autoTransfer.toggleActiveStatus();
+    }
 }

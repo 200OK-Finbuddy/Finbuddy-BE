@@ -7,4 +7,5 @@ import java.util.List;
 public interface AutoTransferService {
     AutoTransfer createAutoTransfers(Long fromAccountId, String targetAccountNumber, Long amount, Integer transferDay);
     List<AutoTransfer> getAutoTransfersByMember(Long memberId);
+    void toggleAutoTransferStatus(Long autoTransferId);
 }

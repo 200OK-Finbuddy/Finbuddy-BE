@@ -45,4 +45,11 @@ public class AutoTransferController {
 
         return ResponseEntity.ok(responseList);
     }
+
+    // 자동이체 상태 변경(활성/비활성화 토글)
+    @PatchMapping("/{autoTransferId}/toggle-status")
+    public ResponseEntity<Void> toggleAutoTransferStatus(@PathVariable("autoTransferId") Long autoTransferId) {
+        autoTransferService.toggleAutoTransferStatus(autoTransferId);
+        return ResponseEntity.noContent().build();
+    }
 }
