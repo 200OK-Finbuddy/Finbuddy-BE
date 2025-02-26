@@ -20,16 +20,16 @@ public class Notification {
     @Column(name = "notification_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "budget_id")
     private Budget budget;
 
     @Column(nullable = false)
-    private String message;
+    private String content;
 
     private Boolean isRead;
     private LocalDateTime createdAt;

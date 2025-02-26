@@ -2,6 +2,8 @@ package com.http200ok.finbuddy.transaction.repository;
 
 import com.http200ok.finbuddy.category.dto.CategoryExpenseDto;
 import com.http200ok.finbuddy.transaction.domain.Transaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,6 +12,7 @@ import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
+    // 특정 유저의 입출금 계좌에 한하여 거래 내역 최신순으로 반환
     @Query("""
         SELECT t FROM Transaction t
         JOIN t.account a
@@ -18,7 +21,20 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
         AND a.accountType = 'CHECKING'
         ORDER BY t.transactionDate DESC
     """)
-    List<Transaction> findLatestTransactionsForUserCheckingAccounts(@Param("memberId") Long memberId);
+    Page<Transaction> findLatestTransactionsForUserCheckingAccounts(@Param("memberId") Long memberId, Pageable pageable);
+
+    // 특정 유저의 입출금 게좌에 한하여 당월 출금 내역 합산
+    @Query("""
+    SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t
+    JOIN t.account a
+    JOIN a.member m
+    WHERE m.id = :memberId
+    AND a.accountType = 'CHECKING'
+    AND t.transactionType = 2
+    AND FUNCTION('YEAR', t.transactionDate) = FUNCTION('YEAR', CURRENT_DATE)
+    AND FUNCTION('MONTH', t.transactionDate) = FUNCTION('MONTH', CURRENT_DATE)
+    """)
+    Long getTotalSpendingForCurrentMonth(@Param("memberId") Long memberId);
 
     // 특정 연-월, 특정 memberId의 Checking 계좌 트랜잭션 조회
     @Query("""

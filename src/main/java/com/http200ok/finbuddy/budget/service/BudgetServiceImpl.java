@@ -2,6 +2,7 @@ package com.http200ok.finbuddy.budget.service;
 
 import com.http200ok.finbuddy.budget.domain.Budget;
 import com.http200ok.finbuddy.budget.domain.PeriodType;
+import com.http200ok.finbuddy.budget.dto.BudgetResponseDto;
 import com.http200ok.finbuddy.budget.repository.BudgetRepository;
 import com.http200ok.finbuddy.member.domain.Member;
 import com.http200ok.finbuddy.member.repository.MemberRepository;
@@ -11,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,5 +49,18 @@ public class BudgetServiceImpl implements BudgetService{
 
         budget.setBudget(newAmount);
         return budget.getId(); // Budget 대신 ID만 반환
+    }
+
+    // 현재 월의 예산 조회 (내부 로직용 - Entity 반환)
+    @Override
+    public Optional<Budget> getCurrentMonthBudget(Long memberId) {
+        LocalDate now = LocalDate.now();
+        return budgetRepository.findByMemberIdAndStartDate(memberId, now.withDayOfMonth(1));
+    }
+
+    // 현재 월의 예산 조회 (화면 반환용 - DTO 변환)
+    @Override
+    public Optional<BudgetResponseDto> getCurrentMonthBudgetDto(Long memberId) {
+        return getCurrentMonthBudget(memberId).map(BudgetResponseDto::fromEntity);
     }
 }

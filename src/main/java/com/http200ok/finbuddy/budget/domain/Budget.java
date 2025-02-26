@@ -26,8 +26,8 @@ public class Budget {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -41,8 +41,8 @@ public class Budget {
         budget.member = member;
         budget.budget = amount;
         budget.periodType = periodType;
-        budget.startDate = startDate.atStartOfDay();
-        budget.endDate = endDate.atTime(LocalTime.MAX);
+        budget.startDate = startDate;
+        budget.endDate = endDate;
         return budget;
     }
 }
