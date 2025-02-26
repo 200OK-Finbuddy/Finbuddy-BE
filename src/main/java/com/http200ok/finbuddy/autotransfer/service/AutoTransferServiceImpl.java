@@ -46,6 +46,13 @@ public class AutoTransferServiceImpl implements AutoTransferService {
         return autoTransferRepository.findByAccount_Member_Id(memberId);
     }
 
+    // 자동이체 정보 조회
+    @Transactional(readOnly = true)
+    public AutoTransfer getAutoTransferById(Long autoTransferId) {
+        return autoTransferRepository.findById(autoTransferId)
+                .orElseThrow(() -> new EntityNotFoundException("자동이체 정보를 찾을 수 없습니다."));
+    }
+
     // 자동이체 정보 수정(금액 날짜)
     @Override
     @Transactional

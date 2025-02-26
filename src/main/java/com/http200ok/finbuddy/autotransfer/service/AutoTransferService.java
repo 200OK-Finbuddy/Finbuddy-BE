@@ -10,6 +10,7 @@ public interface AutoTransferService {
     AutoTransfer createAutoTransfers(Long fromAccountId, String targetAccountNumber, Long amount, Integer transferDay);
     List<AutoTransfer> getAutoTransfersByMember(Long memberId);
 
+    AutoTransfer getAutoTransferById(Long autoTransferId);
     void updateAutoTransfer(Long autoTransferId, AutoTransferUpdateRequestDto requestDto);
     void toggleAutoTransferStatus(Long autoTransferId);
     void deleteAutoTransfer(Long autoTransferId);
