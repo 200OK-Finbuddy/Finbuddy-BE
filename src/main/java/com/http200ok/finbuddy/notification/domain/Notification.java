@@ -3,16 +3,16 @@ package com.http200ok.finbuddy.notification.domain;
 import com.http200ok.finbuddy.budget.domain.Budget;
 import com.http200ok.finbuddy.member.domain.Member;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Entity
 @Getter
 @Setter
-@Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Notification {
 
     @Id
@@ -31,6 +31,14 @@ public class Notification {
     @Column(nullable = false)
     private String content;
 
-    private Boolean isRead;
+    @Builder.Default
+    private Boolean isRead = false;
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

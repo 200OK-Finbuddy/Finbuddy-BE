@@ -2,6 +2,7 @@ package com.http200ok.finbuddy.transaction.service;
 
 import com.http200ok.finbuddy.budget.service.BudgetService;
 import com.http200ok.finbuddy.category.dto.CategoryExpenseDto;
+import com.http200ok.finbuddy.notification.service.NotificationService;
 import com.http200ok.finbuddy.transaction.domain.Transaction;
 import com.http200ok.finbuddy.transaction.dto.CheckingAccountTransactionResponseDto;
 import com.http200ok.finbuddy.transaction.repository.TransactionRepository;
@@ -21,6 +22,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final BudgetService budgetService;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional(readOnly = true)
@@ -77,7 +79,9 @@ public class TransactionServiceImpl implements TransactionService {
                 .ifPresent(budget -> {
                     Long totalSpending = transactionRepository.getTotalSpendingForCurrentMonth(memberId);
                     if (totalSpending > budget.getBudget()) {
-                        // notificationService.sendBudgetExceededNotification(budget.getMember());
+                        notificationService.sendBudgetExceededNotification(
+                                budget.getMember(), budget, "예산을 초과하였습니다."
+                        );
                         System.out.println("예산초과");
                     } else {
                         System.out.println("예산이하");
