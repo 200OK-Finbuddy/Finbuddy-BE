@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin
+//@CrossOrigin
 @RestController
 @RequestMapping("/api/autotransfer")
 @RequiredArgsConstructor
@@ -46,6 +46,13 @@ public class AutoTransferController {
 
         return ResponseEntity.ok(responseList);
     }
+
+    @GetMapping("/{autoTransferId}")
+    public ResponseEntity<AutoTransferResponseDto> getAutoTransferById(@PathVariable("autoTransferId") Long autoTransferId) {
+        AutoTransfer autoTransfer = autoTransferService.getAutoTransferById(autoTransferId);
+        return ResponseEntity.ok(new AutoTransferResponseDto(autoTransfer));
+    }
+
 
     // 자동이체 정보 수정(금액, 날짜)
     @PatchMapping("/{autoTransferId}")
