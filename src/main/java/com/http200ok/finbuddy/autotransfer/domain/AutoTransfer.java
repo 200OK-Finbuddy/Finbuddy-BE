@@ -57,6 +57,13 @@ public class AutoTransfer {
         return autoTransfer;
     }
 
+    // 자동이체 정보 수정 메서드
+    public void updateTransferInfo(Long amount, Integer transferDay) {
+        this.amount = amount;
+        this.transferDay = transferDay;
+        this.updatedAt = LocalDateTime.now();
+    }
+
     // Status 변경 메서드
     public void toggleActiveStatus() {
         if (this.status == AutoTransferStatus.ACTIVE) {

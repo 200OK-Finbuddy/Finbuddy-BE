@@ -3,10 +3,10 @@ package com.http200ok.finbuddy.autotransfer.service;
 import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
 import com.http200ok.finbuddy.autotransfer.domain.AutoTransfer;
+import com.http200ok.finbuddy.autotransfer.dto.AutoTransferUpdateRequestDto;
 import com.http200ok.finbuddy.autotransfer.repository.AutoTransferRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,13 +46,30 @@ public class AutoTransferServiceImpl implements AutoTransferService {
         return autoTransferRepository.findByAccount_Member_Id(memberId);
     }
 
+    // 자동이체 정보 수정(금액 날짜)
+    @Override
+    @Transactional
+    public void updateAutoTransfer(Long autoTransferId, AutoTransferUpdateRequestDto requestDto) {
+        AutoTransfer autoTransfer = autoTransferRepository.findById(autoTransferId)
+                .orElseThrow(() -> new EntityNotFoundException("자동이체 정보를 찾을 수 없습니다."));
+
+        autoTransfer.updateTransferInfo(requestDto.getAmount(), requestDto.getTransferDay());
+    }
     // 자동이체 상태 변경
     @Override
     @Transactional
     public void toggleAutoTransferStatus(Long autoTransferId) {
         AutoTransfer autoTransfer = autoTransferRepository.findById(autoTransferId)
-                .orElseThrow(() -> new EntityNotFoundException("자동이체 정보가 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("자동이체 정보를 찾을 수 없습니다."));
 
         autoTransfer.toggleActiveStatus();
+    }
+
+    @Override
+    public void deleteAutoTransfer(Long autoTransferId) {
+        AutoTransfer autoTransfer = autoTransferRepository.findById(autoTransferId)
+                .orElseThrow(() -> new EntityNotFoundException("자동이체 정보가 존재하지 않습니다."));
+
+        autoTransferRepository.delete(autoTransfer);
     }
 }

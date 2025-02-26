@@ -3,6 +3,7 @@ package com.http200ok.finbuddy.autotransfer.controller;
 import com.http200ok.finbuddy.autotransfer.domain.AutoTransfer;
 import com.http200ok.finbuddy.autotransfer.dto.AutoTransferCreateRequestDto;
 import com.http200ok.finbuddy.autotransfer.dto.AutoTransferResponseDto;
+import com.http200ok.finbuddy.autotransfer.dto.AutoTransferUpdateRequestDto;
 import com.http200ok.finbuddy.autotransfer.service.AutoTransferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -46,10 +47,26 @@ public class AutoTransferController {
         return ResponseEntity.ok(responseList);
     }
 
+    // 자동이체 정보 수정(금액, 날짜)
+    @PatchMapping("/{autoTransferId}")
+    public ResponseEntity<Void> updateAutoTransfer(
+            @PathVariable("autoTransferId") Long autoTransferId,
+            @RequestBody AutoTransferUpdateRequestDto requestDto) {
+        autoTransferService.updateAutoTransfer(autoTransferId, requestDto);
+        return ResponseEntity.noContent().build();
+    }
+
     // 자동이체 상태 변경(활성/비활성화 토글)
     @PatchMapping("/{autoTransferId}/toggle-status")
     public ResponseEntity<Void> toggleAutoTransferStatus(@PathVariable("autoTransferId") Long autoTransferId) {
         autoTransferService.toggleAutoTransferStatus(autoTransferId);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 자동이체 정보 삭제
+    @DeleteMapping("/{autoTransferId}")
+    public ResponseEntity<Void> deleteAutoTransfer(@PathVariable("autoTransferId") Long autoTransferId) {
+        autoTransferService.deleteAutoTransfer(autoTransferId);
         return ResponseEntity.noContent().build();
     }
 }
