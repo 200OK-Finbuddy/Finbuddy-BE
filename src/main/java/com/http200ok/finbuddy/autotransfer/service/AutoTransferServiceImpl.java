@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AutoTransferServiceImpl implements AutoTransferService {
@@ -35,5 +37,12 @@ public class AutoTransferServiceImpl implements AutoTransferService {
         );
 
         return autoTransferRepository.save(autoTransfer);
+    }
+
+    // 특정 회원의 자동이체 목록 조회
+    @Override
+    @Transactional(readOnly = true)
+    public List<AutoTransfer> getAutoTransfersByMember(Long memberId) {
+        return autoTransferRepository.findByAccount_Member_Id(memberId);
     }
 }

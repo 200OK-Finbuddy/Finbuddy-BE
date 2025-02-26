@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -33,4 +34,15 @@ public class AutoTransferController {
         return ResponseEntity.ok(new AutoTransferResponseDto(autoTransfer));
     }
 
+
+    // 특정 회원의 자동이체 목록 조회 API
+    @GetMapping("/list/{memberId}")
+    public ResponseEntity<List<AutoTransferResponseDto>> getAutoTransfersByMember(@PathVariable("memberId") Long memberId) {
+        List<AutoTransferResponseDto> responseList = autoTransferService.getAutoTransfersByMember(memberId)
+                .stream()
+                .map(AutoTransferResponseDto::new)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(responseList);
+    }
 }
