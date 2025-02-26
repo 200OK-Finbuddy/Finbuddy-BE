@@ -31,5 +31,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     """)
     List<Account> findCheckingAccountsByMemberId(@Param("memberId") Long memberId);
 
+
+    // 계좌번호로 계좌 조회
+    Optional<Account> findByAccountNumber(String accountNumber);
 }
 

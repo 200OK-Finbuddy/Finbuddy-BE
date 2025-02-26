@@ -2,14 +2,16 @@ package com.http200ok.finbuddy.autotransfer.domain;
 
 import com.http200ok.finbuddy.account.domain.Account;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AutoTransfer {
 
     @Id
@@ -24,7 +26,7 @@ public class AutoTransfer {
 
     // 입금 계좌
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", nullable = false)
+    @JoinColumn(name = "target_account_id", nullable = false)
     private Account targetAccount;
 
     @Column(nullable = false)
@@ -39,6 +41,19 @@ public class AutoTransfer {
     @Column(nullable = false)
     private AutoTransferStatus status;
 
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    // 생성 메서드
+    public static AutoTransfer createAutoTransfer(Account account, Account targetAccount, Long amount, Integer transferDay) {
+        AutoTransfer autoTransfer = new AutoTransfer();
+        autoTransfer.account = account;
+        autoTransfer.targetAccount = targetAccount;
+        autoTransfer.amount = amount;
+        autoTransfer.transferDay = transferDay;
+        autoTransfer.status = AutoTransferStatus.ACTIVE;
+        autoTransfer.createdAt = LocalDateTime.now();
+        autoTransfer.updatedAt = LocalDateTime.now();
+        return autoTransfer;
+    }
 }
