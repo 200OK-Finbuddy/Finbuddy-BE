@@ -1,7 +1,7 @@
-package com.http200ok.finbuddy.autotransfer.repository;
+package com.http200ok.finbuddy.transfer.repository;
 
-import com.http200ok.finbuddy.autotransfer.domain.AutoTransfer;
-import com.http200ok.finbuddy.autotransfer.domain.AutoTransferStatus;
+import com.http200ok.finbuddy.transfer.domain.AutoTransfer;
+import com.http200ok.finbuddy.transfer.domain.AutoTransferStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

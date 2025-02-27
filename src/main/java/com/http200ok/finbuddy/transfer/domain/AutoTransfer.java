@@ -1,4 +1,4 @@
-package com.http200ok.finbuddy.autotransfer.domain;
+package com.http200ok.finbuddy.transfer.domain;
 
 import com.http200ok.finbuddy.account.domain.Account;
 import jakarta.persistence.*;

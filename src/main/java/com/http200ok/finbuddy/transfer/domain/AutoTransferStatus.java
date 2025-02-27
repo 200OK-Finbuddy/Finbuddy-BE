@@ -1,4 +1,4 @@
-package com.http200ok.finbuddy.autotransfer.domain;
+package com.http200ok.finbuddy.transfer.domain;
 
 public enum AutoTransferStatus {
     ACTIVE, // 자동이체 진행중

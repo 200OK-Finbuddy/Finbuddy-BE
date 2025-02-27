@@ -1,6 +1,5 @@
-package com.http200ok.finbuddy.autotransfer.dto;
+package com.http200ok.finbuddy.transfer.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

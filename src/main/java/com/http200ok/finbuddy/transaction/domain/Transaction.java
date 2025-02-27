@@ -40,4 +40,21 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    // 생성 메소드
+    public static Transaction createTransaction(Account account, String opponentName, Long amount, Integer transactionType, Category category) {
+        if (transactionType != 1 && transactionType != 2) {
+            throw new IllegalArgumentException("유효하지 않은 거래 타입입니다. (1: 입금, 2: 출금)");
+        }
+
+        Transaction transaction = new Transaction();
+        transaction.setAccount(account);
+        transaction.setOpponentName(opponentName);
+        transaction.setTransactionType(transactionType);
+        transaction.setAmount(amount);
+        transaction.setUpdatedBalance(account.getBalance());
+        transaction.setTransactionDate(LocalDateTime.now());
+        transaction.setCategory(category);
+        return transaction;
+    }
 }

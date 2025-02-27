@@ -1,6 +1,6 @@
-package com.http200ok.finbuddy.autotransfer.dto;
+package com.http200ok.finbuddy.transfer.dto;
 
-import com.http200ok.finbuddy.autotransfer.domain.AutoTransfer;
+import com.http200ok.finbuddy.transfer.domain.AutoTransfer;
 import lombok.Getter;
 
 @Getter

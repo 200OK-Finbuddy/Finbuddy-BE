@@ -2,14 +2,10 @@ package com.http200ok.finbuddy.account.dto;
 
 import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.account.domain.AccountType;
-import com.http200ok.finbuddy.transaction.dto.TransactionResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
