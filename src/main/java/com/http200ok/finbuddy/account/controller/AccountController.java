@@ -1,7 +1,6 @@
 package com.http200ok.finbuddy.account.controller;
 
 import com.http200ok.finbuddy.account.dto.AccountDetailsResponse;
-import com.http200ok.finbuddy.account.dto.AccountResponseDto;
 import com.http200ok.finbuddy.account.dto.AccountSummaryResponseDto;
 import com.http200ok.finbuddy.account.dto.CheckingAccountsSummaryResponseDto;
 import com.http200ok.finbuddy.account.service.AccountService;
