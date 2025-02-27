@@ -101,4 +101,45 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("year") int year,
             @Param("month") int month
     );
+
+
+    // 특정 연-월 계좌 별로 전체 지출 amount 합계 조회
+    @Query("""
+            SELECT CAST(COALESCE(SUM(t.amount), 0) AS long)
+            FROM Transaction t
+            WHERE t.transactionType = 2
+            AND t.account.member.id = :memberId
+            AND t.account.id = :accountId
+            AND FUNCTION('YEAR', t.transactionDate) = :year
+            AND FUNCTION('MONTH', t.transactionDate) = :month
+            """)
+    Long getTotalSpendingForMonth(
+            @Param("memberId") Long memberId,
+            @Param("accountId") Long accountId,
+            @Param("year") int year,
+            @Param("month") int month
+    );
+
+    // 특정 연-월의 계좌에서 카테고리별 거래 금액 합계 조회
+    @Query("""
+            SELECT NEW com.http200ok.finbuddy.category.dto.CategoryExpenseDto(
+                t.category.name,
+                CAST(COALESCE(SUM(t.amount), 0) AS long),
+                0.0)
+            FROM Transaction t
+            JOIN t.account a
+            JOIN a.member m
+            WHERE t.transactionType = 2
+            AND m.id = :memberId
+            AND a.id = :accountId
+            AND YEAR(t.transactionDate) = :year
+            AND MONTH(t.transactionDate) = :month
+            GROUP BY t.category.name
+            """)
+    List<CategoryExpenseDto> getTotalSpendingByCategoryForMonth(
+            @Param("memberId") Long memberId,
+            @Param("accountId") Long accountId,
+            @Param("year") int year,
+            @Param("month") int month
+    );
 }

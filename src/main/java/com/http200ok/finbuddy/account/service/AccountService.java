@@ -9,5 +9,5 @@ import java.util.List;
 public interface AccountService {
     AccountDetailsResponse getAccountDetails(Long memberId, Long accountId);
     CheckingAccountsSummaryResponseDto getCheckingAccountsSummary(Long memberId);
-    // List<AccountSummaryResponseDto> getAccountsByMemberId(Long memberId);
+    List<AccountSummaryResponseDto> getAccountsByMemberId(Long memberId);
 }

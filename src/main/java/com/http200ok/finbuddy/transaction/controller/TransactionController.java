@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/transactions")
 @RequiredArgsConstructor
@@ -38,6 +39,18 @@ public class TransactionController {
             @RequestParam("month") int month
     ) {
         List<CategoryExpenseDto> expenses = transactionService.categoryExpensesForMonth(memberId, year, month);
+        return ResponseEntity.ok(expenses);
+    }
+
+    // 카테고리별 지출 금액, 비율 조회(월, 계좌)
+    @GetMapping("/account-category-expense")
+    public ResponseEntity<List<CategoryExpenseDto>> getAccountCategoryExpense(
+            @RequestParam("memberId") Long memberId,
+            @RequestParam("accountId") Long accountId,
+            @RequestParam("year") int year,
+            @RequestParam("month") int month
+    ) {
+        List<CategoryExpenseDto> expenses = transactionService.categoryExpensesForAccountAndMonth(memberId, accountId, year, month);
         return ResponseEntity.ok(expenses);
     }
 

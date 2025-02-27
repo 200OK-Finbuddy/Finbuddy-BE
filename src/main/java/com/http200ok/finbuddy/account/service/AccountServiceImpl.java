@@ -1,9 +1,7 @@
 package com.http200ok.finbuddy.account.service;
 
 import com.http200ok.finbuddy.account.domain.Account;
-import com.http200ok.finbuddy.account.dto.AccountDetailsResponse;
-import com.http200ok.finbuddy.account.dto.AccountSummaryResponseDto;
-import com.http200ok.finbuddy.account.dto.CheckingAccountsSummaryResponseDto;
+import com.http200ok.finbuddy.account.dto.*;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 
@@ -46,11 +44,12 @@ public class AccountServiceImpl implements AccountService {
         return new CheckingAccountsSummaryResponseDto(totalBalance, top3Accounts);
     }
 
-//    @Override
-//    public List<AccountSummaryResponseDto> getAccountsByMemberId(Long memberId) {
-//        List<Account> accounts = accountRepository.findAccountsByMemberId(memberId);
-//        return accounts.stream()
-//                .map(AccountSummaryResponseDto::from)
-//                .collect(Collectors.toList());
-//    }
+    @Override
+    public List<AccountSummaryResponseDto> getAccountsByMemberId(Long memberId) {
+        List<Account> accounts = accountRepository.findAccountsByMemberId(memberId);
+        return accounts.stream()
+                .map(AccountSummaryResponseDto::from)
+                .collect(Collectors.toList());
+    }
+
 }

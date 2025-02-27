@@ -26,6 +26,13 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("""
         SELECT a FROM Account a 
         WHERE a.member.id = :memberId 
+        ORDER BY a.id
+    """)
+    List<Account> findAccountsByMemberId(@Param("memberId") Long memberId);
+
+    @Query("""
+        SELECT a FROM Account a 
+        WHERE a.member.id = :memberId 
         AND a.accountType = 'CHECKING' 
         ORDER BY a.id
     """)
