@@ -1,4 +1,4 @@
-package com.http200ok.finbuddy.product.dto;
+package com.http200ok.finbuddy.common.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +14,8 @@ public class PagedResponseDto<T> {
     private int size;
     private long totalElements;
     private int totalPages;
+    private boolean last;
+    private boolean empty;
 
     public PagedResponseDto(Page<T> page) {
         this.content = page.getContent();
@@ -21,5 +23,7 @@ public class PagedResponseDto<T> {
         this.size = page.getSize();
         this.totalElements = page.getTotalElements();
         this.totalPages = page.getTotalPages();
+        this.last = page.isLast();
+        this.empty = page.isEmpty();
     }
 }

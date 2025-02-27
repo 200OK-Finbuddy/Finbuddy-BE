@@ -1,5 +1,6 @@
 package com.http200ok.finbuddy.product.service;
 
+import com.http200ok.finbuddy.common.dto.PagedResponseDto;
 import com.http200ok.finbuddy.product.dto.*;
 
 import java.util.List;

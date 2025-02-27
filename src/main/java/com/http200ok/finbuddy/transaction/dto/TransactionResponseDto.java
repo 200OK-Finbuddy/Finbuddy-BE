@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransactionResponseDto {
-    private Long id;
+    private Long transactionId;
     private String opponentName;
-    private Integer transactionType;
+    private Integer transactionType; // 1: 입금, 2: 출금
     private Long amount;
     private Long updatedBalance;
     private LocalDateTime transactionDate;
@@ -28,7 +28,7 @@ public class TransactionResponseDto {
                 transaction.getAmount(),
                 transaction.getUpdatedBalance(),
                 transaction.getTransactionDate(),
-                transaction.getCategory().getCategoryName()
+                transaction.getCategory().getName()
         );
     }
 }

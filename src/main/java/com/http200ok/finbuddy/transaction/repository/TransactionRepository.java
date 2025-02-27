@@ -24,7 +24,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     """)
     Page<Transaction> findLatestTransactionsForUserCheckingAccounts(@Param("memberId") Long memberId, Pageable pageable);
 
-    // 특정 유저의 입출금 게좌에 한하여 당월 출금 내역 합산
+    // 특정 유저의 입출금 계좌에 한하여 당월 출금 내역 합산
     @Query("""
     SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t
     JOIN t.account a

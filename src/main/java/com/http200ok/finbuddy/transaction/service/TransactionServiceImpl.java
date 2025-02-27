@@ -8,7 +8,6 @@ import com.http200ok.finbuddy.notification.service.NotificationService;
 import com.http200ok.finbuddy.transaction.domain.Transaction;
 import com.http200ok.finbuddy.transaction.dto.CheckingAccountTransactionResponseDto;
 import com.http200ok.finbuddy.transaction.dto.TransactionResponseDto;
-import com.http200ok.finbuddy.transaction.dto.TransactionSearchConditionDto;
 import com.http200ok.finbuddy.transaction.repository.TransactionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collections;
@@ -100,29 +100,20 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Page<TransactionResponseDto> getTransactionsByAccountId(TransactionSearchConditionDto condition, Pageable pageable) {
-        Account account = accountRepository.findById(condition.getAccountId())
+    public Page<TransactionResponseDto> getTransactionsByAccountId(Long accountId, Long memberId, LocalDate startDate, LocalDate endDate, Integer transactionType, Pageable pageable) {
+
+        Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Account not found"));
 
-        if (!account.getMember().getId().equals(condition.getMemberId())) {
-            new AccessDeniedException("Unauthorized access");
+        if (!account.getMember().getId().equals(memberId)) {
+            new AccessDeniedException("Unauthorized access"); // 추후 throw 처리
         }
 
-        // LocalDate를 LocalDateTime으로 변환
-        LocalDateTime startDateTime = condition.getStartDate() != null
-                ? condition.getStartDate().atStartOfDay()
-                : null;
+        // LocalDate -> LocalDateTime 변환
+        LocalDateTime startDateTime = startDate != null ? startDate.atStartOfDay() : null;
+        LocalDateTime endDateTime = endDate != null ? endDate.atTime(LocalTime.MAX) : null;
 
-        LocalDateTime endDateTime = condition.getEndDate() != null
-                ? condition.getEndDate().atTime(LocalTime.MAX)
-                : null;
-
-        return transactionRepository.findTransactions(
-                condition.getAccountId(),
-                startDateTime,
-                endDateTime,
-                condition.getTransactionType(),
-                pageable
-        ).map(TransactionResponseDto::fromEntity);
+        return transactionRepository.findTransactions(accountId, startDateTime, endDateTime, transactionType, pageable)
+                .map(TransactionResponseDto::fromEntity);
     }
 }
