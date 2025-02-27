@@ -1,11 +1,14 @@
 package com.http200ok.finbuddy.account.controller;
 
 import com.http200ok.finbuddy.account.dto.AccountDetailsResponse;
-import com.http200ok.finbuddy.account.dto.CheckingAccountSummaryResponseDto;
+import com.http200ok.finbuddy.account.dto.AccountSummaryResponseDto;
+import com.http200ok.finbuddy.account.dto.CheckingAccountsSummaryResponseDto;
 import com.http200ok.finbuddy.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -23,8 +26,15 @@ public class AccountController {
     }
 
     @GetMapping("/checking/{memberId}")
-    public ResponseEntity<CheckingAccountSummaryResponseDto> getCheckingAccounts(@PathVariable("memberId") Long memberId) {
-        CheckingAccountSummaryResponseDto response = accountService.getCheckingAccountsSummary(memberId);
+    public ResponseEntity<CheckingAccountsSummaryResponseDto> getCheckingAccounts(@PathVariable("memberId") Long memberId) {
+        CheckingAccountsSummaryResponseDto response = accountService.getCheckingAccountsSummary(memberId);
         return ResponseEntity.ok(response);
     }
+
+//    @GetMapping("/member/{memberId}")
+//    public ResponseEntity<List<AccountSummaryResponseDto>> getAccountsByMember(@PathVariable("memberId") Long memberId) {
+//        List<AccountSummaryResponseDto> accounts = accountService.getAccountsByMemberId(memberId);
+//        return ResponseEntity.ok(accounts);
+//    }
+
 }

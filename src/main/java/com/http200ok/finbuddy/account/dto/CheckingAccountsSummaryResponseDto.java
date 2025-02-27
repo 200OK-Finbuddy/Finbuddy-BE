@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class CheckingAccountSummaryResponseDto {
+public class CheckingAccountsSummaryResponseDto {
     private Long totalBalance;
     private List<AccountSummaryResponseDto> top3Accounts;
 }

@@ -2,8 +2,8 @@ package com.http200ok.finbuddy.account.service;
 
 import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.account.dto.AccountDetailsResponse;
-import com.http200ok.finbuddy.account.dto.CheckingAccountResponseDto;
-import com.http200ok.finbuddy.account.dto.CheckingAccountSummaryResponseDto;
+import com.http200ok.finbuddy.account.dto.AccountSummaryResponseDto;
+import com.http200ok.finbuddy.account.dto.CheckingAccountsSummaryResponseDto;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public CheckingAccountSummaryResponseDto getCheckingAccountsSummary(Long memberId) {
+    public CheckingAccountsSummaryResponseDto getCheckingAccountsSummary(Long memberId) {
         // 모든 CheckingAccount 가져오기
         List<Account> checkingAccounts = accountRepository.findCheckingAccountsByMemberId(memberId);
 
@@ -38,17 +38,19 @@ public class AccountServiceImpl implements AccountService {
                 .sum();
 
         // 계좌 ID로 정렬된 리스트에서 상위 3개만 가져오기
-        List<CheckingAccountResponseDto> top3Accounts = checkingAccounts.stream()
+        List<AccountSummaryResponseDto> top3Accounts = checkingAccounts.stream()
                 .limit(3)
-                .map(account -> new CheckingAccountResponseDto(
-                        account.getId(),
-                        account.getAccountName(),
-                        account.getBank().getLogoUrl(),
-                        account.getAccountNumber(),
-                        account.getBalance()
-                ))
+                .map(AccountSummaryResponseDto::from)
                 .collect(Collectors.toList());
 
-        return new CheckingAccountSummaryResponseDto(totalBalance, top3Accounts);
+        return new CheckingAccountsSummaryResponseDto(totalBalance, top3Accounts);
     }
+
+//    @Override
+//    public List<AccountSummaryResponseDto> getAccountsByMemberId(Long memberId) {
+//        List<Account> accounts = accountRepository.findAccountsByMemberId(memberId);
+//        return accounts.stream()
+//                .map(AccountSummaryResponseDto::from)
+//                .collect(Collectors.toList());
+//    }
 }
