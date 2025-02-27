@@ -3,8 +3,10 @@ package com.http200ok.finbuddy.account.service;
 import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.account.dto.*;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,11 +20,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDetailsResponse getAccountDetails(Long memberId, Long accountId) {
-        Account account = accountRepository.findAccountWithTransactions(accountId, memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 계좌를 찾을 수 없습니다."));
-        return new AccountDetailsResponse(account);
+    public AccountResponseDto getAccountDetails(Long memberId, Long accountId) {
 
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new EntityNotFoundException("Account not found"));
+
+        if (!account.getMember().getId().equals(memberId)) {
+            new AccessDeniedException("Unauthorized access"); // 추후 throw 처리
+        }
+
+        return AccountResponseDto.from(account);
     }
 
     @Override

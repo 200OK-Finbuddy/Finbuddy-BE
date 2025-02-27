@@ -1,6 +1,6 @@
 package com.http200ok.finbuddy.account.controller;
 
-import com.http200ok.finbuddy.account.dto.AccountDetailsResponse;
+import com.http200ok.finbuddy.account.dto.AccountResponseDto;
 import com.http200ok.finbuddy.account.dto.AccountSummaryResponseDto;
 import com.http200ok.finbuddy.account.dto.CheckingAccountsSummaryResponseDto;
 import com.http200ok.finbuddy.account.service.AccountService;
@@ -18,11 +18,10 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    @GetMapping("/{memberId}/{accountId}")
-    public ResponseEntity<AccountDetailsResponse> getAccountDetails(@PathVariable("memberId") Long memberId,
-                                                                    @PathVariable("accountId") Long accountId) {
-        AccountDetailsResponse response = accountService.getAccountDetails(memberId, accountId);
-        return ResponseEntity.ok(response);
+    @GetMapping("/{accountId}")
+    public ResponseEntity<AccountResponseDto> getAccountDetails(@PathVariable("accountId") Long accountId, @RequestParam("memberId") Long memberId) {
+        AccountResponseDto accountResponse = accountService.getAccountDetails(memberId, accountId);
+        return ResponseEntity.ok(accountResponse);
     }
 
     @GetMapping("/checking/{memberId}")
