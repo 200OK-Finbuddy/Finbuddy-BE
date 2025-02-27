@@ -55,7 +55,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     // 특정 연-월의 Checking 계좌에서 카테고리별 거래 금액 합계 조회
     @Query("""
             SELECT NEW com.http200ok.finbuddy.category.dto.CategoryExpenseDto(
-                t.category.categoryName,
+                t.category.name,
                 CAST(COALESCE(SUM(t.amount), 0) AS long),
                 0.0)
             FROM Transaction t
@@ -66,7 +66,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             AND a.accountType = 'CHECKING'
             AND YEAR(t.transactionDate) = :year
             AND MONTH(t.transactionDate) = :month
-            GROUP BY t.category.categoryName
+            GROUP BY t.category.name
             """)
     List<CategoryExpenseDto> sumAmountByCategoryForMonth(
             @Param("memberId") Long memberId,
