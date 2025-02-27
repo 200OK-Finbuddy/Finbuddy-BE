@@ -21,6 +21,6 @@ public class TransactionResponse {
         this.amount = transaction.getAmount();
         this.updatedBalance = transaction.getUpdatedBalance();
         this.transactionDate = transaction.getTransactionDate();
-        this.categoryName = transaction.getCategory().getCategoryName();
+        this.categoryName = transaction.getCategory().getName();
     }
 }
