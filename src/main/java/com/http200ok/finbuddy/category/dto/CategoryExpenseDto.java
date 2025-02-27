@@ -1,8 +1,6 @@
 package com.http200ok.finbuddy.category.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 //@NoArgsConstructor

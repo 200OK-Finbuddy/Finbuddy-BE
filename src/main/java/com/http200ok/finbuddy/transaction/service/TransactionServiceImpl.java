@@ -81,7 +81,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .map(dto -> new CategoryExpenseDto(
                         dto.getCategoryName(),
                         dto.getTotalAmount(),
-                        totalAmount > 0 ? (dto.getPercentage().doubleValue() / totalAmount.doubleValue()) * 100.0 : 0.0
+                        totalAmount > 0 ? (dto.getTotalAmount().doubleValue() / totalAmount.doubleValue()) * 100.0 : 0.0
                 ))
                 .collect(Collectors.toList());
     }
