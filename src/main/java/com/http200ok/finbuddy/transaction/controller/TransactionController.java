@@ -2,8 +2,14 @@ package com.http200ok.finbuddy.transaction.controller;
 
 import com.http200ok.finbuddy.category.dto.CategoryExpenseDto;
 import com.http200ok.finbuddy.transaction.dto.CheckingAccountTransactionResponseDto;
+import com.http200ok.finbuddy.transaction.dto.TransactionResponseDto;
+import com.http200ok.finbuddy.transaction.dto.TransactionSearchConditionDto;
 import com.http200ok.finbuddy.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,5 +38,12 @@ public class TransactionController {
     ) {
         List<CategoryExpenseDto> expenses = transactionService.categoryExpensesForMonth(memberId, year, month);
         return ResponseEntity.ok(expenses);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<TransactionResponseDto>> getTransactionsByAccountId(
+            @ModelAttribute TransactionSearchConditionDto condition,
+            @PageableDefault(page = 0, size = 10, sort = "transactionDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(transactionService.getTransactionsByAccountId(condition, pageable));
     }
 }

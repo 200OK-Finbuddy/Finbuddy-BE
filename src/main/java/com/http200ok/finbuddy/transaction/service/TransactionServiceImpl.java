@@ -1,17 +1,26 @@
 package com.http200ok.finbuddy.transaction.service;
 
+import com.http200ok.finbuddy.account.domain.Account;
+import com.http200ok.finbuddy.account.repository.AccountRepository;
 import com.http200ok.finbuddy.budget.service.BudgetService;
 import com.http200ok.finbuddy.category.dto.CategoryExpenseDto;
 import com.http200ok.finbuddy.notification.service.NotificationService;
 import com.http200ok.finbuddy.transaction.domain.Transaction;
 import com.http200ok.finbuddy.transaction.dto.CheckingAccountTransactionResponseDto;
+import com.http200ok.finbuddy.transaction.dto.TransactionResponseDto;
+import com.http200ok.finbuddy.transaction.dto.TransactionSearchConditionDto;
 import com.http200ok.finbuddy.transaction.repository.TransactionRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.AccessDeniedException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +32,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final BudgetService budgetService;
     private final NotificationService notificationService;
+    private final AccountRepository accountRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -87,5 +97,32 @@ public class TransactionServiceImpl implements TransactionService {
                         System.out.println("예산이하");
                     }
                 });
+    }
+
+    @Override
+    public Page<TransactionResponseDto> getTransactionsByAccountId(TransactionSearchConditionDto condition, Pageable pageable) {
+        Account account = accountRepository.findById(condition.getAccountId())
+                .orElseThrow(() -> new EntityNotFoundException("Account not found"));
+
+        if (!account.getMember().getId().equals(condition.getMemberId())) {
+            new AccessDeniedException("Unauthorized access");
+        }
+
+        // LocalDate를 LocalDateTime으로 변환
+        LocalDateTime startDateTime = condition.getStartDate() != null
+                ? condition.getStartDate().atStartOfDay()
+                : null;
+
+        LocalDateTime endDateTime = condition.getEndDate() != null
+                ? condition.getEndDate().atTime(LocalTime.MAX)
+                : null;
+
+        return transactionRepository.findTransactions(
+                condition.getAccountId(),
+                startDateTime,
+                endDateTime,
+                condition.getTransactionType(),
+                pageable
+        ).map(TransactionResponseDto::fromEntity);
     }
 }

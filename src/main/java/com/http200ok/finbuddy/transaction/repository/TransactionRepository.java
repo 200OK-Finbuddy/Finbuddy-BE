@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
@@ -35,6 +36,16 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     AND FUNCTION('MONTH', t.transactionDate) = FUNCTION('MONTH', CURRENT_DATE)
     """)
     Long getTotalSpendingForCurrentMonth(@Param("memberId") Long memberId);
+
+    @Query("SELECT t FROM Transaction t WHERE t.account.id = :accountId"
+            + " AND (:startDate IS NULL OR t.transactionDate >= :startDate)"
+            + " AND (:endDate IS NULL OR t.transactionDate <= :endDate)"
+            + " AND (:transactionType IS NULL OR t.transactionType = :transactionType)")
+    Page<Transaction> findTransactions(@Param("accountId") Long accountId,
+                                       @Param("startDate") LocalDateTime startDate,
+                                       @Param("endDate") LocalDateTime endDate,
+                                       @Param("transactionType") Integer transactionType,
+                                       Pageable pageable);
 
     // 특정 연-월, 특정 memberId의 Checking 계좌 트랜잭션 조회
     @Query("""
