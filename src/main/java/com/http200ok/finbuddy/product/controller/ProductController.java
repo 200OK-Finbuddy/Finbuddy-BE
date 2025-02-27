@@ -1,5 +1,6 @@
 package com.http200ok.finbuddy.product.controller;
 
+import com.http200ok.finbuddy.common.dto.PagedResponseDto;
 import com.http200ok.finbuddy.product.dto.*;
 import com.http200ok.finbuddy.product.service.ProductFetchService;
 import com.http200ok.finbuddy.product.service.ProductService;
