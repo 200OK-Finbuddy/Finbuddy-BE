@@ -9,4 +9,5 @@ public interface TransactionService {
     List<CheckingAccountTransactionResponseDto> getLatestTransactionsForUserCheckingAccounts(Long memberId);
     List<CategoryExpenseDto> categoryExpensesForMonth(Long memberId, int year, int month);
     void checkAndNotifyBudgetExceededOnTransaction(Long memberId);
+    List<CategoryExpenseDto> categoryExpensesForAccountAndMonth(Long memberId, Long accountId, int year, int month);
 }

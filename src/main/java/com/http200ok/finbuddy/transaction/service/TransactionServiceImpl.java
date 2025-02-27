@@ -58,6 +58,24 @@ public class TransactionServiceImpl implements TransactionService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<CategoryExpenseDto> categoryExpensesForAccountAndMonth(Long memberId, Long accountId, int year, int month) {
+        Long totalAmount = transactionRepository.getTotalSpendingForMonth(memberId, accountId, year, month);
+        if (totalAmount == null || totalAmount == 0) {
+            return Collections.emptyList();
+        }
+
+        List<CategoryExpenseDto> categorySums = transactionRepository.getTotalSpendingByCategoryForMonth(memberId, accountId, year, month);
+
+        return categorySums.stream()
+                .map(dto -> new CategoryExpenseDto(
+                        dto.getCategoryName(),
+                        dto.getTotalAmount(),
+                        totalAmount > 0 ? (dto.getPercentage().doubleValue() / totalAmount.doubleValue()) * 100.0 : 0.0
+                ))
+                .collect(Collectors.toList());
+    }
+
 //    @Transactional
 //    public Transaction createTransaction(Transaction transaction) {
 //
