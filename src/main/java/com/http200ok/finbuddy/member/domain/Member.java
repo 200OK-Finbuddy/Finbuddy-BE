@@ -4,6 +4,8 @@ import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.budget.domain.Budget;
 import com.http200ok.finbuddy.notification.domain.Notification;
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,9 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
-@Entity
 @NoArgsConstructor
+@Entity
 public class Member {
 
     @Id
@@ -31,10 +32,20 @@ public class Member {
     @Column(nullable = false)
     private String name;
 
-    private String nickname;
+    @Column(nullable = false)
+    private LocalDate birthDate;
+
+    @Column(nullable = false, length = 10)
+    private String sex;
+
+    @Column(nullable = false, length = 20)
+    private String job;
+
+    @Column(nullable = false, length = 20)
+    private String income;
+
+    @Column
     private String phone;
-    private String simplePassword;
-    private String address;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> accounts = new ArrayList<>();
@@ -44,4 +55,16 @@ public class Member {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
+
+
+    @Builder
+    public Member(String name, String email, String password, LocalDate birthDate, String sex, String job, String income) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.birthDate = birthDate;
+        this.sex = sex;
+        this.job = job;
+        this.income = income;
+    }
 }
