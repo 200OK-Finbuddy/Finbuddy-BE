@@ -1,7 +1,9 @@
 package com.http200ok.finbuddy.account.repository;
 
 import com.http200ok.finbuddy.account.domain.Account;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -26,8 +28,13 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     """)
     List<Account> findCheckingAccountsByMemberId(@Param("memberId") Long memberId);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT a FROM Account a WHERE a.accountNumber = :accountNumber")
+    Optional<Account> findByAccountNumberWithPessimisticLock(@Param("accountNumber") String accountNumber);
 
     // 계좌번호로 계좌 조회
     Optional<Account> findByAccountNumber(String accountNumber);
+
+    boolean existsByAccountNumber(String accountNumber);
 }
 

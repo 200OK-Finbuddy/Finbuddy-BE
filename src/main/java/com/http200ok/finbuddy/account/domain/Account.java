@@ -1,6 +1,6 @@
 package com.http200ok.finbuddy.account.domain;
 
-import com.http200ok.finbuddy.autotransfer.domain.AutoTransfer;
+import com.http200ok.finbuddy.transfer.domain.AutoTransfer;
 import com.http200ok.finbuddy.bank.domain.Bank;
 import com.http200ok.finbuddy.member.domain.Member;
 import com.http200ok.finbuddy.product.domain.Product;

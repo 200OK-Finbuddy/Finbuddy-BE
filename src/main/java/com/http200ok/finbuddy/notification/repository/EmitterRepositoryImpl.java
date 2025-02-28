@@ -41,7 +41,6 @@ public class EmitterRepositoryImpl implements EmitterRepository {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-
     // 사용
     @Override
     public void deleteById(String emitterId) { // emitter를 지움

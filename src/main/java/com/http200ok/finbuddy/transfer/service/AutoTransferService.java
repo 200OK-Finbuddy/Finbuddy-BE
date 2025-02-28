@@ -1,8 +1,7 @@
-package com.http200ok.finbuddy.autotransfer.service;
+package com.http200ok.finbuddy.transfer.service;
 
-import com.http200ok.finbuddy.autotransfer.domain.AutoTransfer;
-import com.http200ok.finbuddy.autotransfer.dto.AutoTransferUpdateRequestDto;
-import org.springframework.transaction.annotation.Transactional;
+import com.http200ok.finbuddy.transfer.domain.AutoTransfer;
+import com.http200ok.finbuddy.transfer.dto.AutoTransferUpdateRequestDto;
 
 import java.util.List;
 

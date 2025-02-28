@@ -1,10 +1,10 @@
-package com.http200ok.finbuddy.autotransfer.service;
+package com.http200ok.finbuddy.transfer.service;
 
 import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
-import com.http200ok.finbuddy.autotransfer.domain.AutoTransfer;
-import com.http200ok.finbuddy.autotransfer.dto.AutoTransferUpdateRequestDto;
-import com.http200ok.finbuddy.autotransfer.repository.AutoTransferRepository;
+import com.http200ok.finbuddy.transfer.domain.AutoTransfer;
+import com.http200ok.finbuddy.transfer.dto.AutoTransferUpdateRequestDto;
+import com.http200ok.finbuddy.transfer.repository.AutoTransferRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

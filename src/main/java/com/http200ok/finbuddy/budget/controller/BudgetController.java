@@ -4,6 +4,7 @@ import com.http200ok.finbuddy.budget.dto.BudgetCreateRequestDto;
 import com.http200ok.finbuddy.budget.dto.BudgetUpdateRequestDto;
 import com.http200ok.finbuddy.budget.service.BudgetService;
 import com.http200ok.finbuddy.transaction.service.TransactionService;
+import com.http200ok.finbuddy.transfer.service.TransferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class BudgetController {
 
     private final BudgetService budgetService;
-    private final TransactionService transactionService;
+    private final TransferService transferService;
 
     @PostMapping
     public ResponseEntity<Long> createMonthlyBudget(@RequestBody BudgetCreateRequestDto requestDto) {
@@ -31,7 +32,7 @@ public class BudgetController {
     // 예산 초과 테스트 API (GET 요청)
     @GetMapping("/test-exceeded/{memberId}")
     public ResponseEntity<String> testExceededBudget(@PathVariable("memberId") Long memberId) {
-        transactionService.checkAndNotifyBudgetExceededOnTransaction(memberId);
+        transferService.checkAndNotifyBudgetExceededOnTransaction(memberId);
         return ResponseEntity.ok("예산 초과 체크를 수행했습니다.");
     }
 
