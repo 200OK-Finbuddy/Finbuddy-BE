@@ -31,8 +31,8 @@ public class AccountController {
         return ResponseEntity.ok(checkingAccountsSummary);
     }
 
-    @GetMapping("/all/checking/{memberId}")
-    public ResponseEntity<List<CheckingAccountResponseDto>> getCheckingAccounts(@PathVariable("memberId") Long memberId) {
+    @GetMapping("/all/checking")
+    public ResponseEntity<List<CheckingAccountResponseDto>> getCheckingAccounts(@RequestParam("memberId") Long memberId) {
         List<CheckingAccountResponseDto> checkingAccountList = accountService.getCheckingAccountList(memberId);
         accountService.getCheckingAccountList(memberId);
         return ResponseEntity.ok(checkingAccountList);
