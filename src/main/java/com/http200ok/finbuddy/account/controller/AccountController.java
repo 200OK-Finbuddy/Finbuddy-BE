@@ -2,6 +2,7 @@ package com.http200ok.finbuddy.account.controller;
 
 import com.http200ok.finbuddy.account.dto.AccountResponseDto;
 import com.http200ok.finbuddy.account.dto.AccountSummaryResponseDto;
+import com.http200ok.finbuddy.account.dto.CheckingAccountResponseDto;
 import com.http200ok.finbuddy.account.dto.CheckingAccountsSummaryResponseDto;
 import com.http200ok.finbuddy.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +21,21 @@ public class AccountController {
 
     @GetMapping("/{accountId}")
     public ResponseEntity<AccountResponseDto> getAccountDetails(@PathVariable("accountId") Long accountId, @RequestParam("memberId") Long memberId) {
-        AccountResponseDto accountResponse = accountService.getAccountDetails(memberId, accountId);
-        return ResponseEntity.ok(accountResponse);
+        AccountResponseDto accountDetails = accountService.getAccountDetails(memberId, accountId);
+        return ResponseEntity.ok(accountDetails);
     }
 
     @GetMapping("/checking/{memberId}")
-    public ResponseEntity<CheckingAccountsSummaryResponseDto> getCheckingAccounts(@PathVariable("memberId") Long memberId) {
-        CheckingAccountsSummaryResponseDto response = accountService.getCheckingAccountsSummary(memberId);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<CheckingAccountsSummaryResponseDto> getCheckingAccountsTop3(@PathVariable("memberId") Long memberId) {
+        CheckingAccountsSummaryResponseDto checkingAccountsSummary = accountService.getCheckingAccountsSummary(memberId);
+        return ResponseEntity.ok(checkingAccountsSummary);
+    }
+
+    @GetMapping("/all/checking/{memberId}")
+    public ResponseEntity<List<CheckingAccountResponseDto>> getCheckingAccounts(@PathVariable("memberId") Long memberId) {
+        List<CheckingAccountResponseDto> checkingAccountList = accountService.getCheckingAccountList(memberId);
+        accountService.getCheckingAccountList(memberId);
+        return ResponseEntity.ok(checkingAccountList);
     }
 
     @GetMapping("/all/{memberId}")

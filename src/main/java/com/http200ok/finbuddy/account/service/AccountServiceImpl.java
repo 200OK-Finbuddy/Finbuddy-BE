@@ -52,6 +52,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public List<CheckingAccountResponseDto> getCheckingAccountList(Long memberId) {
+        // 모든 CheckingAccount 가져오기
+        List<Account> checkingAccounts = accountRepository.findCheckingAccountsByMemberId(memberId);
+
+        return checkingAccounts.stream()
+                .map(CheckingAccountResponseDto::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<AccountSummaryResponseDto> getAccountsByMemberId(Long memberId) {
         List<Account> accounts = accountRepository.findAccountsByMemberId(memberId);
         return accounts.stream()
