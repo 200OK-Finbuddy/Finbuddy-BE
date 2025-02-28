@@ -84,4 +84,12 @@ public class AutoTransfer {
         this.targetAccount.setBalance(this.targetAccount.getBalance() + this.amount);
         this.updatedAt = LocalDateTime.now();
     }
+
+    public void markAsFailed() {
+        this.status = AutoTransferStatus.FAILED;
+    }
+
+    public void markAsActive() {
+        this.status = AutoTransferStatus.ACTIVE;
+    }
 }
