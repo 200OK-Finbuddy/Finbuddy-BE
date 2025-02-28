@@ -11,4 +11,7 @@ public interface AutoTransferRepository extends JpaRepository<AutoTransfer, Long
 
     // 특정 회원의 자동이체 목록 조회 (account.member.id 기준)
     List<AutoTransfer> findByAccount_Member_Id(Long memberId);
+
+    // 자동이체 날짜와 활성/비활성 상태
+    List<AutoTransfer> findByTransferDayAndStatus(Integer transferDay, AutoTransferStatus status);
 }

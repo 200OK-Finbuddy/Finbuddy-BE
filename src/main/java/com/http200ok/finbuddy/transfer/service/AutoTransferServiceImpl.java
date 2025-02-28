@@ -3,13 +3,16 @@ package com.http200ok.finbuddy.transfer.service;
 import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
 import com.http200ok.finbuddy.transfer.domain.AutoTransfer;
+import com.http200ok.finbuddy.transfer.domain.AutoTransferStatus;
 import com.http200ok.finbuddy.transfer.dto.AutoTransferUpdateRequestDto;
 import com.http200ok.finbuddy.transfer.repository.AutoTransferRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -17,6 +20,7 @@ import java.util.List;
 public class AutoTransferServiceImpl implements AutoTransferService {
     private final AccountRepository accountRepository;
     private final AutoTransferRepository autoTransferRepository;
+    private final TransferService transferService;
 
     @Override
     @Transactional
@@ -78,5 +82,41 @@ public class AutoTransferServiceImpl implements AutoTransferService {
                 .orElseThrow(() -> new EntityNotFoundException("자동이체 정보가 존재하지 않습니다."));
 
         autoTransferRepository.delete(autoTransfer);
+    }
+
+    @Transactional
+    public void executeScheduledAutoTransfers() {
+        int today = LocalDate.now().getDayOfMonth();
+        System.out.println("자동이체 실행 - 오늘 날짜: " + today);
+
+        List<AutoTransfer> transfers = autoTransferRepository.findByTransferDayAndStatus(today, AutoTransferStatus.ACTIVE);
+
+        if (transfers.isEmpty()) {
+            System.out.println("오늘 실행할 자동이체가 없습니다.");
+            return;
+        }
+
+        for (AutoTransfer transfer : transfers) {
+            try {
+                boolean success = transferService.transferMoney(
+                        transfer.getAccount().getMember().getId(),
+                        transfer.getAccount().getAccountNumber(),
+                        transfer.getTargetAccount().getAccountNumber(),
+                        transfer.getAmount(),
+                        transfer.getAccount().getPassword(),
+                        transfer.getAccount().getMember().getName(),
+                        transfer.getTargetAccount().getMember().getName()
+                );
+
+                if (!success) {
+                    System.out.println("자동이체 성공 (ID: " + transfer.getId() + ")");
+                } else {
+                    System.out.println("자동이체 실패 (ID: " + transfer.getId() + ")");
+                }
+
+            } catch (Exception e) {
+                System.out.println("자동이체 중 오류 발생 (ID: " + transfer.getId() + "): " + e.getMessage());
+            }
+        }
     }
 }

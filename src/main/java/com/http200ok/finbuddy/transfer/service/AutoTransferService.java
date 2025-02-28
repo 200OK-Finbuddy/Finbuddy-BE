@@ -13,4 +13,5 @@ public interface AutoTransferService {
     void updateAutoTransfer(Long autoTransferId, AutoTransferUpdateRequestDto requestDto);
     void toggleAutoTransferStatus(Long autoTransferId);
     void deleteAutoTransfer(Long autoTransferId);
+    void executeScheduledAutoTransfers();
 }

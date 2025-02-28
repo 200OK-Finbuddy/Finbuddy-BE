@@ -76,4 +76,12 @@ public class AutoTransfer {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void executeTransfer() {
+        if (this.account.getBalance() < this.amount) {
+            throw new IllegalStateException("잔액 부족으로 자동이체 실패");
+        }
+        this.account.setBalance(this.account.getBalance() - this.amount);
+        this.targetAccount.setBalance(this.targetAccount.getBalance() + this.amount);
+        this.updatedAt = LocalDateTime.now();
+    }
 }
