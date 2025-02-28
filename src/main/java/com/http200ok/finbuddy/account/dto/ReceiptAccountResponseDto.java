@@ -6,22 +6,18 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CheckingAccountResponseDto {
+public class ReceiptAccountResponseDto {
     private Long accountId;
     private String bankName;
-    private String senderName;
-    private String accountName;
+    private String receiverName;
     private String accountNumber;
-    private Long balance;
 
-    public static CheckingAccountResponseDto from(Account account) {
-        return new CheckingAccountResponseDto(
+    public static ReceiptAccountResponseDto from(Account account) {
+        return new ReceiptAccountResponseDto(
                 account.getId(),
                 account.getBank().getName(),
                 account.getMember().getName(),
-                account.getAccountName(),
-                account.getAccountNumber(),
-                account.getBalance()
+                account.getAccountNumber()
         );
     }
 }
