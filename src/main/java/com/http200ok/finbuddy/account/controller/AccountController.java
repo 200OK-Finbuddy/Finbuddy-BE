@@ -34,7 +34,6 @@ public class AccountController {
     @GetMapping("/all/checking")
     public ResponseEntity<List<CheckingAccountResponseDto>> getCheckingAccounts(@RequestParam("memberId") Long memberId) {
         List<CheckingAccountResponseDto> checkingAccountList = accountService.getCheckingAccountList(memberId);
-        accountService.getCheckingAccountList(memberId);
         return ResponseEntity.ok(checkingAccountList);
     }
 

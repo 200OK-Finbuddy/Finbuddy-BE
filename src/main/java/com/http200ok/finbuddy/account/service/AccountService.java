@@ -1,9 +1,6 @@
 package com.http200ok.finbuddy.account.service;
 
-import com.http200ok.finbuddy.account.dto.AccountResponseDto;
-import com.http200ok.finbuddy.account.dto.AccountSummaryResponseDto;
-import com.http200ok.finbuddy.account.dto.CheckingAccountResponseDto;
-import com.http200ok.finbuddy.account.dto.CheckingAccountsSummaryResponseDto;
+import com.http200ok.finbuddy.account.dto.*;
 
 import java.util.List;
 
