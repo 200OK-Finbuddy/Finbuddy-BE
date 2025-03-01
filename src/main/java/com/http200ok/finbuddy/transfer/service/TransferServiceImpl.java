@@ -1,12 +1,13 @@
 package com.http200ok.finbuddy.transfer.service;
 
 import com.http200ok.finbuddy.account.domain.Account;
+import com.http200ok.finbuddy.account.dto.CheckingAccountResponseDto;
 import com.http200ok.finbuddy.account.dto.ReceivingAccountResponseDto;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
-import com.http200ok.finbuddy.common.exception.InsufficientBalanceException;
 import com.http200ok.finbuddy.budget.service.BudgetService;
 import com.http200ok.finbuddy.category.domain.Category;
 import com.http200ok.finbuddy.category.repository.CategoryRepository;
+import com.http200ok.finbuddy.common.exception.InsufficientBalanceException;
 import com.http200ok.finbuddy.common.exception.InvalidTransactionException;
 import com.http200ok.finbuddy.common.validator.AccountValidator;
 import com.http200ok.finbuddy.notification.service.NotificationService;
@@ -16,6 +17,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +31,16 @@ public class TransferServiceImpl implements TransferService {
     private final CategoryRepository categoryRepository;
     private final BudgetService budgetService;
     private final NotificationService notificationService;
+
+    @Override
+    public List<CheckingAccountResponseDto> getCheckingAccountList(Long memberId) {
+        // 모든 CheckingAccount 가져오기
+        List<Account> checkingAccounts = accountRepository.findCheckingAccountsByMemberId(memberId);
+
+        return checkingAccounts.stream()
+                .map(CheckingAccountResponseDto::from)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public ReceivingAccountResponseDto getReceivingAccount(String bankName, String accountNumber) {

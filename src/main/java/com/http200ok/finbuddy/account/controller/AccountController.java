@@ -2,7 +2,6 @@ package com.http200ok.finbuddy.account.controller;
 
 import com.http200ok.finbuddy.account.dto.AccountResponseDto;
 import com.http200ok.finbuddy.account.dto.AccountSummaryResponseDto;
-import com.http200ok.finbuddy.account.dto.CheckingAccountResponseDto;
 import com.http200ok.finbuddy.account.dto.CheckingAccountsSummaryResponseDto;
 import com.http200ok.finbuddy.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +28,6 @@ public class AccountController {
     public ResponseEntity<CheckingAccountsSummaryResponseDto> getCheckingAccountsTop3(@PathVariable("memberId") Long memberId) {
         CheckingAccountsSummaryResponseDto checkingAccountsSummary = accountService.getCheckingAccountsSummary(memberId);
         return ResponseEntity.ok(checkingAccountsSummary);
-    }
-
-    @GetMapping("/all/checking")
-    public ResponseEntity<List<CheckingAccountResponseDto>> getCheckingAccounts(@RequestParam("memberId") Long memberId) {
-        List<CheckingAccountResponseDto> checkingAccountList = accountService.getCheckingAccountList(memberId);
-        return ResponseEntity.ok(checkingAccountList);
     }
 
     @GetMapping("/all/{memberId}")

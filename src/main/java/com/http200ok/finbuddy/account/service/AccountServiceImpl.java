@@ -3,7 +3,6 @@ package com.http200ok.finbuddy.account.service;
 import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.account.dto.AccountResponseDto;
 import com.http200ok.finbuddy.account.dto.AccountSummaryResponseDto;
-import com.http200ok.finbuddy.account.dto.CheckingAccountResponseDto;
 import com.http200ok.finbuddy.account.dto.CheckingAccountsSummaryResponseDto;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
 import com.http200ok.finbuddy.common.validator.AccountValidator;
@@ -48,16 +47,6 @@ public class AccountServiceImpl implements AccountService {
                 .collect(Collectors.toList());
 
         return new CheckingAccountsSummaryResponseDto(totalBalance, top3Accounts);
-    }
-
-    @Override
-    public List<CheckingAccountResponseDto> getCheckingAccountList(Long memberId) {
-        // 모든 CheckingAccount 가져오기
-        List<Account> checkingAccounts = accountRepository.findCheckingAccountsByMemberId(memberId);
-
-        return checkingAccounts.stream()
-                .map(CheckingAccountResponseDto::from)
-                .collect(Collectors.toList());
     }
 
     @Override

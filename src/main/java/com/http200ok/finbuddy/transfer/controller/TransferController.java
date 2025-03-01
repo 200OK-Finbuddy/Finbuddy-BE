@@ -1,5 +1,6 @@
 package com.http200ok.finbuddy.transfer.controller;
 
+import com.http200ok.finbuddy.account.dto.CheckingAccountResponseDto;
 import com.http200ok.finbuddy.account.dto.ReceivingAccountResponseDto;
 import com.http200ok.finbuddy.transfer.dto.TransferRequestDto;
 import com.http200ok.finbuddy.transfer.service.TransferService;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -17,15 +19,21 @@ public class TransferController {
 
     private final TransferService transferService;
 
+    // 이체 시 입출금 계좌 조회
+    @GetMapping("/all/checking-account")
+    public ResponseEntity<List<CheckingAccountResponseDto>> getCheckingAccounts(@RequestParam("memberId") Long memberId) {
+        List<CheckingAccountResponseDto> checkingAccountList = transferService.getCheckingAccountList(memberId);
+        return ResponseEntity.ok(checkingAccountList);
+    }
+
+    // 이체 시 입금 계좌 조회
     @GetMapping("/receiving-account")
     public ResponseEntity<ReceivingAccountResponseDto> getReceivingAccount(@RequestParam("bankName") String bankName, @RequestParam("accountNumber") String accountNumber) {
         ReceivingAccountResponseDto receivingAccount = transferService.getReceivingAccount(bankName, accountNumber);
         return ResponseEntity.ok(receivingAccount);
     }
 
-    /**
-     * 계좌 이체 API
-     */
+    // 계좌 이체 API
     @PostMapping
     public ResponseEntity<?> executeTransfer(@RequestBody TransferRequestDto transferRequestDto, @RequestParam("memberId") Long memberId) {
         boolean result = transferService.executeAccountTransfer(
