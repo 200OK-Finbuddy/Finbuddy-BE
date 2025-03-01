@@ -31,16 +31,16 @@ public class RetryFailedAutoTransferTasklet implements Tasklet {
 
         for (AutoTransfer transfer : failedTransfers) {
             try {
-                boolean success = true;
-//                boolean success = transferService.transferMoney(
-//                        transfer.getAccount().getMember().getId(),
-//                        transfer.getAccount().getAccountNumber(),
-//                        transfer.getTargetAccount().getAccountNumber(),
-//                        transfer.getAmount(),
-//                        transfer.getAccount().getPassword(),
-//                        transfer.getAccount().getMember().getName(),
-//                        transfer.getTargetAccount().getMember().getName()
-//                );
+                boolean success = transferService.executeAccountTransfer(
+                        transfer.getAccount().getMember().getId(),
+                        transfer.getAccount().getId(),
+                        transfer.getTargetAccount().getBank().getName(),
+                        transfer.getTargetAccount().getAccountNumber(),
+                        transfer.getAmount(),
+                        transfer.getAccount().getPassword(),
+                        transfer.getAccount().getMember().getName(),
+                        transfer.getTargetAccount().getMember().getName()
+                );
 
                 if (success) {
                     transfer.markAsActive();
