@@ -8,15 +8,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalTime;
+
 @Component
 public class AutoTransferScheduler {
 
     private final JobLauncher jobLauncher;
-
-    @Qualifier("autoTransferJob")
     private final Job autoTransferJob;
-
-    @Qualifier("retryFailedAutoTransferJob")
     private final Job retryFailedAutoTransferJob;
 
     public AutoTransferScheduler(JobLauncher jobLauncher,
@@ -41,8 +39,16 @@ public class AutoTransferScheduler {
         }
     }
 
-    @Scheduled(cron = "0 22 * * * ?")
+    @Scheduled(cron = "0 0 * * * ?")
     public void runRetryFailedAutoTransferJob() {
+        LocalTime now = LocalTime.now();
+
+        // 오전 9시 이전이거나 오후 6시 이후에는 실행하지 않음
+        if (now.isBefore(LocalTime.of(9, 0)) || now.isAfter(LocalTime.of(18, 0))) {
+            System.out.println("현재 시간이 오전 9시 이전 또는 오후 6시 이후이므로 자동이체 재시도를 중단합니다.");
+            return;
+        }
+
         try {
             JobParameters params = new JobParametersBuilder()
                     .addLong("time", System.currentTimeMillis())
