@@ -3,7 +3,7 @@ package com.http200ok.finbuddy.transfer.service;
 import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.account.dto.ReceivingAccountResponseDto;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
-import com.http200ok.finbuddy.batch.exception.InsufficientBalanceException;
+import com.http200ok.finbuddy.common.exception.InsufficientBalanceException;
 import com.http200ok.finbuddy.budget.service.BudgetService;
 import com.http200ok.finbuddy.category.domain.Category;
 import com.http200ok.finbuddy.category.repository.CategoryRepository;

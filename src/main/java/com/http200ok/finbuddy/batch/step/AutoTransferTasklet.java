@@ -1,6 +1,6 @@
 package com.http200ok.finbuddy.batch.step;
 
-import com.http200ok.finbuddy.batch.exception.InsufficientBalanceException;
+import com.http200ok.finbuddy.common.exception.InsufficientBalanceException;
 import com.http200ok.finbuddy.transfer.domain.AutoTransfer;
 import com.http200ok.finbuddy.transfer.repository.AutoTransferRepository;
 import com.http200ok.finbuddy.transfer.service.AutoTransferService;
