@@ -20,7 +20,7 @@ public class AutoTransferScheduler {
 
 
 
-    @Scheduled(cron = "0 40 15 * * ?")
+    @Scheduled(cron = "0 28 13 * * ?")
     public void runAutoTransferJob() {
         try {
             JobParameters params = new JobParametersBuilder()

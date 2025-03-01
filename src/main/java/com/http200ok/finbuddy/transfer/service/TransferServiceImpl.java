@@ -2,6 +2,7 @@ package com.http200ok.finbuddy.transfer.service;
 
 import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
+import com.http200ok.finbuddy.batch.exception.InsufficientBalanceException;
 import com.http200ok.finbuddy.budget.service.BudgetService;
 import com.http200ok.finbuddy.category.domain.Category;
 import com.http200ok.finbuddy.category.repository.CategoryRepository;
@@ -58,7 +59,7 @@ public class TransferServiceImpl implements TransferService {
 
         // 잔액 확인
         if (fromAccount.getBalance() < amount) {
-            throw new RuntimeException("잔액이 부족합니다");
+            throw new InsufficientBalanceException("잔액이 부족합니다");
         }
 
         // 거래 카테고리 조회 (이체 카테고리 - 실제 코드에서는 상수로 관리하거나 DB에서 조회)
