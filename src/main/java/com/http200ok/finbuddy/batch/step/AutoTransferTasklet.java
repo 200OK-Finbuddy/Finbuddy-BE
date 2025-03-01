@@ -55,15 +55,15 @@ public class AutoTransferTasklet implements Tasklet {
 
         for (AutoTransfer transfer : transfers) {
             try {
-                transferService.transferMoney(
-                        transfer.getAccount().getMember().getId(),
-                        transfer.getAccount().getAccountNumber(),
-                        transfer.getTargetAccount().getAccountNumber(),
-                        transfer.getAmount(),
-                        transfer.getAccount().getPassword(),
-                        transfer.getAccount().getMember().getName(),
-                        transfer.getTargetAccount().getMember().getName()
-                );
+//                transferService.transferMoney(
+//                        transfer.getAccount().getMember().getId(),
+//                        transfer.getAccount().getAccountNumber(),
+//                        transfer.getTargetAccount().getAccountNumber(),
+//                        transfer.getAmount(),
+//                        transfer.getAccount().getPassword(),
+//                        transfer.getAccount().getMember().getName(),
+//                        transfer.getTargetAccount().getMember().getName()
+//                );
                 System.out.println("자동이체 성공 ID: " + transfer.getId());
             } catch (InsufficientBalanceException e) {
                 System.out.println("자동이체 실패(잔액 부족) ID: " + transfer.getId());

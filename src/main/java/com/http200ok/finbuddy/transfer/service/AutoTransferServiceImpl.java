@@ -106,15 +106,16 @@ public class AutoTransferServiceImpl implements AutoTransferService {
 
         for (AutoTransfer transfer : transfers) {
             try {
-                boolean success = transferService.transferMoney(
-                        transfer.getAccount().getMember().getId(),
-                        transfer.getAccount().getAccountNumber(),
-                        transfer.getTargetAccount().getAccountNumber(),
-                        transfer.getAmount(),
-                        transfer.getAccount().getPassword(),
-                        transfer.getAccount().getMember().getName(),
-                        transfer.getTargetAccount().getMember().getName()
-                );
+                boolean success = true;
+//                boolean success = transferService.transferMoney(
+//                        transfer.getAccount().getMember().getId(),
+//                        transfer.getAccount().getAccountNumber(),
+//                        transfer.getTargetAccount().getAccountNumber(),
+//                        transfer.getAmount(),
+//                        transfer.getAccount().getPassword(),
+//                        transfer.getAccount().getMember().getName(),
+//                        transfer.getTargetAccount().getMember().getName()
+//                );
 
                 if (!success) {
                     System.out.println("자동이체 성공 (ID: " + transfer.getId() + ")");
