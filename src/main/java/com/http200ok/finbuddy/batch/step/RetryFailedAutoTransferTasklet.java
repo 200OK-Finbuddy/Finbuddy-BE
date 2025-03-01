@@ -5,13 +5,10 @@ import com.http200ok.finbuddy.transfer.domain.AutoTransferStatus;
 import com.http200ok.finbuddy.transfer.repository.AutoTransferRepository;
 import com.http200ok.finbuddy.transfer.service.TransferService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.batch.core.Job;
 import org.springframework.batch.core.StepContribution;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
