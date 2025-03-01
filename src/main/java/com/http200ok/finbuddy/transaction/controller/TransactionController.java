@@ -3,6 +3,7 @@ package com.http200ok.finbuddy.transaction.controller;
 import com.http200ok.finbuddy.category.dto.CategoryExpenseDto;
 import com.http200ok.finbuddy.common.dto.PagedResponseDto;
 import com.http200ok.finbuddy.transaction.dto.CheckingAccountTransactionResponseDto;
+import com.http200ok.finbuddy.transaction.dto.MonthlyTransactionSummaryDto;
 import com.http200ok.finbuddy.transaction.dto.TransactionResponseDto;
 import com.http200ok.finbuddy.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -66,5 +67,16 @@ public class TransactionController {
         Page<TransactionResponseDto> pagedTransactions = transactionService.getTransactionsByAccountId(accountId, memberId, startDate, endDate, transactionType, pageable);
 
         return ResponseEntity.ok(new PagedResponseDto<>(pagedTransactions));
+    }
+
+    @GetMapping("/account/monthly-summary")
+    public ResponseEntity<MonthlyTransactionSummaryDto> getMonthlySummary(
+            @RequestParam("memberId") Long memberId,
+            @RequestParam("accountId") Long accountId,
+            @RequestParam("year") int year,
+            @RequestParam("month") int month) {
+
+        MonthlyTransactionSummaryDto summary = transactionService.getMonthlyTransactionSummary(memberId, accountId, year, month);
+        return ResponseEntity.ok(summary);
     }
 }

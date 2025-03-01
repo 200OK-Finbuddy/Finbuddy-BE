@@ -5,6 +5,7 @@ import com.http200ok.finbuddy.common.validator.AccountValidator;
 import com.http200ok.finbuddy.transaction.domain.Transaction;
 import com.http200ok.finbuddy.transaction.dto.CheckingAccountTransactionResponseDto;
 import com.http200ok.finbuddy.transaction.dto.TransactionResponseDto;
+import com.http200ok.finbuddy.transaction.dto.MonthlyTransactionSummaryDto;
 import com.http200ok.finbuddy.transaction.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -91,5 +92,12 @@ public class TransactionServiceImpl implements TransactionService {
 
         return transactionRepository.findTransactions(accountId, startDateTime, endDateTime, transactionType, pageable)
                 .map(TransactionResponseDto::fromEntity);
+    }
+
+    public MonthlyTransactionSummaryDto getMonthlyTransactionSummary(Long memberId, Long accountId, int year, int month) {
+        Long totalSpending = transactionRepository.getTotalSpendingForMonth(memberId, accountId, year, month);
+        Long totalIncome = transactionRepository.getTotalIncomeForMonth(memberId, accountId, year, month);
+
+        return new MonthlyTransactionSummaryDto(totalSpending, totalIncome);
     }
 }

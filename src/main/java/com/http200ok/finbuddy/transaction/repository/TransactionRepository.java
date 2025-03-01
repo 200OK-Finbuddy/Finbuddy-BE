@@ -103,7 +103,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     );
 
 
-    // 특정 연-월 계좌 별로 전체 지출 amount 합계 조회
+    // 특정 연-월 계좌 별로 전체 출금 amount 합계 조회
     @Query("""
             SELECT CAST(COALESCE(SUM(t.amount), 0) AS long)
             FROM Transaction t
@@ -114,6 +114,23 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             AND FUNCTION('MONTH', t.transactionDate) = :month
             """)
     Long getTotalSpendingForMonth(
+            @Param("memberId") Long memberId,
+            @Param("accountId") Long accountId,
+            @Param("year") int year,
+            @Param("month") int month
+    );
+
+    // 특정 연-월 계좌 별로 전체 입금 amount 합계 조회
+    @Query("""
+            SELECT CAST(COALESCE(SUM(t.amount), 0) AS long)
+            FROM Transaction t
+            WHERE t.transactionType = 1
+            AND t.account.member.id = :memberId
+            AND t.account.id = :accountId
+            AND FUNCTION('YEAR', t.transactionDate) = :year
+            AND FUNCTION('MONTH', t.transactionDate) = :month
+            """)
+    Long getTotalIncomeForMonth(
             @Param("memberId") Long memberId,
             @Param("accountId") Long accountId,
             @Param("year") int year,

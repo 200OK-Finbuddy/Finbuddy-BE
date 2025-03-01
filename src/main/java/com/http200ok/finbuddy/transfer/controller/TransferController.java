@@ -52,7 +52,7 @@ public class TransferController {
      * 계좌 유효성 확인 API
      */
     @GetMapping("/validate-account/{accountNumber}")
-    public ResponseEntity<?> validateAccount(@PathVariable String accountNumber) {
+    public ResponseEntity<?> validateAccount(@PathVariable("accountNumber") String accountNumber) {
         boolean exists = accountRepository.existsByAccountNumber(accountNumber);
 
         Map<String, Object> response = new HashMap<>();
