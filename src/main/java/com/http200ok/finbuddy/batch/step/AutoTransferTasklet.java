@@ -15,6 +15,7 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,10 +30,23 @@ public class AutoTransferTasklet implements Tasklet {
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        int today = LocalDate.now().getDayOfMonth();
-        System.out.println("자동이체 실행 - 오늘 날짜: " + today);
+        LocalDate today = LocalDate.now();
+        DayOfWeek dayOfWeek = today.getDayOfWeek();
 
-        List<AutoTransfer> transfers = autoTransferRepository.findByTransferDayAndStatus(today, AutoTransferStatus.ACTIVE);
+        // 주말(토, 일)이면 실행하지 않음
+        if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
+            System.out.println("주말이므로 자동이체 실행 안 함.");
+            return RepeatStatus.FINISHED;
+        }
+
+        // 월요일이면 지난 주말(토, 일) + 월요일 날짜의 자동이체 실행
+        List<Integer> targetDays = (dayOfWeek == DayOfWeek.MONDAY)
+                ? List.of(today.minusDays(2).getDayOfMonth(), today.minusDays(1).getDayOfMonth(), today.getDayOfMonth()) // 토, 일, 월
+                : List.of(today.getDayOfMonth()); // 평일이면 오늘 날짜만 실행
+
+        System.out.println("자동이체 실행 - 오늘 날짜: " + today + ", 실행 대상 날짜: " + targetDays);
+
+        List<AutoTransfer> transfers = autoTransferRepository.findForScheduledExecution(targetDays);
 
         if (transfers.isEmpty()) {
             System.out.println("오늘 실행할 자동이체 없음.");
