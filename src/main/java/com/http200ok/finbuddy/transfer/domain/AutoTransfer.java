@@ -36,7 +36,7 @@ public class AutoTransfer {
     @Column(nullable = false)
     private Integer transferDay;
 
-    // 자동이체 상태 (ACTIVE, INACTIVE)
+    // 자동이체 상태 (ACTIVE, INACTIVE, FAILED)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AutoTransferStatus status;
@@ -82,6 +82,16 @@ public class AutoTransfer {
         }
         this.account.setBalance(this.account.getBalance() - this.amount);
         this.targetAccount.setBalance(this.targetAccount.getBalance() + this.amount);
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void markAsFailed() {
+        this.status = AutoTransferStatus.FAILED;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void markAsActive() {
+        this.status = AutoTransferStatus.ACTIVE;
         this.updatedAt = LocalDateTime.now();
     }
 }

@@ -14,4 +14,5 @@ public interface AutoTransferService {
     void toggleAutoTransferStatus(Long autoTransferId);
     void deleteAutoTransfer(Long autoTransferId);
     void executeScheduledAutoTransfers();
+    void markAsFailedAndSave(AutoTransfer transfer);
 }
