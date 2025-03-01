@@ -1,12 +1,14 @@
 package com.http200ok.finbuddy.account.service;
 
 import com.http200ok.finbuddy.account.domain.Account;
-import com.http200ok.finbuddy.account.dto.*;
+import com.http200ok.finbuddy.account.dto.AccountResponseDto;
+import com.http200ok.finbuddy.account.dto.AccountSummaryResponseDto;
+import com.http200ok.finbuddy.account.dto.CheckingAccountResponseDto;
+import com.http200ok.finbuddy.account.dto.CheckingAccountsSummaryResponseDto;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.http200ok.finbuddy.common.validator.AccountValidator;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,20 +16,17 @@ import java.util.stream.Collectors;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
+    private final AccountValidator accountValidator;
 
-    public AccountServiceImpl(AccountRepository accountRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository, AccountValidator accountValidator) {
         this.accountRepository = accountRepository;
+        this.accountValidator = accountValidator;
     }
 
     @Override
     public AccountResponseDto getAccountDetails(Long memberId, Long accountId) {
-
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new EntityNotFoundException("Account not found"));
-
-        if (!account.getMember().getId().equals(memberId)) {
-            new AccessDeniedException("Unauthorized access"); // 추후 throw 처리
-        }
+        // AccountValidator를 사용하여 계좌 권한 검증 및 조회
+        Account account = accountValidator.validateAndGetAccount(accountId, memberId);
 
         return AccountResponseDto.from(account);
     }
@@ -49,6 +48,16 @@ public class AccountServiceImpl implements AccountService {
                 .collect(Collectors.toList());
 
         return new CheckingAccountsSummaryResponseDto(totalBalance, top3Accounts);
+    }
+
+    @Override
+    public List<CheckingAccountResponseDto> getCheckingAccountList(Long memberId) {
+        // 모든 CheckingAccount 가져오기
+        List<Account> checkingAccounts = accountRepository.findCheckingAccountsByMemberId(memberId);
+
+        return checkingAccounts.stream()
+                .map(CheckingAccountResponseDto::from)
+                .collect(Collectors.toList());
     }
 
     @Override

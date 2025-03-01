@@ -1,13 +1,11 @@
 package com.http200ok.finbuddy.transaction.service;
 
-import com.http200ok.finbuddy.account.domain.Account;
-import com.http200ok.finbuddy.account.repository.AccountRepository;
 import com.http200ok.finbuddy.category.dto.CategoryExpenseDto;
+import com.http200ok.finbuddy.common.validator.AccountValidator;
 import com.http200ok.finbuddy.transaction.domain.Transaction;
 import com.http200ok.finbuddy.transaction.dto.CheckingAccountTransactionResponseDto;
 import com.http200ok.finbuddy.transaction.dto.TransactionResponseDto;
 import com.http200ok.finbuddy.transaction.repository.TransactionRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -28,7 +25,7 @@ import java.util.stream.Collectors;
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
-    private final AccountRepository accountRepository;
+    private final AccountValidator accountValidator;
 
     @Override
     @Transactional(readOnly = true)
@@ -85,12 +82,8 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Page<TransactionResponseDto> getTransactionsByAccountId(Long accountId, Long memberId, LocalDate startDate, LocalDate endDate, Integer transactionType, Pageable pageable) {
 
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new EntityNotFoundException("Account not found"));
-
-        if (!account.getMember().getId().equals(memberId)) {
-            new AccessDeniedException("Unauthorized access"); // 추후 throw 처리
-        }
+        // AccountValidator를 사용하여 계좌 소유권 검증
+        accountValidator.validateAndGetAccount(accountId, memberId);
 
         // LocalDate -> LocalDateTime 변환
         LocalDateTime startDateTime = startDate != null ? startDate.atStartOfDay() : null;
