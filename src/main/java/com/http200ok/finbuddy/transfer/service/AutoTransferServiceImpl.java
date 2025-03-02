@@ -3,6 +3,8 @@ package com.http200ok.finbuddy.transfer.service;
 import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
 import com.http200ok.finbuddy.common.validator.AccountValidator;
+import com.http200ok.finbuddy.notification.domain.NotificationType;
+import com.http200ok.finbuddy.notification.service.NotificationService;
 import com.http200ok.finbuddy.transfer.domain.AutoTransfer;
 import com.http200ok.finbuddy.transfer.domain.AutoTransferStatus;
 import com.http200ok.finbuddy.transfer.dto.AutoTransferUpdateRequestDto;
@@ -22,8 +24,9 @@ import java.util.List;
 public class AutoTransferServiceImpl implements AutoTransferService {
     private final AccountRepository accountRepository;
     private final AutoTransferRepository autoTransferRepository;
-    private final TransferService transferService;
+//    private final TransferService transferService;
     private final AccountValidator accountValidator;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -87,47 +90,99 @@ public class AutoTransferServiceImpl implements AutoTransferService {
         autoTransferRepository.delete(autoTransfer);
     }
 
+    // 스케줄러
+//    @Transactional
+//    public void executeScheduledAutoTransfers() {
+//        int today = LocalDate.now().getDayOfMonth();
+//        System.out.println("자동이체 실행 - 오늘 날짜: " + today);
+//
+//        List<AutoTransfer> transfers = autoTransferRepository.findByTransferDayAndStatus(today, AutoTransferStatus.ACTIVE);
+//
+//        if (transfers.isEmpty()) {
+//            System.out.println("오늘 실행할 자동이체가 없습니다.");
+//            return;
+//        }
+//
+//        for (AutoTransfer transfer : transfers) {
+//            try {
+//                boolean success = transferService.executeAccountTransfer(
+//                        transfer.getAccount().getMember().getId(),
+//                        transfer.getAccount().getId(),
+//                        transfer.getTargetBankName(),
+//                        transfer.getTargetAccountNumber(),
+//                        transfer.getAmount(),
+//                        transfer.getAccount().getPassword(),
+//                        transfer.getAccount().getMember().getName(),
+//                        null
+//                );
+//
+//                if (!success) {
+//                    System.out.println("자동이체 성공 (ID: " + transfer.getId() + ")");
+//                } else {
+//                    System.out.println("자동이체 실패 (ID: " + transfer.getId() + ")");
+//                }
+//
+//            } catch (Exception e) {
+//                System.out.println("자동이체 중 오류 발생 (ID: " + transfer.getId() + "): " + e.getMessage());
+//            }
+//        }
+//    }
+
+    /**
+     * 자동이체 실패 처리 및 알림 발송
+     */
+    @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void markAsFailedAndSave(AutoTransfer transfer) {
         transfer.markAsFailed();
         autoTransferRepository.save(transfer);
+        sendFailureNotification(transfer);
     }
 
-    // 스케줄러
+    /**
+     * 자동이체 성공 처리 및 알림 발송
+     */
+    @Override
     @Transactional
-    public void executeScheduledAutoTransfers() {
-        int today = LocalDate.now().getDayOfMonth();
-        System.out.println("자동이체 실행 - 오늘 날짜: " + today);
+    public void markAsSuccessAndNotify(AutoTransfer transfer) {
+        transfer.markAsActive(); // 실패 상태에서 성공으로 변경 가능하도록
+        autoTransferRepository.save(transfer);
+        sendSuccessNotification(transfer);
+    }
 
-        List<AutoTransfer> transfers = autoTransferRepository.findByTransferDayAndStatus(today, AutoTransferStatus.ACTIVE);
+    /**
+     * 자동이체 성공 알림
+     */
+    private void sendSuccessNotification(AutoTransfer transfer) {
+        String message = String.format(
+                "자동이체 성공 안내\n\n" +
+                        "출금 계좌: %s\n" +
+                        "입금 계좌: %s %s\n" +
+                        "이체 금액: %,d원\n" +
+                        "이체일: %s",
+                transfer.getAccount().getAccountNumber(),
+                transfer.getTargetBankName(),
+                transfer.getTargetAccountNumber(),
+                transfer.getAmount()
+        );
+        notificationService.sendNotification(transfer.getAccount().getMember(), NotificationType.AUTOTRANSFERSUCCESS, message);
+    }
 
-        if (transfers.isEmpty()) {
-            System.out.println("오늘 실행할 자동이체가 없습니다.");
-            return;
-        }
-
-        for (AutoTransfer transfer : transfers) {
-            try {
-                boolean success = transferService.executeAccountTransfer(
-                        transfer.getAccount().getMember().getId(),
-                        transfer.getAccount().getId(),
-                        transfer.getTargetBankName(),
-                        transfer.getTargetAccountNumber(),
-                        transfer.getAmount(),
-                        transfer.getAccount().getPassword(),
-                        transfer.getAccount().getMember().getName(),
-                        null
-                );
-
-                if (!success) {
-                    System.out.println("자동이체 성공 (ID: " + transfer.getId() + ")");
-                } else {
-                    System.out.println("자동이체 실패 (ID: " + transfer.getId() + ")");
-                }
-
-            } catch (Exception e) {
-                System.out.println("자동이체 중 오류 발생 (ID: " + transfer.getId() + "): " + e.getMessage());
-            }
-        }
+    /**
+     * 자동이체 실패 알림
+     */
+    private void sendFailureNotification(AutoTransfer transfer) {
+        String message = String.format(
+                "자동이체 실패 안내\n\n" +
+                        "출금 계좌: %s\n" +
+                        "입금 계좌: %s %s\n" +
+                        "이체 금액: %,d원\n" +
+                        "사유: 잔액 부족 또는 기타 오류",
+                transfer.getAccount().getAccountNumber(),
+                transfer.getTargetBankName(),
+                transfer.getTargetAccountNumber(),
+                transfer.getAmount()
+        );
+        notificationService.sendNotification(transfer.getAccount().getMember(), NotificationType.AUTOTRANSFERFAIL, message);
     }
 }

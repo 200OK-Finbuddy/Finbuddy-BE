@@ -64,6 +64,7 @@ public class AutoTransfer {
     public void updateTransferInfo(Long amount, Integer transferDay) {
         this.amount = amount;
         this.transferDay = transferDay;
+        this.status = AutoTransferStatus.ACTIVE;
         this.updatedAt = LocalDateTime.now();
     }
 
@@ -73,8 +74,8 @@ public class AutoTransfer {
             this.status = AutoTransferStatus.INACTIVE;
         } else if (this.status == AutoTransferStatus.INACTIVE) {
             this.status = AutoTransferStatus.ACTIVE;
-        } else {
-            throw new IllegalStateException("취소된 자동이체는 활성화할 수 없습니다.");
+        } else if (this.status == AutoTransferStatus.FAILED) {
+            this.status = AutoTransferStatus.ACTIVE;
         }
         this.updatedAt = LocalDateTime.now();
     }

@@ -13,6 +13,8 @@ public interface AutoTransferService {
     void updateAutoTransfer(Long autoTransferId, AutoTransferUpdateRequestDto requestDto);
     void toggleAutoTransferStatus(Long autoTransferId);
     void deleteAutoTransfer(Long autoTransferId);
-    void executeScheduledAutoTransfers();
+//    void executeScheduledAutoTransfers();
+    void markAsSuccessAndNotify(AutoTransfer transfer);
     void markAsFailedAndSave(AutoTransfer transfer);
+
 }

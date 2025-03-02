@@ -2,6 +2,7 @@ package com.http200ok.finbuddy.batch.step;
 
 import com.http200ok.finbuddy.account.repository.AccountRepository;
 import com.http200ok.finbuddy.common.exception.InsufficientBalanceException;
+import com.http200ok.finbuddy.notification.service.NotificationService;
 import com.http200ok.finbuddy.transfer.domain.AutoTransfer;
 import com.http200ok.finbuddy.transfer.repository.AutoTransferRepository;
 import com.http200ok.finbuddy.transfer.service.AutoTransferService;
@@ -24,8 +25,7 @@ public class AutoTransferTasklet implements Tasklet {
     private final AutoTransferRepository autoTransferRepository;
     private final TransferService transferService;
     private final AutoTransferService autoTransferService;
-    private final AccountRepository accountRepository;
-//    private final NotificationService notificationService;
+    private final NotificationService notificationService;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
@@ -64,10 +64,10 @@ public class AutoTransferTasklet implements Tasklet {
                         transfer.getAccount().getMember().getName(),
                         null
                 );
+                autoTransferService.markAsSuccessAndNotify(transfer);
                 System.out.println("자동이체 성공 ID: " + transfer.getId());
             } catch (InsufficientBalanceException e) {
                 System.out.println("자동이체 실패(잔액 부족) ID: " + transfer.getId());
-                // 잔액 부족으로 자동이체 실패했다고 알림 보내기
                 autoTransferService.markAsFailedAndSave(transfer);
             } catch (Exception e) {
                 System.out.println("자동이체 실패(기타 오류) ID: " + transfer.getId());
