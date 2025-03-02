@@ -1,11 +1,7 @@
 package com.http200ok.finbuddy.budget.controller;
 
-import com.http200ok.finbuddy.budget.dto.BudgetCreateRequestDto;
 import com.http200ok.finbuddy.budget.dto.BudgetResponseDto;
-import com.http200ok.finbuddy.budget.dto.BudgetUpdateRequestDto;
 import com.http200ok.finbuddy.budget.service.BudgetService;
-import com.http200ok.finbuddy.transaction.service.TransactionService;
-import com.http200ok.finbuddy.transfer.service.TransferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +16,14 @@ public class BudgetController {
 
     private final BudgetService budgetService;
 
+    // 예산 생성
     @PostMapping
     public ResponseEntity<Long> createMonthlyBudget(@RequestParam("memberId") Long memberId, @RequestParam("amount") Long amount) {
         Long budgetId = budgetService.createMonthlyBudget(memberId, amount);
         return ResponseEntity.status(HttpStatus.CREATED).body(budgetId);
     }
 
+    // 예산 수정
     @PatchMapping("/{budgetId}")
     public ResponseEntity<Long> updateBudget(@RequestParam("memberId") Long memberId, @PathVariable("budgetId") Long budgetId, @RequestParam("newAmount") Long newAmount) {
         Long updatedBudgetId = budgetService.updateBudget(memberId, budgetId, newAmount);
