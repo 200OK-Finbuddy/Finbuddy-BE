@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BudgetCreateRequestDto {
-    private Long memberId;
     private Long amount;
 }

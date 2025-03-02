@@ -4,31 +4,33 @@ import com.http200ok.finbuddy.budget.domain.Budget;
 import com.http200ok.finbuddy.budget.domain.PeriodType;
 import com.http200ok.finbuddy.budget.dto.BudgetResponseDto;
 import com.http200ok.finbuddy.budget.repository.BudgetRepository;
+import com.http200ok.finbuddy.common.validator.BudgetValidator;
 import com.http200ok.finbuddy.member.domain.Member;
 import com.http200ok.finbuddy.member.repository.MemberRepository;
 import com.http200ok.finbuddy.notification.domain.NotificationType;
 import com.http200ok.finbuddy.notification.service.NotificationService;
 import com.http200ok.finbuddy.transaction.repository.TransactionRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class BudgetServiceImpl implements BudgetService{
+public class BudgetServiceImpl implements BudgetService {
     private final BudgetRepository budgetRepository;
     private final MemberRepository memberRepository;
     private final TransactionRepository transactionRepository;
+    private final BudgetValidator budgetValidator;
     private final NotificationService notificationService;
 
     @Override
     @Transactional
     public Long createMonthlyBudget(Long memberId, Long amount) {
-        Member member = memberRepository.findById(memberId).get();
+        Member member = budgetValidator.validateMemberAndCheckDuplicateBudget(memberId);
 
         LocalDate now = LocalDate.now();
         LocalDate startDate = now.withDayOfMonth(1);
@@ -37,25 +39,27 @@ public class BudgetServiceImpl implements BudgetService{
         Budget budget = Budget.createBudget(member, amount, PeriodType.MONTHLY, startDate, endDate);
         budgetRepository.save(budget);
 
-        return budget.getId(); // Budget 대신 ID만 반환
+        return budget.getId();
     }
 
     @Override
     @Transactional
     public Long updateBudget(Long memberId, Long budgetId, Long newAmount) {
-        Budget budget = budgetRepository.findById(budgetId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 예산이 존재하지 않습니다."));
-
-        if (!budget.getMember().getId().equals(memberId)) {
-            new AccessDeniedException("해당 예산을 수정할 권한이 없습니다.");
-        }
-
+        Budget budget = budgetValidator.validateAndGetBudget(budgetId, memberId);
         budget.setAmount(newAmount);
-        return budget.getId(); // Budget 대신 ID만 반환
+        return budget.getId();
+    }
+
+    @Override
+    @Transactional
+    public void deleteBudget(Long memberId, Long budgetId) {
+        Budget budget = budgetValidator.validateAndGetBudget(budgetId, memberId);
+        budgetRepository.delete(budget);
     }
 
     // 현재 월의 예산 조회 (화면 반환용 - DTO 변환)
     @Override
+    @Transactional(readOnly = true)
     public Optional<BudgetResponseDto> getCurrentMonthBudgetDto(Long memberId) {
         return getCurrentMonthBudget(memberId).map(BudgetResponseDto::fromEntity);
     }

@@ -1,13 +1,17 @@
 package com.http200ok.finbuddy.budget.controller;
 
 import com.http200ok.finbuddy.budget.dto.BudgetCreateRequestDto;
+import com.http200ok.finbuddy.budget.dto.BudgetResponseDto;
 import com.http200ok.finbuddy.budget.dto.BudgetUpdateRequestDto;
 import com.http200ok.finbuddy.budget.service.BudgetService;
 import com.http200ok.finbuddy.transaction.service.TransactionService;
 import com.http200ok.finbuddy.transfer.service.TransferService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/budgets")
@@ -17,15 +21,29 @@ public class BudgetController {
     private final BudgetService budgetService;
 
     @PostMapping
-    public ResponseEntity<Long> createMonthlyBudget(@RequestBody BudgetCreateRequestDto requestDto) {
-        Long budgetId = budgetService.createMonthlyBudget(requestDto.getMemberId(), requestDto.getAmount());
-        return ResponseEntity.ok(budgetId);
+    public ResponseEntity<Long> createMonthlyBudget(@RequestParam("memberId") Long memberId, @RequestParam("amount") Long amount) {
+        Long budgetId = budgetService.createMonthlyBudget(memberId, amount);
+        return ResponseEntity.status(HttpStatus.CREATED).body(budgetId);
     }
 
     @PatchMapping("/{budgetId}")
-    public ResponseEntity<Long> updateBudget(@PathVariable("budgetId") Long budgetId, @RequestBody BudgetUpdateRequestDto requestDto) {
-        Long updatedBudgetId = budgetService.updateBudget(requestDto.getMemberId(), budgetId, requestDto.getNewAmount());
+    public ResponseEntity<Long> updateBudget(@RequestParam("memberId") Long memberId, @PathVariable("budgetId") Long budgetId, @RequestParam("newAmount") Long newAmount) {
+        Long updatedBudgetId = budgetService.updateBudget(memberId, budgetId, newAmount);
         return ResponseEntity.ok(updatedBudgetId);
+    }
+
+    // 현재 월 예산 조회
+    @GetMapping("/current")
+    public ResponseEntity<BudgetResponseDto> getCurrentMonthBudget(@RequestParam("memberId") Long memberId) {
+        Optional<BudgetResponseDto> budgetDto = budgetService.getCurrentMonthBudgetDto(memberId);
+        return budgetDto.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    // 예산 삭제
+    @DeleteMapping("/{budgetId}")
+    public ResponseEntity<Void> deleteBudget(@RequestParam("memberId") Long memberId, @PathVariable("budgetId") Long budgetId) {
+        budgetService.deleteBudget(memberId, budgetId);
+        return ResponseEntity.noContent().build();
     }
 
     // 예산 초과 테스트 API (GET 요청)

@@ -8,7 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BudgetUpdateRequestDto {
-    private Long memberId;
-    private Long budgetId;
     private Long newAmount;
 }

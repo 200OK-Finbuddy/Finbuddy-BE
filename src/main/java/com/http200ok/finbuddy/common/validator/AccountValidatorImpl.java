@@ -4,16 +4,14 @@ import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
 import com.http200ok.finbuddy.common.exception.UnauthorizedAccessException;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class AccountValidatorImpl implements AccountValidator{
 
     private final AccountRepository accountRepository;
-
-    public AccountValidatorImpl(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
-    }
 
     @Override
     public Account validateAndGetAccount(Long accountId, Long memberId) {
