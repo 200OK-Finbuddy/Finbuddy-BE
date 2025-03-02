@@ -27,35 +27,35 @@ public class NotificationController {
 
     // 알림 목록 조회
     @GetMapping("/{memberId}")
-    public ResponseEntity<List<NotificationResponseDto>> getNotifications(@PathVariable String memberId) {
+    public ResponseEntity<List<NotificationResponseDto>> getNotifications(@PathVariable("memberId") String memberId) {
         List<NotificationResponseDto> notifications = notificationService.getNotifications(memberId);
         return ResponseEntity.ok(notifications);
     }
 
     // 알림 읽음 표시
     @PatchMapping("/{notificationId}/read")
-    public ResponseEntity<Void> markAsRead(@PathVariable Long notificationId) {
+    public ResponseEntity<Void> markAsRead(@PathVariable("notificationId") Long notificationId) {
         notificationService.markAsRead(notificationId);
         return ResponseEntity.ok().build();
     }
 
     // 알림 단일 삭제
     @DeleteMapping("/{notificationId}")
-    public ResponseEntity<Void> deleteNotification(@PathVariable Long notificationId) {
+    public ResponseEntity<Void> deleteNotification(@PathVariable("notificationId") Long notificationId) {
         notificationService.deleteNotification(notificationId);
         return ResponseEntity.ok().build();
     }
 
     // 사용자의 모든 알림 삭제
     @DeleteMapping("/member/{memberId}")
-    public ResponseEntity<Void> deleteAllNotifications(@PathVariable String memberId) {
+    public ResponseEntity<Void> deleteAllNotifications(@PathVariable("memberId") String memberId) {
         notificationService.deleteAllNotifications(memberId);
         return ResponseEntity.ok().build();
     }
 
     // 읽지 않은 알림 개수 조회
     @GetMapping("/unread-count/{memberId}")
-    public ResponseEntity<Long> getUnreadCount(@PathVariable String memberId) {
+    public ResponseEntity<Long> getUnreadCount(@PathVariable("memberId") String memberId) {
         Long count = notificationService.getUnreadCount(memberId);
         return ResponseEntity.ok(count);
     }
