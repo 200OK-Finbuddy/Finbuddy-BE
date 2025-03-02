@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -33,13 +31,13 @@ public class Budget {
     @Enumerated(EnumType.STRING)
     private PeriodType periodType;
 
-    private Long budget;
+    private Long amount;
 
     // 생성 메서드
     public static Budget createBudget(Member member, Long amount, PeriodType periodType, LocalDate startDate, LocalDate endDate) {
         Budget budget = new Budget();
         budget.member = member;
-        budget.budget = amount;
+        budget.amount = amount;
         budget.periodType = periodType;
         budget.startDate = startDate;
         budget.endDate = endDate;

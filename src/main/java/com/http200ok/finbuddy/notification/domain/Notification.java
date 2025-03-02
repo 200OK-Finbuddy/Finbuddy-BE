@@ -1,6 +1,5 @@
 package com.http200ok.finbuddy.notification.domain;
 
-import com.http200ok.finbuddy.budget.domain.Budget;
 import com.http200ok.finbuddy.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,11 +21,11 @@ public class Notification {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    private Member receiver;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "budget_id")
-    private Budget budget;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private NotificationType notificationType;
 
     @Column(nullable = false)
     private String content;
@@ -34,11 +33,22 @@ public class Notification {
     @Builder.Default
     private Boolean isRead = false;
 
+    @Builder.Default
+    private Boolean deleted = false; // 소프트 삭제를 위한 필드
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public void read() {
+        isRead = true;
+    }
+
+    public void delete() {
+        this.deleted = true;
     }
 }

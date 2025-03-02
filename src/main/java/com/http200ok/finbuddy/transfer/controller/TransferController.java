@@ -2,6 +2,7 @@ package com.http200ok.finbuddy.transfer.controller;
 
 import com.http200ok.finbuddy.account.dto.CheckingAccountResponseDto;
 import com.http200ok.finbuddy.account.dto.ReceivingAccountResponseDto;
+import com.http200ok.finbuddy.budget.service.BudgetService;
 import com.http200ok.finbuddy.transfer.dto.TransferRequestDto;
 import com.http200ok.finbuddy.transfer.service.TransferService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.Map;
 public class TransferController {
 
     private final TransferService transferService;
+    private final BudgetService budgetService;
 
     // 이체 시 입출금 계좌 조회
     @GetMapping("/all/checking-account")
@@ -48,9 +50,9 @@ public class TransferController {
         );
 
         // 이체 성공 후 예산 초과 확인 및 알림 전송
-//        if (result) {
-//            transferService.checkAndNotifyBudgetExceededOnTransaction(memberId);
-//        }
+        if (result) {
+            budgetService.checkAndNotifyBudgetExceededOnTransaction(memberId);
+        }
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);

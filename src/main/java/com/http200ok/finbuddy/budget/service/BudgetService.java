@@ -9,6 +9,6 @@ public interface BudgetService {
     Long createMonthlyBudget(Long memberId, Long amount);
     Long updateBudget(Long memberId, Long budgetId, Long newAmount);
 
-    Optional<Budget> getCurrentMonthBudget(Long memberId);
     Optional<BudgetResponseDto> getCurrentMonthBudgetDto(Long memberId);
+    void checkAndNotifyBudgetExceededOnTransaction(Long memberId);
 }

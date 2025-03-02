@@ -4,13 +4,11 @@ import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.account.dto.CheckingAccountResponseDto;
 import com.http200ok.finbuddy.account.dto.ReceivingAccountResponseDto;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
-import com.http200ok.finbuddy.budget.service.BudgetService;
 import com.http200ok.finbuddy.category.domain.Category;
 import com.http200ok.finbuddy.category.repository.CategoryRepository;
 import com.http200ok.finbuddy.common.exception.InsufficientBalanceException;
 import com.http200ok.finbuddy.common.exception.InvalidTransactionException;
 import com.http200ok.finbuddy.common.validator.AccountValidator;
-import com.http200ok.finbuddy.notification.service.NotificationService;
 import com.http200ok.finbuddy.transaction.domain.Transaction;
 import com.http200ok.finbuddy.transaction.repository.TransactionRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,8 +27,6 @@ public class TransferServiceImpl implements TransferService {
     private final TransactionRepository transactionRepository;
     private final AccountValidator accountValidator;
     private final CategoryRepository categoryRepository;
-    private final BudgetService budgetService;
-    private final NotificationService notificationService;
 
     @Override
     public List<CheckingAccountResponseDto> getCheckingAccountList(Long memberId) {
@@ -107,23 +103,6 @@ public class TransferServiceImpl implements TransferService {
         accountRepository.save(toAccount);
 
         return true;
-    }
-
-    // 이체 발생 즉시 예산 초과 여부 확인 및 알림 전송
-    @Override
-    public void checkAndNotifyBudgetExceededOnTransaction(Long memberId) {
-        budgetService.getCurrentMonthBudget(memberId)
-                .ifPresent(budget -> {
-                    Long totalSpending = transactionRepository.getTotalSpendingForCurrentMonth(memberId);
-                    if (totalSpending > budget.getBudget()) {
-                        notificationService.sendBudgetExceededNotification(
-                                budget.getMember(), budget, "예산을 초과하였습니다."
-                        );
-                        System.out.println("예산초과");
-                    } else {
-                        System.out.println("예산이하");
-                    }
-                });
     }
 
 }

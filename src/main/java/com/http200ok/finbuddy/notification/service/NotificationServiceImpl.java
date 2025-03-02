@@ -1,8 +1,8 @@
 package com.http200ok.finbuddy.notification.service;
 
-import com.http200ok.finbuddy.budget.domain.Budget;
 import com.http200ok.finbuddy.member.domain.Member;
 import com.http200ok.finbuddy.notification.domain.Notification;
+import com.http200ok.finbuddy.notification.domain.NotificationType;
 import com.http200ok.finbuddy.notification.repository.EmitterRepository;
 import com.http200ok.finbuddy.notification.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,10 +39,10 @@ public class NotificationServiceImpl implements NotificationService{
     }
 
     // 예산 초과 시 알림을 보내는 메서드
-    public void sendBudgetExceededNotification(Member member, Budget budget, String content) {
+    public void sendNotification(Member member, NotificationType notificationType, String content) {
         Notification notification = Notification.builder()
-                .member(member)
-                .budget(budget)
+                .receiver(member)
+                .notificationType(notificationType)
                 .content(content)
                 .build();
 

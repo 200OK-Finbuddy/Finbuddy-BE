@@ -12,6 +12,6 @@ public class BudgetResponseDto {
     private Long budgetAmount;
 
     public static BudgetResponseDto fromEntity(Budget budget) {
-        return new BudgetResponseDto(budget.getId(), budget.getBudget());
+        return new BudgetResponseDto(budget.getId(), budget.getAmount());
     }
 }
