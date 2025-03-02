@@ -31,6 +31,7 @@ public class TransferController {
     // 이체 시 입금 계좌 조회
     @GetMapping("/receiving-account")
     public ResponseEntity<ReceivingAccountResponseDto> getReceivingAccount(@RequestParam("bankName") String bankName, @RequestParam("accountNumber") String accountNumber) {
+        System.out.println("bankName = " + bankName);
         ReceivingAccountResponseDto receivingAccount = transferService.getReceivingAccount(bankName, accountNumber);
         return ResponseEntity.ok(receivingAccount);
     }

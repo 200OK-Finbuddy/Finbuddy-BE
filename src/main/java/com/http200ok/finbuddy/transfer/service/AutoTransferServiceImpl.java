@@ -2,6 +2,7 @@ package com.http200ok.finbuddy.transfer.service;
 
 import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
+import com.http200ok.finbuddy.common.validator.AccountValidator;
 import com.http200ok.finbuddy.transfer.domain.AutoTransfer;
 import com.http200ok.finbuddy.transfer.domain.AutoTransferStatus;
 import com.http200ok.finbuddy.transfer.dto.AutoTransferUpdateRequestDto;
@@ -22,21 +23,22 @@ public class AutoTransferServiceImpl implements AutoTransferService {
     private final AccountRepository accountRepository;
     private final AutoTransferRepository autoTransferRepository;
     private final TransferService transferService;
+    private final AccountValidator accountValidator;
 
     @Override
     @Transactional
-    public AutoTransfer createAutoTransfers(Long fromAccountId, String targetAccountNumber, Long amount, Integer transferDay) {
+    public AutoTransfer createAutoTransfers(Long fromAccountId, String bankName, String targetAccountNumber, Long amount, Integer transferDay) {
         Account fromAccount = accountRepository.findById(fromAccountId)
                 .orElseThrow(() -> new EntityNotFoundException("선택하신 출금 계좌를 찾을 수 없습니다."));
 
         // 입력한 입금 계좌 조회
-        Account toAccount = accountRepository.findByAccountNumber(targetAccountNumber)
-                .orElseThrow(() -> new EntityNotFoundException("입력하신 계좌번호의 계좌가 존재하지 않습니다."));
+        Account toAccount = accountValidator.validateAndGetBankAccount(bankName, targetAccountNumber);
 
         // 자동이체 엔티티 생성
         AutoTransfer autoTransfer = AutoTransfer.createAutoTransfer(
                 fromAccount,
-                toAccount,
+                toAccount.getBank().getName(),
+                toAccount.getAccountNumber(),
                 amount,
                 transferDay
         );
@@ -109,12 +111,12 @@ public class AutoTransferServiceImpl implements AutoTransferService {
                 boolean success = transferService.executeAccountTransfer(
                         transfer.getAccount().getMember().getId(),
                         transfer.getAccount().getId(),
-                        transfer.getTargetAccount().getBank().getName(),
-                        transfer.getTargetAccount().getAccountNumber(),
+                        transfer.getTargetBankName(),
+                        transfer.getTargetAccountNumber(),
                         transfer.getAmount(),
                         transfer.getAccount().getPassword(),
                         transfer.getAccount().getMember().getName(),
-                        transfer.getTargetAccount().getMember().getName()
+                        null
                 );
 
                 if (!success) {

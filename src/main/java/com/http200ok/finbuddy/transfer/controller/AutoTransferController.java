@@ -26,6 +26,7 @@ public class AutoTransferController {
 
         AutoTransfer autoTransfer = autoTransferService.createAutoTransfers(
                 request.getFromAccountId(),
+                request.getTargetBankName(),
                 request.getTargetAccountNumber(),
                 request.getAmount(),
                 request.getTransferDay()

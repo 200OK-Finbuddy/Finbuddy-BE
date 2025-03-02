@@ -6,6 +6,7 @@ import com.http200ok.finbuddy.account.dto.AccountSummaryResponseDto;
 import com.http200ok.finbuddy.account.dto.CheckingAccountsSummaryResponseDto;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
 import com.http200ok.finbuddy.common.validator.AccountValidator;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,4 +58,14 @@ public class AccountServiceImpl implements AccountService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 계좌 비밀번호 검증
+     */
+    public boolean verifyPassword(Long accountId, String inputPassword) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 계좌를 찾을 수 없습니다."));
+
+        // 비밀번호 일치 여부 확인
+        return account.getPassword().equals(inputPassword);
+    }
 }

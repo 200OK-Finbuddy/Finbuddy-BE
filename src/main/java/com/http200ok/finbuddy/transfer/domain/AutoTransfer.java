@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,10 +23,13 @@ public class AutoTransfer {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
-    // 입금 계좌
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "target_account_id", nullable = false)
-    private Account targetAccount;
+    // 입금 은행명
+    @Column(nullable = false)
+    private String targetBankName;
+
+    // 입금 계좌번호
+    @Column(nullable = false)
+    private String targetAccountNumber;
 
     @Column(nullable = false)
     private Long amount;
@@ -45,10 +47,11 @@ public class AutoTransfer {
     private LocalDateTime updatedAt;
 
     // 생성 메서드
-    public static AutoTransfer createAutoTransfer(Account account, Account targetAccount, Long amount, Integer transferDay) {
+    public static AutoTransfer createAutoTransfer(Account account, String targetBankName, String targetAccountNumber, Long amount, Integer transferDay) {
         AutoTransfer autoTransfer = new AutoTransfer();
         autoTransfer.account = account;
-        autoTransfer.targetAccount = targetAccount;
+        autoTransfer.targetBankName = targetBankName;
+        autoTransfer.targetAccountNumber = targetAccountNumber;
         autoTransfer.amount = amount;
         autoTransfer.transferDay = transferDay;
         autoTransfer.status = AutoTransferStatus.ACTIVE;
@@ -73,15 +76,6 @@ public class AutoTransfer {
         } else {
             throw new IllegalStateException("취소된 자동이체는 활성화할 수 없습니다.");
         }
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    public void executeTransfer() {
-        if (this.account.getBalance() < this.amount) {
-            throw new IllegalStateException("잔액 부족으로 자동이체 실패");
-        }
-        this.account.setBalance(this.account.getBalance() - this.amount);
-        this.targetAccount.setBalance(this.targetAccount.getBalance() + this.amount);
         this.updatedAt = LocalDateTime.now();
     }
 

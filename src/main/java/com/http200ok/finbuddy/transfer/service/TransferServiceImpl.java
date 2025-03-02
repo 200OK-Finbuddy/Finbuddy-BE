@@ -66,6 +66,10 @@ public class TransferServiceImpl implements TransferService {
         // 입금 계좌 검증 및 조회 (비관적 락 사용)
         Account toAccount = accountValidator.validateAndGetBankAccountWithLock(toBankName, toAccountNumber);
 
+        if (receiverName == null) {
+            receiverName = toAccount.getMember().getName();
+        }
+
         // 동일 계좌 검증
         if (fromAccount.getAccountNumber().equals(toAccountNumber) &&
                 fromAccount.getBank().getName().equals(toBankName)) {

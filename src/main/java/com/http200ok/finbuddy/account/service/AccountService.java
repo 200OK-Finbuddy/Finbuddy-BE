@@ -10,4 +10,5 @@ public interface AccountService {
     AccountResponseDto getAccountDetails(Long memberId, Long accountId);
     CheckingAccountsSummaryResponseDto getCheckingAccountsSummary(Long memberId);
     List<AccountSummaryResponseDto> getAccountsByMemberId(Long memberId);
+    boolean verifyPassword(Long accountId, String inputPassword);
 }
