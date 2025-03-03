@@ -2,11 +2,13 @@ package com.http200ok.finbuddy.budget.controller;
 
 import com.http200ok.finbuddy.budget.dto.BudgetResponseDto;
 import com.http200ok.finbuddy.budget.service.BudgetService;
+import com.http200ok.finbuddy.transaction.dto.CheckingAccountTransactionResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -49,6 +51,12 @@ public class BudgetController {
     public ResponseEntity<String> testExceededBudget(@PathVariable("memberId") Long memberId) {
         budgetService.checkAndNotifyBudgetExceededOnTransaction(memberId);
         return ResponseEntity.ok("예산 초과 체크를 수행했습니다.");
+    }
+
+    @GetMapping("/checking/recent/{memberId}")
+    public ResponseEntity<List<CheckingAccountTransactionResponseDto>> getLatestTransactionsForUserCheckingAccounts(@PathVariable("memberId") Long memberId) {
+        List<CheckingAccountTransactionResponseDto> transactions = budgetService.getLatestTransactionsForCurrentMonth(memberId);
+        return ResponseEntity.ok(transactions);
     }
 
 }

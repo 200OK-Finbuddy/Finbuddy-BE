@@ -9,14 +9,20 @@ import com.http200ok.finbuddy.member.domain.Member;
 import com.http200ok.finbuddy.member.repository.MemberRepository;
 import com.http200ok.finbuddy.notification.domain.NotificationType;
 import com.http200ok.finbuddy.notification.service.NotificationService;
+import com.http200ok.finbuddy.transaction.domain.Transaction;
+import com.http200ok.finbuddy.transaction.dto.CheckingAccountTransactionResponseDto;
 import com.http200ok.finbuddy.transaction.repository.TransactionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,7 +67,9 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     @Transactional(readOnly = true)
     public Optional<BudgetResponseDto> getCurrentMonthBudgetDto(Long memberId) {
-        return getCurrentMonthBudget(memberId).map(BudgetResponseDto::fromEntity);
+        Long totalSpending = transactionRepository.getTotalSpendingForCurrentMonth(memberId);
+        return getCurrentMonthBudget(memberId)
+                .map(budget -> BudgetResponseDto.fromEntity(budget, totalSpending != null ? totalSpending : 0L));
     }
 
     // 현재 월의 예산 조회 (내부 로직용 - Entity 반환)
@@ -92,5 +100,20 @@ public class BudgetServiceImpl implements BudgetService {
                         );
                     }
                 });
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<CheckingAccountTransactionResponseDto> getLatestTransactionsForCurrentMonth(Long memberId) {
+        // 현재 날짜 가져오기
+        LocalDate now = LocalDate.now();
+        int currentYear = now.getYear();
+        int currentMonth = now.getMonthValue();
+
+        // 해당 월의 거래 내역 조회
+        return transactionRepository.findLatestTransactionsForUserCheckingAccountsInMonth(memberId, currentYear, currentMonth)
+                .stream()
+                .map(CheckingAccountTransactionResponseDto::new)
+                .collect(Collectors.toList());
     }
 }
