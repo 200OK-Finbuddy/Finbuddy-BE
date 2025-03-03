@@ -1,7 +1,9 @@
 package com.http200ok.finbuddy.budget.service;
 
 import com.http200ok.finbuddy.budget.dto.BudgetResponseDto;
+import com.http200ok.finbuddy.transaction.dto.CheckingAccountTransactionResponseDto;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface BudgetService {
@@ -10,4 +12,5 @@ public interface BudgetService {
     Optional<BudgetResponseDto> getCurrentMonthBudgetDto(Long memberId);
     void deleteBudget(Long memberId, Long budgetId);
     void checkAndNotifyBudgetExceededOnTransaction(Long memberId);
+    List<CheckingAccountTransactionResponseDto> getLatestTransactionsForCurrentMonth(Long memberId);
 }

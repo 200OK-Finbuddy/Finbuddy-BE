@@ -18,15 +18,17 @@ public class BudgetResponseDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private PeriodType periodType;
+    private Long spentAmount;
 
-    public static BudgetResponseDto fromEntity(Budget budget) {
+    public static BudgetResponseDto fromEntity(Budget budget, Long spentAmount) {
         return new BudgetResponseDto(
                 budget.getId(),
                 budget.getMember().getId(),
                 budget.getAmount(),
                 budget.getStartDate(),
                 budget.getEndDate(),
-                budget.getPeriodType()
+                budget.getPeriodType(),
+                spentAmount
         );
     }
 }

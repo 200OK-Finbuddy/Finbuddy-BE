@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
@@ -156,6 +157,22 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<CategoryExpenseDto> getTotalSpendingByCategoryForMonth(
             @Param("memberId") Long memberId,
             @Param("accountId") Long accountId,
+            @Param("year") int year,
+            @Param("month") int month
+    );
+
+    @Query("""
+        SELECT t FROM Transaction t
+        JOIN t.account a
+        JOIN a.member m
+        WHERE m.id = :memberId
+        AND a.accountType = 'CHECKING'
+        AND FUNCTION('YEAR', t.transactionDate) = :year
+        AND FUNCTION('MONTH', t.transactionDate) = :month
+        ORDER BY t.transactionDate DESC
+    """)
+    List<Transaction> findLatestTransactionsForUserCheckingAccountsInMonth(
+            @Param("memberId") Long memberId,
             @Param("year") int year,
             @Param("month") int month
     );
