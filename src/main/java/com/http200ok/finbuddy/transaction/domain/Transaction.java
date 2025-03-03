@@ -57,4 +57,29 @@ public class Transaction {
         transaction.setCategory(category);
         return transaction;
     }
+
+    // 더미 데이터용 생성 메서드
+    public static Transaction createDummyTransaction(
+            Account account, Integer transactionType, Long amount,
+            Category category, LocalDateTime transactionDate,
+            String opponentName, Long updatedBalance) {
+
+        if (transactionType != 1 && transactionType != 2) {
+            throw new IllegalArgumentException("유효하지 않은 거래 타입입니다. (1: 입금, 2: 출금)");
+        }
+
+        Transaction transaction = new Transaction();
+        transaction.setAccount(account);
+        transaction.setTransactionType(transactionType);
+        transaction.setAmount(amount);
+        transaction.setCategory(category);
+        transaction.setTransactionDate(transactionDate);
+        transaction.setOpponentName(opponentName);
+        transaction.setUpdatedBalance(updatedBalance);
+
+        // 연관관계 설정
+        account.getTransactions().add(transaction);
+
+        return transaction;
+    }
 }
