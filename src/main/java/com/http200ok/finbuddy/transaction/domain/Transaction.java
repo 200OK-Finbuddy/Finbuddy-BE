@@ -52,9 +52,27 @@ public class Transaction {
         transaction.setOpponentName(opponentName);
         transaction.setTransactionType(transactionType);
         transaction.setAmount(amount);
-        transaction.setUpdatedBalance(account.getBalance());
+
+        // 계좌 잔액 업데이트
+        long currentBalance = account.getBalance();
+        if (transactionType == 1) { // 입금
+            currentBalance += amount;
+        } else { // 출금
+            // 잔액이 부족한 경우 예외 발생
+            if (currentBalance < amount) {
+                throw new IllegalArgumentException("계좌 잔액이 부족합니다.");
+            }
+            currentBalance -= amount;
+        }
+
+        account.setBalance(currentBalance);
+        transaction.setUpdatedBalance(currentBalance);
         transaction.setTransactionDate(LocalDateTime.now());
         transaction.setCategory(category);
+
+        // 연관관계 설정
+        account.getTransactions().add(transaction);
+
         return transaction;
     }
 

@@ -122,7 +122,7 @@ public class MyDataServiceImpl implements MyDataService {
             }
 
             // 계좌 삭제
-            accountRepository.deleteById(memberId);
+            accountRepository.deleteByMemberId(memberId);
 
             System.out.println("회원 " + member.getName() + "(ID: " + memberId + ")의 기존 데이터 삭제 완료. 계좌 "
                     + accountCount + "개, 거래내역 " + transactionCount + "개 삭제됨");
@@ -475,40 +475,72 @@ public class MyDataServiceImpl implements MyDataService {
     private int generateInterAccountTransactions(Account mainAccount, List<Account> checkingAccounts,
                                                  List<Account> depositAccounts, List<Account> savingAccounts) {
         List<Transaction> allTransactions = new ArrayList<>();
-        long transferAmount = randomAmount(50, 200) * 1000;
+
+        // 계좌별 잔액 맵 초기화
+        Map<Long, Long> accountBalances = new HashMap<>();
+        accountBalances.put(mainAccount.getId(), mainAccount.getBalance());
+
+        for (Account account : checkingAccounts) {
+            accountBalances.put(account.getId(), account.getBalance());
+        }
+        for (Account account : depositAccounts) {
+            accountBalances.put(account.getId(), account.getBalance());
+        }
+        for (Account account : savingAccounts) {
+            accountBalances.put(account.getId(), account.getBalance());
+        }
 
         // 메인 계좌 -> 다른 입출금 계좌 이체
-        if (mainAccount.getBalance() >= transferAmount) {
-            for (int i = 1; i < checkingAccounts.size(); i++) {
-                Account targetAccount = checkingAccounts.get(i);
-                for (int j = 0; j < randomInt(1, 3); j++) {
-                    LocalDateTime transferDate = randomDateWithinLastMonth();
+        for (int i = 1; i < checkingAccounts.size(); i++) {
+            Account targetAccount = checkingAccounts.get(i);
+            for (int j = 0; j < randomInt(1, 3); j++) {
+                // 1000원 단위 금액 설정
+                long transferAmount = randomAmount(50, 200) * 1000;
+                LocalDateTime transferDate = randomDateWithinLastMonth();
 
-                    // 메인 계좌에서 출금
-                    Transaction outTx = Transaction.createDummyTransaction(
-                            mainAccount,
-                            EXPENSE_TYPE,
-                            transferAmount,
-                            categoryRepository.findById(7L).orElse(null), // 기타(이체)
-                            transferDate,
-                            targetAccount.getMember().getName(),
-                            mainAccount.getBalance() - transferAmount
-                    );
-
-                    // 타겟 계좌에 입금
-                    Transaction inTx = Transaction.createDummyTransaction(
-                            targetAccount,
-                            INCOME_TYPE,
-                            transferAmount,
-                            categoryRepository.findById(7L).orElse(null), // 기타(이체)
-                            transferDate,
-                            mainAccount.getMember().getName(),
-                            0L // 잔액은 나중에 계산
-                    );
-
-                    allTransactions.add(outTx);
-                    allTransactions.add(inTx);
+                // 메인 계좌 잔액 확인
+                long mainAccountBalance = accountBalances.get(mainAccount.getId());
+                if (mainAccountBalance < transferAmount) {
+                    // 잔액 부족 시 조정
+                    transferAmount = mainAccountBalance > 1000 ? mainAccountBalance - 1000 : 0;
+                    if (transferAmount <= 0) {
+                        continue; // 이체할 금액이 없으면 건너뜀
+                    }
                 }
+
+                // 메인 계좌에서 차감
+                mainAccountBalance -= transferAmount;
+                accountBalances.put(mainAccount.getId(), mainAccountBalance);
+
+                // 대상 계좌에 추가
+                long targetAccountBalance = accountBalances.get(targetAccount.getId());
+                targetAccountBalance += transferAmount;
+                accountBalances.put(targetAccount.getId(), targetAccountBalance);
+
+                // 메인 계좌에서 출금 - 상대방(계좌 주인) 이름 표시
+                Transaction outTx = Transaction.createDummyTransaction(
+                        mainAccount,
+                        EXPENSE_TYPE,
+                        transferAmount,
+                        categoryRepository.findById(7L).orElse(null), // 기타(이체)
+                        transferDate,
+                        targetAccount.getMember().getName(), // 계좌 주인 이름
+                        mainAccountBalance
+                );
+
+                // 타겟 계좌에 입금 - 상대방(계좌 주인) 이름 표시
+                Transaction inTx = Transaction.createDummyTransaction(
+                        targetAccount,
+                        INCOME_TYPE,
+                        transferAmount,
+                        categoryRepository.findById(7L).orElse(null), // 기타(이체)
+                        transferDate,
+                        mainAccount.getMember().getName(), // 계좌 주인 이름
+                        targetAccountBalance
+                );
+
+                allTransactions.add(outTx);
+                allTransactions.add(inTx);
             }
         }
 
@@ -520,10 +552,35 @@ public class MyDataServiceImpl implements MyDataService {
 
             // 매월 납입한 횟수 계산
             long monthsBetween = startDate.toLocalDate().until(now.toLocalDate()).toTotalMonths();
-            long monthlyDeposit = savingAccount.getBalance() / (monthsBetween > 0 ? monthsBetween : 1);
+            if (monthsBetween <= 0) monthsBetween = 1;
+
+            // 적금 잔액을 납입 월수로 나누어 월 납입액 계산 (만원 단위로 조정)
+            long monthlyDeposit = (savingAccount.getBalance() / monthsBetween) / 10000 * 10000;
+            if (monthlyDeposit < 10000) {
+                monthlyDeposit = 10000; // 최소 1만원
+            }
 
             for (int i = 0; i < monthsBetween; i++) {
                 LocalDateTime depositDate = startDate.plusMonths(i);
+
+                // 메인 계좌 잔액 확인
+                long mainAccountBalance = accountBalances.get(mainAccount.getId());
+                if (mainAccountBalance < monthlyDeposit) {
+                    // 잔액 부족 시 조정
+                    monthlyDeposit = mainAccountBalance > 10000 ? (mainAccountBalance / 10000) * 10000 - 10000 : 0;
+                    if (monthlyDeposit <= 0) {
+                        continue; // 이체할 금액이 없으면 건너뜀
+                    }
+                }
+
+                // 메인 계좌에서 차감
+                mainAccountBalance -= monthlyDeposit;
+                accountBalances.put(mainAccount.getId(), mainAccountBalance);
+
+                // 적금 계좌에 추가
+                long savingAccountBalance = accountBalances.get(savingAccount.getId());
+                savingAccountBalance += monthlyDeposit;
+                accountBalances.put(savingAccount.getId(), savingAccountBalance);
 
                 // 메인 계좌에서 출금
                 Transaction outTx = Transaction.createDummyTransaction(
@@ -532,8 +589,8 @@ public class MyDataServiceImpl implements MyDataService {
                         monthlyDeposit,
                         categoryRepository.findById(7L).orElse(null), // 기타(적금)
                         depositDate,
-                        savingAccount.getMember().getName(),
-                        0L // 임시값
+                        savingAccount.getAccountName(), // 계좌 이름(상품명)
+                        mainAccountBalance
                 );
 
                 // 적금 계좌에 입금
@@ -543,8 +600,8 @@ public class MyDataServiceImpl implements MyDataService {
                         monthlyDeposit,
                         categoryRepository.findById(7L).orElse(null), // 기타(적금)
                         depositDate,
-                        mainAccount.getMember().getName(),
-                        0L // 임시값
+                        mainAccount.getMember().getName(), // 계좌 주인 이름
+                        savingAccountBalance
                 );
 
                 allTransactions.add(outTx);
@@ -556,26 +613,45 @@ public class MyDataServiceImpl implements MyDataService {
         for (Account depositAccount : depositAccounts) {
             LocalDateTime depositDate = depositAccount.getCreatedAt();
 
+            // 예금 잔액을 만원 단위로 조정
+            long depositAmount = depositAccount.getBalance() / 10000 * 10000;
+
+            // 메인 계좌 잔액 확인
+            long mainAccountBalance = accountBalances.get(mainAccount.getId());
+            if (mainAccountBalance < depositAmount) {
+                // 잔액 부족 시 이 거래는 건너뜀
+                continue;
+            }
+
+            // 메인 계좌에서 차감
+            mainAccountBalance -= depositAmount;
+            accountBalances.put(mainAccount.getId(), mainAccountBalance);
+
+            // 예금 계좌에 추가
+            long depositAccountBalance = accountBalances.get(depositAccount.getId());
+            depositAccountBalance += depositAmount;
+            accountBalances.put(depositAccount.getId(), depositAccountBalance);
+
             // 메인 계좌에서 출금
             Transaction outTx = Transaction.createDummyTransaction(
                     mainAccount,
                     EXPENSE_TYPE,
-                    depositAccount.getBalance(),
+                    depositAmount,
                     categoryRepository.findById(7L).orElse(null), // 기타(예금)
                     depositDate,
                     depositAccount.getMember().getName(),
-                    0L // 임시값
+                    mainAccountBalance
             );
 
             // 예금 계좌에 입금
             Transaction inTx = Transaction.createDummyTransaction(
                     depositAccount,
                     INCOME_TYPE,
-                    depositAccount.getBalance(),
+                    depositAmount,
                     categoryRepository.findById(7L).orElse(null), // 기타(예금)
                     depositDate,
                     mainAccount.getMember().getName(),
-                    0L // 임시값
+                    depositAccountBalance // 임시값
             );
 
             allTransactions.add(outTx);
@@ -585,35 +661,19 @@ public class MyDataServiceImpl implements MyDataService {
         // 거래 날짜 기준 정렬
         allTransactions.sort(Comparator.comparing(Transaction::getTransactionDate));
 
-        // 계좌별 잔액 재계산
-        Map<Long, Long> accountBalances = new HashMap<>();
-        for (Account account : checkingAccounts) {
-            accountBalances.put(account.getId(), 0L);
-        }
-        for (Account account : depositAccounts) {
-            accountBalances.put(account.getId(), 0L);
-        }
-        for (Account account : savingAccounts) {
-            accountBalances.put(account.getId(), 0L);
-        }
-
-        for (Transaction tx : allTransactions) {
-            Long accountId = tx.getAccount().getId();
-            Long currentBalance = accountBalances.getOrDefault(accountId, 0L);
-
-            if (tx.getTransactionType() == INCOME_TYPE) {
-                currentBalance += tx.getAmount();
-            } else {
-                currentBalance -= tx.getAmount();
+        // 모든 계좌의 잔액 업데이트
+        for (Map.Entry<Long, Long> entry : accountBalances.entrySet()) {
+            Account account = accountRepository.findById(entry.getKey()).orElse(null);
+            if (account != null) {
+                account.setBalance(entry.getValue());
+                accountRepository.save(account);
             }
-
-            accountBalances.put(accountId, currentBalance);
-            tx.setUpdatedBalance(currentBalance);
         }
 
-        // 저장
+        // 생성된 거래 저장
         transactionRepository.saveAll(allTransactions);
 
+        // 생성된 거래 수 반환
         return allTransactions.size();
     }
 
