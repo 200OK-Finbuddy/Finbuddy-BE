@@ -1,6 +1,7 @@
 HELP.md
 .gradle
 .env
+.dockerignore
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/

@@ -35,7 +35,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	implementation 'io.github.cdimascio:dotenv-java:2.2.0'
+	// implementation 'io.github.cdimascio:dotenv-java:2.2.0'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation group: 'org.json', name: 'json', version: '20250107'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
@@ -45,4 +45,12 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jar {
+	enabled = false
+}
+
+bootJar {
+	archiveFileName = 'app.jar' // 빌드 시 단일 JAR 파일로 생성
 }

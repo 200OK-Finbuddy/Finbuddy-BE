@@ -8,12 +8,12 @@ import com.http200ok.finbuddy.product.domain.SavingProduct;
 import com.http200ok.finbuddy.product.domain.SavingProductOption;
 import com.http200ok.finbuddy.product.repository.DepositProductRepository;
 import com.http200ok.finbuddy.product.repository.SavingProductRepository;
-import io.github.cdimascio.dotenv.Dotenv;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +33,10 @@ public class ProductFetchServiceImpl implements ProductFetchService {
     private final BankRepository bankRepository;
     private final RestTemplate restTemplate;
 
-    private static final Dotenv dotenv = Dotenv.load();
+    // private static final Dotenv dotenv = Dotenv.load();
     private static final String BASE_URL = "http://finlife.fss.or.kr/finlifeapi/";
-    private static final String BANK_API_KEY = dotenv.get("BANK_API_KEY");
+    @Value("bank.api.key")
+    private static String BANK_API_KEY;
 
     private static final DateTimeFormatter LOCAL_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
     private static final DateTimeFormatter LOCAL_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmm");

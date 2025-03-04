@@ -1,14 +1,13 @@
 package com.http200ok.finbuddy.mail.service;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,8 +17,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MailServiceImpl implements MailService {
 
     private final JavaMailSender javaMailSender;
-    private static final Dotenv dotenv = Dotenv.load();
-    private static final String senderEmail = dotenv.get("SMTP_EMAIL");
+    // private static final Dotenv dotenv = Dotenv.load();
+    // private static final String senderEmail = dotenv.get("SMTP_EMAIL");
+    @Value("${smtp.email}")
+    private static String senderEmail;
     private static final Map<String, String> verificationCodes = new ConcurrentHashMap<>();
     private final Random random = new Random();
 
