@@ -46,7 +46,6 @@ jobs:
             docker pull ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
             
             cat <<EOF > docker-compose.override.yml
-            version: '3'
             services:
               backend:
                 environment:
