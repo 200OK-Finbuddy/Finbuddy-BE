@@ -6,16 +6,11 @@ import com.http200ok.finbuddy.budget.dto.BudgetResponseDto;
 import com.http200ok.finbuddy.budget.repository.BudgetRepository;
 import com.http200ok.finbuddy.common.validator.BudgetValidator;
 import com.http200ok.finbuddy.member.domain.Member;
-import com.http200ok.finbuddy.member.repository.MemberRepository;
 import com.http200ok.finbuddy.notification.domain.NotificationType;
 import com.http200ok.finbuddy.notification.service.NotificationService;
-import com.http200ok.finbuddy.transaction.domain.Transaction;
 import com.http200ok.finbuddy.transaction.dto.CheckingAccountTransactionResponseDto;
 import com.http200ok.finbuddy.transaction.repository.TransactionRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +23,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BudgetServiceImpl implements BudgetService {
     private final BudgetRepository budgetRepository;
-    private final MemberRepository memberRepository;
     private final TransactionRepository transactionRepository;
     private final BudgetValidator budgetValidator;
     private final NotificationService notificationService;
@@ -81,7 +75,7 @@ public class BudgetServiceImpl implements BudgetService {
 
     // 이체 발생 즉시 예산 초과 여부 확인 및 알림 전송
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public void checkAndNotifyBudgetExceededOnTransaction(Long memberId) {
         getCurrentMonthBudget(memberId)
                 .ifPresent(budget -> {
