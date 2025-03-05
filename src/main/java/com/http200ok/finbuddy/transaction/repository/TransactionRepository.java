@@ -176,4 +176,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("year") int year,
             @Param("month") int month
     );
+
+    List<Transaction> findByAccountId(Long id);
+
+    int deleteByAccountId(Long id);
 }

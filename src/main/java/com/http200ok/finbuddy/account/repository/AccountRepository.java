@@ -48,5 +48,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     // 계좌번호로 계좌 조회
     Optional<Account> findByAccountNumber(String accountNumber);
 
+    List<Account> findByMemberId(Long memberId);
+
+    void deleteByMemberId(Long memberId);
 }
 

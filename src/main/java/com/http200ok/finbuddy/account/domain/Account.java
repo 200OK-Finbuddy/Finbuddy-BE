@@ -75,4 +75,25 @@ public class Account {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_option_id")
     private ProductOption selectedOption;
+
+    // 생성 메서드
+    public static Account createAccount(
+            Member member, Bank bank, Product product, ProductOption productOption,
+            String accountName, String accountNumber, String password,
+            AccountType accountType, Long balance, LocalDateTime createdAt, LocalDateTime maturedAt) {
+
+        Account account = new Account();
+        account.setMember(member);
+        account.setBank(bank);
+        account.setProduct(product);
+        account.setSelectedOption(productOption);
+        account.setAccountName(accountName);
+        account.setAccountNumber(accountNumber);
+        account.setPassword(password);
+        account.setAccountType(accountType);
+        account.setBalance(balance);
+        account.setCreatedAt(createdAt);
+        account.setMaturedAt(maturedAt);
+        return account;
+    }
 }
