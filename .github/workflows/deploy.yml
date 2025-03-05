@@ -37,4 +37,18 @@ jobs:
           key: ${{ secrets.AWS_KEY }}
           script: |
             docker pull ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
+            
+            cat <<EOF > docker-compose.override.yml
+            version: '3'
+            services:
+              backend:
+                environment:
+                  - DB_URL=${{ secrets.DB_URL }}
+                  - DB_USERNAME=${{ secrets.DB_USERNAME }}
+                  - DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+                  - BANK_API_KEY=${{ secrets.BANK_API_KEY }}
+                  - SMTP_EMAIL=${{ secrets.SMTP_EMAIL }}
+                  - SMTP_APPPASSWORD=${{ secrets.SMTP_APPPASSWORD }}
+            EOF
+      
             docker-compose up -d
