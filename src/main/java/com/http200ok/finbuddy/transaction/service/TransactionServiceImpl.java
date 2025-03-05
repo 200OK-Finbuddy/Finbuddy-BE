@@ -98,6 +98,6 @@ public class TransactionServiceImpl implements TransactionService {
         Long totalSpending = transactionRepository.getTotalSpendingForMonth(memberId, accountId, year, month);
         Long totalIncome = transactionRepository.getTotalIncomeForMonth(memberId, accountId, year, month);
 
-        return new MonthlyTransactionSummaryDto(totalSpending, totalIncome);
+        return new MonthlyTransactionSummaryDto(totalIncome, totalSpending);
     }
 }

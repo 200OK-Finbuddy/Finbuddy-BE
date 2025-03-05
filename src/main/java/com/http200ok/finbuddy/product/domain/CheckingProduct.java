@@ -19,8 +19,8 @@ import java.util.List;
 public class CheckingProduct extends Product {
 
     // 생성 메소드
-    public static com.http200ok.finbuddy.product.domain.DepositProduct createProduct(Bank bank, String code, String name) {
-        com.http200ok.finbuddy.product.domain.DepositProduct product = new com.http200ok.finbuddy.product.domain.DepositProduct();
+    public static CheckingProduct createProduct(Bank bank, String code, String name) {
+        CheckingProduct product = new CheckingProduct();
         product.bank = bank;
         product.code = code;
         product.name = name;

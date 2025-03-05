@@ -162,5 +162,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     List<Transaction> findByAccountId(Long id);
 
-    void deleteByAccountId(Long id);
+    int deleteByAccountId(Long id);
 }
