@@ -24,7 +24,6 @@ import java.util.List;
 public class AutoTransferServiceImpl implements AutoTransferService {
     private final AccountRepository accountRepository;
     private final AutoTransferRepository autoTransferRepository;
-//    private final TransferService transferService;
     private final AccountValidator accountValidator;
     private final NotificationService notificationService;
 
@@ -72,6 +71,7 @@ public class AutoTransferServiceImpl implements AutoTransferService {
 
         autoTransfer.updateTransferInfo(requestDto.getAmount(), requestDto.getTransferDay());
     }
+
     // 자동이체 상태 변경
     @Override
     @Transactional
@@ -83,6 +83,7 @@ public class AutoTransferServiceImpl implements AutoTransferService {
     }
 
     @Override
+    @Transactional
     public void deleteAutoTransfer(Long autoTransferId) {
         AutoTransfer autoTransfer = autoTransferRepository.findById(autoTransferId)
                 .orElseThrow(() -> new EntityNotFoundException("자동이체 정보가 존재하지 않습니다."));

@@ -73,6 +73,7 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     // 현재 월의 예산 조회 (내부 로직용 - Entity 반환)
+    @Transactional(readOnly = true)
     private Optional<Budget> getCurrentMonthBudget(Long memberId) {
         LocalDate now = LocalDate.now();
         return budgetRepository.findByMemberIdAndStartDate(memberId, now.withDayOfMonth(1));
@@ -80,6 +81,7 @@ public class BudgetServiceImpl implements BudgetService {
 
     // 이체 발생 즉시 예산 초과 여부 확인 및 알림 전송
     @Override
+    @Transactional(readOnly = true)
     public void checkAndNotifyBudgetExceededOnTransaction(Long memberId) {
         getCurrentMonthBudget(memberId)
                 .ifPresent(budget -> {
@@ -102,7 +104,7 @@ public class BudgetServiceImpl implements BudgetService {
                 });
     }
 
-
+    @Override
     @Transactional(readOnly = true)
     public List<CheckingAccountTransactionResponseDto> getLatestTransactionsForCurrentMonth(Long memberId) {
         // 현재 날짜 가져오기

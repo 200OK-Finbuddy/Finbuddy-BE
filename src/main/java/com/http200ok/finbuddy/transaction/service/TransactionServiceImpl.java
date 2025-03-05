@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final AccountValidator accountValidator;
 
     @Override
-    @Transactional(readOnly = true)
     public List<CheckingAccountTransactionResponseDto> getLatestTransactionsForUserCheckingAccounts(Long memberId) {
         Pageable pageable = PageRequest.of(0, 5);
         List<Transaction> transactions = transactionRepository

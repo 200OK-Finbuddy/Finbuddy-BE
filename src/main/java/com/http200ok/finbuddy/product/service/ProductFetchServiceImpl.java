@@ -33,7 +33,6 @@ public class ProductFetchServiceImpl implements ProductFetchService {
     private final BankRepository bankRepository;
     private final RestTemplate restTemplate;
 
-    // private static final Dotenv dotenv = Dotenv.load();
     private static final String BASE_URL = "http://finlife.fss.or.kr/finlifeapi/";
     @Value("bank.api.key")
     private static String BANK_API_KEY;
@@ -49,8 +48,8 @@ public class ProductFetchServiceImpl implements ProductFetchService {
         this.restTemplate = new RestTemplate();
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void fetchAndSaveProducts(String productType) {
         try {
             String apiUrl = BASE_URL + productType + "ProductsSearch.json?auth=" + BANK_API_KEY + "&topFinGrpNo=020000&pageNo=1";
@@ -87,6 +86,7 @@ public class ProductFetchServiceImpl implements ProductFetchService {
         return response;
     }
 
+    @Transactional
     private void processProduct(String productType, JSONObject productData, JSONArray optionList) {
         String bankCode = productData.getString("fin_co_no");
         String productCode = productData.getString("fin_prdt_cd");

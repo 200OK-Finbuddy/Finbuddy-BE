@@ -29,6 +29,7 @@ public class TransferServiceImpl implements TransferService {
     private final CategoryRepository categoryRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<CheckingAccountResponseDto> getCheckingAccountList(Long memberId) {
         // 모든 CheckingAccount 가져오기
         List<Account> checkingAccounts = accountRepository.findCheckingAccountsByMemberId(memberId);
@@ -39,6 +40,7 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ReceivingAccountResponseDto getReceivingAccount(String bankName, String accountNumber) {
         Account account = accountValidator.validateAndGetBankAccount(bankName, accountNumber);
         return ReceivingAccountResponseDto.from(account);

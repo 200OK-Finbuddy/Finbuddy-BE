@@ -8,11 +8,13 @@ import com.http200ok.finbuddy.account.repository.AccountRepository;
 import com.http200ok.finbuddy.common.validator.AccountValidator;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
@@ -60,6 +62,7 @@ public class AccountServiceImpl implements AccountService {
 
     /**
      * 계좌 비밀번호 검증
+     * 비밀번호 검증 후 로그인 실패 횟수를 업데이트하는 로직이 추가된다면, @Transactional이 적합
      */
     public boolean verifyPassword(Long accountId, String inputPassword) {
         Account account = accountRepository.findById(accountId)
