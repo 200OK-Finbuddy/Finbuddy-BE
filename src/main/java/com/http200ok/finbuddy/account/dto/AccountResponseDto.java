@@ -18,6 +18,9 @@ public class AccountResponseDto {
     private LocalDate createdAt;
     private LocalDate maturedAt; // 예·적금 계좌만 포함
     private Double interestRate; // 예·적금 계좌만 포함
+    private String logoUrl;
+    private Long bankId;
+    private String bankName;
 
     public static AccountResponseDto from(Account account) {
         LocalDate createdAt = (account.getCreatedAt() != null) ? account.getCreatedAt().toLocalDate() : null;
@@ -31,7 +34,10 @@ public class AccountResponseDto {
                 account.getAccountType(),
                 createdAt,   // LocalDate 변환
                 maturedAt,   // LocalDate 변환 (예·적금 계좌만)
-                interestRate // 예·적금 계좌만
+                interestRate, // 예·적금 계좌만
+                account.getBank().getLogoUrl(),
+                account.getBank().getId(),
+                account.getBank().getName()
         );
     }
 }
