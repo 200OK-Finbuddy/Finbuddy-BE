@@ -30,7 +30,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/signin", "/api/auth/signup", "/api/auth/refresh").permitAll() // 로그인과 회원가입은 인증 없이 접근 가능
+                        .requestMatchers("/**").permitAll() // 로그인과 회원가입은 인증 없이 접근 가능
                         .anyRequest().authenticated()
 //                        .anyRequest().permitAll()
                 ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, customUserDetailsService, memberRepository),
