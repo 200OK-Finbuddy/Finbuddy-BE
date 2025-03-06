@@ -41,6 +41,7 @@ jobs:
             cat <<EOF > docker-compose.override.yml
             services:
               backend:
+                container_name: backend
                 environment:
                   - DB_URL=${{ secrets.DB_URL }}
                   - DB_USERNAME=${{ secrets.DB_USERNAME }}
