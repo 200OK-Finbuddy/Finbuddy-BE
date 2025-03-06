@@ -53,7 +53,6 @@ jobs:
                 environment:
                   - VIRTUAL_HOST=${{ secrets.DOMAIN }}
                   - LETSENCRYPT_HOST=${{ secrets.DOMAIN }}
-                  - NGINX_PROXY_CONTAINER=nginx-proxy
                   - LETSENCRYPT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}
 
               proxy:
@@ -72,6 +71,7 @@ jobs:
                 image: jrcs/letsencrypt-nginx-proxy-companion
                 container_name: letsencrypt
                 environment:
+                  - NGINX_PROXY_CONTAINER=nginx-proxy
                   - DEFAULT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}
                 volumes:
                   - /var/run/docker.sock:/var/run/docker.sock:ro
