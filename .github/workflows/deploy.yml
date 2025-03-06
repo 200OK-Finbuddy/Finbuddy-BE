@@ -53,6 +53,7 @@ jobs:
                 environment:
                   - VIRTUAL_HOST=${{ secrets.DOMAIN }}
                   - LETSENCRYPT_HOST=${{ secrets.DOMAIN }}
+                  - NGINX_PROXY_CONTAINER=nginx-proxy
                   - LETSENCRYPT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}
 
               proxy:
