@@ -17,11 +17,6 @@ jobs:
           distribution: 'temurin'
       - name: Add Execute Permission to Gradle Wrapper
         run: chmod +x gradlew
-#      - name: Debug
-#        run: |
-#          ls -al
-#          ls -al gradle/wrapper
-#          ls -l gradlew
       - name: Build with Gradle (CI)
         run: ./gradlew build -x test
       - name: Login to Docker Hub
@@ -53,6 +48,35 @@ jobs:
                   - BANK_API_KEY=${{ secrets.BANK_API_KEY }}
                   - SMTP_EMAIL=${{ secrets.SMTP_EMAIL }}
                   - SMTP_APPPASSWORD=${{ secrets.SMTP_APPPASSWORD }}
+              
+              frontend:
+                environment:
+                  - VIRTUAL_HOST=${{ secrets.DOMAIN }}
+                  - LETSENCRYPT_HOST=${{ secrets.DOMAIN }}
+                  - LETSENCRYPT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}
+
+              proxy:
+                image: jwilder/nginx-proxy
+                container_name: nginx-proxy
+                ports:
+                  - "80:80"
+                  - "443:443"
+                volumes:
+                  - /var/run/docker.sock:/tmp/docker.sock:ro
+                  - ./certs:/etc/nginx/certs
+                  - ./vhost.d:/etc/nginx/vhost.d
+                  - ./html:/usr/share/nginx/html
+
+              letsencrypt:
+                image: jrcs/letsencrypt-nginx-proxy-companion
+                container_name: letsencrypt
+                environment:
+                  - DEFAULT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}
+                volumes:
+                  - /var/run/docker.sock:/var/run/docker.sock:ro
+                  - ./certs:/etc/nginx/certs
+                  - ./vhost.d:/etc/nginx/vhost.d
+                  - ./html:/usr/share/nginx/html
             EOF
       
             docker-compose up -d
