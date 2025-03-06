@@ -17,11 +17,11 @@ jobs:
           distribution: 'temurin'
       - name: Add Execute Permission to Gradle Wrapper
         run: chmod +x gradlew
-#      - name: Debug
-#        run: |
-#          ls -al
-#          ls -al gradle/wrapper
-#          ls -l gradlew
+      #      - name: Debug
+      #        run: |
+      #          ls -al
+      #          ls -al gradle/wrapper
+      #          ls -l gradlew
       - name: Build with Gradle (CI)
         run: ./gradlew build -x test
       - name: Login to Docker Hub
@@ -53,6 +53,8 @@ jobs:
                   - BANK_API_KEY=${{ secrets.BANK_API_KEY }}
                   - SMTP_EMAIL=${{ secrets.SMTP_EMAIL }}
                   - SMTP_APPPASSWORD=${{ secrets.SMTP_APPPASSWORD }}
+                  - JWT_ACCESS_SECRETKEY=${{ secrets.JWT_ACCESS_SECRETKEY }}
+                  - JWT_REFRESH_SECRETKEY=${{ secrets.JWT_REFRESH_SECRETKEY }}
             EOF
-      
+            
             docker-compose up -d
