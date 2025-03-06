@@ -49,6 +49,8 @@ jobs:
                   - BANK_API_KEY=${{ secrets.BANK_API_KEY }}
                   - SMTP_EMAIL=${{ secrets.SMTP_EMAIL }}
                   - SMTP_APPPASSWORD=${{ secrets.SMTP_APPPASSWORD }}
+                  - JWT_ACCESS_SECRETKEY=${{ secrets.JWT_ACCESS_SECRETKEY }}
+                  - JWT_REFRESH_SECRETKEY=${{ secrets.JWT_REFRESH_SECRETKEY }}
                   - VIRTUAL_HOST=${{ secrets.DOMAIN }}
                   - VIRTUAL_PORT=8080
                 networks:
