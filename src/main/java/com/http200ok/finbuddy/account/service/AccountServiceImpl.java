@@ -43,13 +43,16 @@ public class AccountServiceImpl implements AccountService {
                 .mapToLong(Account::getBalance)
                 .sum();
 
+        // Checking 계좌 개수 계산
+        int checkingAccountsCount = checkingAccounts.size();
+
         // 계좌 ID로 정렬된 리스트에서 상위 3개만 가져오기
         List<AccountSummaryResponseDto> top3Accounts = checkingAccounts.stream()
                 .limit(3)
                 .map(AccountSummaryResponseDto::from)
                 .collect(Collectors.toList());
 
-        return new CheckingAccountsSummaryResponseDto(totalBalance, top3Accounts);
+        return new CheckingAccountsSummaryResponseDto(totalBalance, checkingAccountsCount, top3Accounts);
     }
 
     @Override
