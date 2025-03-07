@@ -33,6 +33,10 @@ public class Budget {
 
     private Long amount;
 
+    // 알림 활성화 여부 필드, 기본값 true
+    @Column(nullable = false)
+    private boolean notificationEnabled = true;
+
     // 생성 메서드
     public static Budget createBudget(Member member, Long amount, PeriodType periodType, LocalDate startDate, LocalDate endDate) {
         Budget budget = new Budget();
@@ -41,6 +45,11 @@ public class Budget {
         budget.periodType = periodType;
         budget.startDate = startDate;
         budget.endDate = endDate;
+        budget.notificationEnabled = true;
         return budget;
+    }
+
+    public void toggleNotification(boolean enabled) {
+        this.notificationEnabled = enabled;
     }
 }

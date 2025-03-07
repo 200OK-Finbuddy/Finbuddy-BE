@@ -83,7 +83,7 @@ public class NotificationServiceImpl implements NotificationService {
         sendToClient(memberId, notification, eventId);
     }
 
-    // 클라이언트에게 이벤트를 전송
+    // 클라이언트에게 이벤트 전송
     private void sendToClient(String memberId, Notification notification, String eventId) {
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithByMemberId(memberId);
         sseEmitters.forEach((key, emitter) -> {

@@ -47,6 +47,7 @@ public class BudgetServiceImpl implements BudgetService {
     public Long updateBudget(Long memberId, Long budgetId, Long newAmount) {
         Budget budget = budgetValidator.validateAndGetBudget(budgetId, memberId);
         budget.setAmount(newAmount);
+        budget.setNotificationEnabled(true); // 예산 수정 시 알림 활성화
         return budget.getId();
     }
 
@@ -79,6 +80,11 @@ public class BudgetServiceImpl implements BudgetService {
     public void checkAndNotifyBudgetExceededOnTransaction(Long memberId) {
         getCurrentMonthBudget(memberId)
                 .ifPresent(budget -> {
+                    // 알림이 비활성화된 경우 예산 초과 확인을 건너뜀
+                    if (!budget.isNotificationEnabled()) {
+                        return;
+                    }
+
                     Long totalSpending = transactionRepository.getTotalSpendingForCurrentMonth(memberId);
                     Long budgetLimit = budget.getAmount();
 
@@ -111,5 +117,13 @@ public class BudgetServiceImpl implements BudgetService {
                 .stream()
                 .map(CheckingAccountTransactionResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    // 알림 설정 변경 메소드
+    @Override
+    @Transactional
+    public void toggleBudgetNotification(Long memberId, Long budgetId, boolean enabled) {
+        Budget budget = budgetValidator.validateAndGetBudget(budgetId, memberId);
+        budget.toggleNotification(enabled);
     }
 }
