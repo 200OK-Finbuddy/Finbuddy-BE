@@ -22,5 +22,6 @@ public interface AutoTransferRepository extends JpaRepository<AutoTransfer, Long
             "AND a.status = 'ACTIVE'")
     List<AutoTransfer> findForScheduledExecution(@Param("targetDays") List<Integer> targetDays);
 
-    List<AutoTransfer> findTransfersAfterDay(int dayOfMonth);
+    @Query("SELECT a FROM AutoTransfer a WHERE a.transferDay > :dayOfMonth AND a.status = 'ACTIVE'")
+    List<AutoTransfer> findTransfersAfterDay(@Param("dayOfMonth") int dayOfMonth);
 }
