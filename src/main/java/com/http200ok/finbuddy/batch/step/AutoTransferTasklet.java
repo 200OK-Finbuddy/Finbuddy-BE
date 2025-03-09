@@ -58,8 +58,6 @@ public class AutoTransferTasklet implements Tasklet {
         for (AutoTransfer transfer : transfers) {
 
             try {
-                Account account = accountValidator.validateAndGetBankAccount(transfer.getTargetBankName(), transfer.getTargetAccountNumber());
-
                 transferService.executeAccountTransfer(
                         transfer.getAccount().getMember().getId(),
                         transfer.getAccount().getId(),
@@ -68,7 +66,7 @@ public class AutoTransferTasklet implements Tasklet {
                         transfer.getAmount(),
                         transfer.getAccount().getPassword(),
                         transfer.getAccount().getMember().getName(),
-                        account.getMember().getName()
+                        null
                 );
                 autoTransferService.markAsSuccessAndNotify(transfer);
                 System.out.println("자동이체 성공 ID: " + transfer.getId());
