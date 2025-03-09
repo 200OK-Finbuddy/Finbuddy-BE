@@ -6,16 +6,11 @@ import com.http200ok.finbuddy.budget.dto.BudgetResponseDto;
 import com.http200ok.finbuddy.budget.repository.BudgetRepository;
 import com.http200ok.finbuddy.common.validator.BudgetValidator;
 import com.http200ok.finbuddy.member.domain.Member;
-import com.http200ok.finbuddy.member.repository.MemberRepository;
 import com.http200ok.finbuddy.notification.domain.NotificationType;
 import com.http200ok.finbuddy.notification.service.NotificationService;
-import com.http200ok.finbuddy.transaction.domain.Transaction;
 import com.http200ok.finbuddy.transaction.dto.CheckingAccountTransactionResponseDto;
 import com.http200ok.finbuddy.transaction.repository.TransactionRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +23,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BudgetServiceImpl implements BudgetService {
     private final BudgetRepository budgetRepository;
-    private final MemberRepository memberRepository;
     private final TransactionRepository transactionRepository;
     private final BudgetValidator budgetValidator;
     private final NotificationService notificationService;
@@ -53,6 +47,7 @@ public class BudgetServiceImpl implements BudgetService {
     public Long updateBudget(Long memberId, Long budgetId, Long newAmount) {
         Budget budget = budgetValidator.validateAndGetBudget(budgetId, memberId);
         budget.setAmount(newAmount);
+        budget.setNotificationEnabled(true); // 예산 수정 시 알림 활성화
         return budget.getId();
     }
 
@@ -73,6 +68,7 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     // 현재 월의 예산 조회 (내부 로직용 - Entity 반환)
+    @Transactional(readOnly = true)
     private Optional<Budget> getCurrentMonthBudget(Long memberId) {
         LocalDate now = LocalDate.now();
         return budgetRepository.findByMemberIdAndStartDate(memberId, now.withDayOfMonth(1));
@@ -80,9 +76,15 @@ public class BudgetServiceImpl implements BudgetService {
 
     // 이체 발생 즉시 예산 초과 여부 확인 및 알림 전송
     @Override
+    @Transactional
     public void checkAndNotifyBudgetExceededOnTransaction(Long memberId) {
         getCurrentMonthBudget(memberId)
                 .ifPresent(budget -> {
+                    // 알림이 비활성화된 경우 예산 초과 확인을 건너뜀
+                    if (!budget.isNotificationEnabled()) {
+                        return;
+                    }
+
                     Long totalSpending = transactionRepository.getTotalSpendingForCurrentMonth(memberId);
                     Long budgetLimit = budget.getAmount();
 
@@ -102,7 +104,7 @@ public class BudgetServiceImpl implements BudgetService {
                 });
     }
 
-
+    @Override
     @Transactional(readOnly = true)
     public List<CheckingAccountTransactionResponseDto> getLatestTransactionsForCurrentMonth(Long memberId) {
         // 현재 날짜 가져오기
@@ -115,5 +117,13 @@ public class BudgetServiceImpl implements BudgetService {
                 .stream()
                 .map(CheckingAccountTransactionResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    // 알림 설정 변경 메소드
+    @Override
+    @Transactional
+    public void toggleBudgetNotification(Long memberId, Long budgetId, boolean enabled) {
+        Budget budget = budgetValidator.validateAndGetBudget(budgetId, memberId);
+        budget.toggleNotification(enabled);
     }
 }

@@ -18,6 +18,7 @@ public class BudgetResponseDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private PeriodType periodType;
+    private boolean notificationEnabled;
     private Long spentAmount;
 
     public static BudgetResponseDto fromEntity(Budget budget, Long spentAmount) {
@@ -28,6 +29,7 @@ public class BudgetResponseDto {
                 budget.getStartDate(),
                 budget.getEndDate(),
                 budget.getPeriodType(),
+                budget.isNotificationEnabled(),
                 spentAmount
         );
     }

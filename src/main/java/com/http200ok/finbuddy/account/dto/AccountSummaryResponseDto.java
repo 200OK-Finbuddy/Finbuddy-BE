@@ -1,6 +1,7 @@
 package com.http200ok.finbuddy.account.dto;
 
 import com.http200ok.finbuddy.account.domain.Account;
+import com.http200ok.finbuddy.account.domain.AccountType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,6 +10,7 @@ import lombok.Getter;
 public class AccountSummaryResponseDto {
     private Long accountId;
     private String accountName;
+    private AccountType accountType;
     private String bankLogoUrl;
     private String accountNumber;
     private Long balance;
@@ -17,6 +19,7 @@ public class AccountSummaryResponseDto {
         return new AccountSummaryResponseDto(
                 account.getId(),
                 account.getAccountName(),
+                account.getAccountType(),
                 account.getBank().getLogoUrl(),
                 account.getAccountNumber(),
                 account.getBalance()

@@ -6,6 +6,7 @@ import com.http200ok.finbuddy.common.exception.UnauthorizedAccessException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -14,6 +15,7 @@ public class AccountValidatorImpl implements AccountValidator{
     private final AccountRepository accountRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Account validateAndGetAccount(Long accountId, Long memberId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Account not found with id: " + accountId));
@@ -26,6 +28,7 @@ public class AccountValidatorImpl implements AccountValidator{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Account validateAndGetBankAccount(String bankName, String accountNumber) {
         return accountRepository.findByBankNameAndAccountNumber(bankName, accountNumber)
                 .orElseThrow(() -> new EntityNotFoundException("계좌를 찾을 수 없거나 은행명과 계좌번호가 일치하지 않습니다"));

@@ -19,6 +19,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -31,15 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-//                .cors(cors -> cors.configurationSource(request -> {
-//                    CorsConfiguration config = new CorsConfiguration();
-//                    config.setAllowedOrigins(List.of("http://localhost:5173")); // ✅ 프론트엔드 주소
-//                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-//                    config.setAllowCredentials(true); // ✅ 브라우저에서 쿠키 허용 필수
-//                    config.setAllowedHeaders(List.of("*"));
-//                    config.setExposedHeaders(List.of("Set-Cookie")); // ✅ 클라이언트가 여러 개의 Set-Cookie를 읽을 수 있도록 허용
-//                    return config;
-//                }))
+                .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/**").permitAll()
 //                        .anyRequest().authenticated()

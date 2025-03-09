@@ -9,5 +9,6 @@ import java.util.List;
 @AllArgsConstructor
 public class CheckingAccountsSummaryResponseDto {
     private Long totalBalance;
+    private int checkingAccountsCount;
     private List<AccountSummaryResponseDto> top3Accounts;
 }

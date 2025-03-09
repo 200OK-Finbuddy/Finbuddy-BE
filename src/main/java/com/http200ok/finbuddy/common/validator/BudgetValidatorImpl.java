@@ -9,12 +9,14 @@ import com.http200ok.finbuddy.member.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BudgetValidatorImpl implements BudgetValidator {
 
     private final BudgetRepository budgetRepository;

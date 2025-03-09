@@ -1,0 +1,8 @@
+.env
+
+# git 설정 파일
+.git/
+.gitignore
+
+# IDE 설정 파일
+.idea/

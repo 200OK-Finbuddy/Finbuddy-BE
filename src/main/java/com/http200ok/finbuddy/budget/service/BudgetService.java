@@ -13,4 +13,5 @@ public interface BudgetService {
     void deleteBudget(Long memberId, Long budgetId);
     void checkAndNotifyBudgetExceededOnTransaction(Long memberId);
     List<CheckingAccountTransactionResponseDto> getLatestTransactionsForCurrentMonth(Long memberId);
+    void toggleBudgetNotification(Long memberId, Long budgetId, boolean enabled);
 }

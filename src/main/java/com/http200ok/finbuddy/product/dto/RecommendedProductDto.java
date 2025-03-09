@@ -9,6 +9,7 @@ public class RecommendedProductDto {
     private Long productId;
     private String productType; // 예금(DEPOSIT) 또는 적금(SAVING)
     private String name;
+    private Long bankId;
     private String bankName;
     private String bankLogoUrl;
     private String interestRateTypeName;

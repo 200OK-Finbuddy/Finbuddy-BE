@@ -114,6 +114,7 @@ public class ProductServiceImpl implements ProductService {
                 product.getId(),
                 product instanceof DepositProduct ? "DEPOSIT" : "SAVING",
                 product.getName(),
+                product.getBank().getId(),
                 product.getBank().getName(),
                 product.getBank().getLogoUrl(),
                 interestRateTypeName,

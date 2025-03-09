@@ -32,6 +32,16 @@ public class BudgetController {
         return ResponseEntity.ok(updatedBudgetId);
     }
 
+    // 예산 알림 설정 변경 엔드포인트 추가
+    @PatchMapping("/{budgetId}/notification")
+    public ResponseEntity<Void> toggleBudgetNotification(
+            @RequestParam("memberId") Long memberId,
+            @PathVariable("budgetId") Long budgetId,
+            @RequestParam("enabled") boolean enabled) {
+        budgetService.toggleBudgetNotification(memberId, budgetId, enabled);
+        return ResponseEntity.ok().build();
+    }
+
     // 현재 월 예산 조회
     @GetMapping("/current")
     public ResponseEntity<BudgetResponseDto> getCurrentMonthBudget(@RequestParam("memberId") Long memberId) {

@@ -1,0 +1,60 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest # 작업이 실행될 환경
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set Up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Add Execute Permission to Gradle Wrapper
+        run: chmod +x gradlew
+      - name: Build with Gradle (CI)
+        run: ./gradlew build -x test
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USER_NAME }}
+          password: ${{ secrets.DOCKER_USER_PW }}
+      - name: Build Docker Image
+        run: docker build -t ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be .
+      - name: Push Docker Image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
+      - name: Deploy to AWS EC2 via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_IP }}
+          port: 22
+          username: ubuntu
+          key: ${{ secrets.AWS_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
+            
+            cat <<EOF > docker-compose.override.yml
+            services:
+              backend:
+                container_name: backend
+                environment:
+                  - DB_URL=${{ secrets.DB_URL }}
+                  - DB_USERNAME=${{ secrets.DB_USERNAME }}
+                  - DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+                  - BANK_API_KEY=${{ secrets.BANK_API_KEY }}
+                  - SMTP_EMAIL=${{ secrets.SMTP_EMAIL }}
+                  - SMTP_APPPASSWORD=${{ secrets.SMTP_APPPASSWORD }}
+                  - JWT_ACCESS_SECRETKEY=${{ secrets.JWT_ACCESS_SECRETKEY }}
+                  - JWT_REFRESH_SECRETKEY=${{ secrets.JWT_REFRESH_SECRETKEY }}
+            
+              frontend:
+                container_name: frontend
+            
+            EOF
+            
+            docker-compose up -d

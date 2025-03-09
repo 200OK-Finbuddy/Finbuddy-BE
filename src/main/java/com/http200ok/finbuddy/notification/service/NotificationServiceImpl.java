@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class NotificationServiceImpl implements NotificationService {
 
     private static final Long DEFAULT_TIMEOUT = 60L * 1000L * 60; // 1시간
@@ -65,6 +64,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     // 알림 보내는 메서드
+    @Transactional
     public void sendNotification(Member member, NotificationType notificationType, String content) {
         Notification notification = Notification.builder()
                 .receiver(member)
@@ -83,7 +83,7 @@ public class NotificationServiceImpl implements NotificationService {
         sendToClient(memberId, notification, eventId);
     }
 
-    // 클라이언트에게 이벤트를 전송
+    // 클라이언트에게 이벤트 전송
     private void sendToClient(String memberId, Notification notification, String eventId) {
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithByMemberId(memberId);
         sseEmitters.forEach((key, emitter) -> {
@@ -108,6 +108,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     // 알림 읽음 표시
+    @Transactional
     public void markAsRead(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new IllegalArgumentException("알림을 찾을 수 없습니다."));
@@ -115,6 +116,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     // 알림 단일 삭제 (소프트 삭제)
+    @Transactional
     public void deleteNotification(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new IllegalArgumentException("알림을 찾을 수 없습니다."));
@@ -122,6 +124,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     // 사용자의 모든 알림 삭제 (소프트 삭제)
+    @Transactional
     public void deleteAllNotifications(String memberId) {
         List<Notification> notifications = notificationRepository.findByReceiverIdAndDeletedFalse(Long.valueOf(memberId));
         notifications.forEach(Notification::delete);
