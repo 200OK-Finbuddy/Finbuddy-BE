@@ -1,7 +1,9 @@
 package com.http200ok.finbuddy.batch.step;
 
+import com.http200ok.finbuddy.account.domain.Account;
 import com.http200ok.finbuddy.account.repository.AccountRepository;
 import com.http200ok.finbuddy.common.exception.InsufficientBalanceException;
+import com.http200ok.finbuddy.common.validator.AccountValidator;
 import com.http200ok.finbuddy.notification.service.NotificationService;
 import com.http200ok.finbuddy.transfer.domain.AutoTransfer;
 import com.http200ok.finbuddy.transfer.repository.AutoTransferRepository;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -25,7 +28,7 @@ public class AutoTransferTasklet implements Tasklet {
     private final AutoTransferRepository autoTransferRepository;
     private final TransferService transferService;
     private final AutoTransferService autoTransferService;
-    private final NotificationService notificationService;
+    private final AccountValidator accountValidator;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
@@ -53,7 +56,10 @@ public class AutoTransferTasklet implements Tasklet {
         }
 
         for (AutoTransfer transfer : transfers) {
+
             try {
+                Account account = accountValidator.validateAndGetBankAccount(transfer.getTargetBankName(), transfer.getTargetAccountNumber());
+
                 transferService.executeAccountTransfer(
                         transfer.getAccount().getMember().getId(),
                         transfer.getAccount().getId(),
@@ -62,7 +68,7 @@ public class AutoTransferTasklet implements Tasklet {
                         transfer.getAmount(),
                         transfer.getAccount().getPassword(),
                         transfer.getAccount().getMember().getName(),
-                        null
+                        account.getMember().getName()
                 );
                 autoTransferService.markAsSuccessAndNotify(transfer);
                 System.out.println("자동이체 성공 ID: " + transfer.getId());

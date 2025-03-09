@@ -25,7 +25,7 @@ public class AutoTransferScheduler {
         this.retryFailedAutoTransferJob = retryFailedAutoTransferJob;
     }
 
-    @Scheduled(cron = "0 45 13 * * ?")
+    @Scheduled(cron = "0 00 10 * * ?")
     public void runAutoTransferJob() {
         try {
             JobParameters params = new JobParametersBuilder()

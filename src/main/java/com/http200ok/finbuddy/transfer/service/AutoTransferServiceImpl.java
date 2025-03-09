@@ -160,11 +160,12 @@ public class AutoTransferServiceImpl implements AutoTransferService {
                         "출금 계좌: %s\n" +
                         "입금 계좌: %s %s\n" +
                         "이체 금액: %,d원\n" +
-                        "이체일: %s",
+                        "이체일: %d",
                 transfer.getAccount().getAccountNumber(),
                 transfer.getTargetBankName(),
                 transfer.getTargetAccountNumber(),
-                transfer.getAmount()
+                transfer.getAmount(),
+                transfer.getTransferDay()
         );
         notificationService.sendNotification(transfer.getAccount().getMember(), NotificationType.AUTOTRANSFERSUCCESS, message);
     }

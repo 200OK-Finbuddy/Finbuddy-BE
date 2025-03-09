@@ -46,7 +46,7 @@ public class AutoTransferBatchConfig {
     }
 
     @Bean
-    public Step retryFailedAutoTransferStep() { // private -> public 변경
+    public Step retryFailedAutoTransferStep() {
         return new StepBuilder("retryFailedAutoTransferStep", jobRepository)
                 .tasklet(retryFailedAutoTransferTasklet, transactionManager)
                 .build();
