@@ -552,7 +552,7 @@ public class MyDataServiceImpl implements MyDataService {
                         option,
                         product.getName(), // 상품 이름 사용
                         "DP" + generateRandomDigits(8),
-                        "pass" + generateRandomDigits(3),
+                        "1234",
                         AccountType.DEPOSIT,
                         balance,
                         createdAt,
@@ -603,7 +603,7 @@ public class MyDataServiceImpl implements MyDataService {
                         option,
                         product.getName(), // 상품 이름 사용
                         "SV" + generateRandomDigits(8),
-                        "pass" + generateRandomDigits(3),
+                        "1234",
                         AccountType.SAVING,
                         balance,
                         createdAt,
