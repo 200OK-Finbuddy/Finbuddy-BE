@@ -19,6 +19,7 @@ import com.http200ok.finbuddy.transaction.repository.TransactionRepository;
 import com.http200ok.finbuddy.transaction.service.TransactionFixService;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -45,6 +46,7 @@ public class MyDataServiceImpl implements MyDataService {
     private final CheckingProductRepository checkingProductRepository;
     private final EntityManager entityManager;
     private final TransactionTemplate transactionTemplate;
+    private final PasswordEncoder passwordEncoder;
 
     // 가게 이름 목록
     private final Map<Long, List<String>> categoryStores = new HashMap<>();
@@ -481,7 +483,7 @@ public class MyDataServiceImpl implements MyDataService {
                 null,
                 mainProduct.getName(),
                 "CH" + generateRandomDigits(8),
-                "1234",
+                passwordEncoder.encode("1234"),
                 AccountType.CHECKING,
                 randomAmount(5000, 10000) * 1000, // 메인 계좌는 더 많은 초기 잔액
                 randomDateWithinLastYear(),
@@ -502,7 +504,7 @@ public class MyDataServiceImpl implements MyDataService {
                     null,
                     product.getName(),
                     "CH" + generateRandomDigits(8),
-                    "1234",
+                    passwordEncoder.encode("1234"),
                     AccountType.CHECKING,
                     randomAmount(100, 800) * 1000, // 1000원 단위
                     randomDateWithinLastYear(),
@@ -552,7 +554,7 @@ public class MyDataServiceImpl implements MyDataService {
                         option,
                         product.getName(), // 상품 이름 사용
                         "DP" + generateRandomDigits(8),
-                        "1234",
+                        passwordEncoder.encode("1234"),
                         AccountType.DEPOSIT,
                         balance,
                         createdAt,
@@ -603,7 +605,7 @@ public class MyDataServiceImpl implements MyDataService {
                         option,
                         product.getName(), // 상품 이름 사용
                         "SV" + generateRandomDigits(8),
-                        "1234",
+                        passwordEncoder.encode("1234"),
                         AccountType.SAVING,
                         balance,
                         createdAt,
