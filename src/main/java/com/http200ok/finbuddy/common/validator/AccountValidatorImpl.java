@@ -35,7 +35,6 @@ public class AccountValidatorImpl implements AccountValidator{
     }
 
     @Override
-    @Transactional
     public Account validateAndGetAccountWithLock(Long accountId, Long memberId) {
         // 비관적 락을 사용하여 계좌 조회
         Account account = accountRepository.findByIdWithPessimisticLock(accountId)
@@ -49,7 +48,6 @@ public class AccountValidatorImpl implements AccountValidator{
     }
 
     @Override
-    @Transactional
     public Account validateAndGetBankAccountWithLock(String bankName, String accountNumber) {
         // 은행명과 계좌번호로 계좌를 한 번에 조회, 비관적 락 적용
         return accountRepository.findByBankNameAndAccountNumberWithPessimisticLock(bankName, accountNumber)
