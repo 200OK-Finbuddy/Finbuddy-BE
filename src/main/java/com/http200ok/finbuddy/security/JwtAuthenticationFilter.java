@@ -6,6 +6,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        Optional<String> token = jwtTokenProvider.resolveToken(request);
+//        Optional<String> token = jwtTokenProvider.resolveToken(request);
+        Optional<String> token = extractAccessTokenFromCookies(request);
+
 
         token.ifPresent(t -> {
             try {
@@ -37,7 +40,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     Long memberId = jwtTokenProvider.getMemberIdFromAccessToken(t);
                     Member member = memberRepository.findById(memberId) // ID 기반 조회
                             .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + memberId));
+
                     UserDetails userDetails = userDetailsService.loadUserByUsername(member.getEmail());
+//                    CustomUserDetails userDetails = new CustomUserDetails(member.getId(), member.getEmail(), member.getPassword());
+
                     SecurityContextHolder.getContext().setAuthentication(
                             new UsernamePasswordAuthenticationToken(userDetails, null));
                 }
@@ -52,5 +58,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         });
 
         chain.doFilter(request, response);
+    }
+
+    // 쿠키에서 액세스 토큰을 추출하는 메서드
+    private Optional<String> extractAccessTokenFromCookies(HttpServletRequest request) {
+        if (request.getCookies() == null) return Optional.empty();
+
+        for (Cookie cookie : request.getCookies()) {
+            if ("accessToken".equals(cookie.getName())) {
+                return Optional.of(cookie.getValue());
+            }
+        }
+        return Optional.empty();
     }
 }

@@ -20,13 +20,12 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/signin")
-    public ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest request, HttpServletResponse response) {
-        return ResponseEntity.ok(authenticationService.signIn(request, response));
+    public ResponseEntity<?> signIn(@RequestBody SignInRequest request, HttpServletResponse response) {
+        return authenticationService.signIn(request, response);
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<TokenResponse> refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
-        TokenResponse tokenResponse = authenticationService.refreshAccessToken(request, response);
-        return ResponseEntity.ok(tokenResponse);
+    public ResponseEntity<?> refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
+        return authenticationService.refreshAccessToken(request, response);
     }
 }

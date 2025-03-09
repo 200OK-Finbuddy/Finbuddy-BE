@@ -4,6 +4,7 @@ import com.http200ok.finbuddy.member.repository.MemberRepository;
 import com.http200ok.finbuddy.security.CustomUserDetailsService;
 import com.http200ok.finbuddy.security.JwtAuthenticationFilter;
 import com.http200ok.finbuddy.security.JwtTokenProvider;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -33,8 +35,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll() // 로그인과 회원가입은 인증 없이 접근 가능
-                        .anyRequest().authenticated()
+                        .requestMatchers("/**").permitAll()
+//                        .anyRequest().authenticated()
 //                        .anyRequest().permitAll()
                 ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, customUserDetailsService, memberRepository),
                         UsernamePasswordAuthenticationFilter.class);
