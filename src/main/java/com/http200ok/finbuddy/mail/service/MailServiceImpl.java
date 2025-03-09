@@ -17,10 +17,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MailServiceImpl implements MailService {
 
     private final JavaMailSender javaMailSender;
-    // private static final Dotenv dotenv = Dotenv.load();
-    // private static final String senderEmail = dotenv.get("SMTP_EMAIL");
     @Value("${smtp.email}")
-    private static String senderEmail;
+    private String senderEmail;
+
     private static final Map<String, String> verificationCodes = new ConcurrentHashMap<>();
     private final Random random = new Random();
 
