@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,10 +42,20 @@ public class AutoTransferTasklet implements Tasklet {
             return RepeatStatus.FINISHED;
         }
 
+        // 이번 달의 마지막 날 계산
+        int lastDayOfMonth = YearMonth.now().atEndOfMonth().getDayOfMonth();
+
         // 월요일이면 지난 주말(토, 일) + 월요일 날짜의 자동이체 실행
         List<Integer> targetDays = (dayOfWeek == DayOfWeek.MONDAY)
                 ? List.of(today.minusDays(2).getDayOfMonth(), today.minusDays(1).getDayOfMonth(), today.getDayOfMonth()) // 토, 일, 월
                 : List.of(today.getDayOfMonth()); // 평일이면 오늘 날짜만 실행
+
+        // 이번 달의 마지막 날이라면, transferDay가 이번 달의 마지막 날 이후인 항목도 실행 대상으로 추가
+        if (today.getDayOfMonth() == lastDayOfMonth) {
+            System.out.println("이번 달의 마지막 날이므로, transferDay가 마지막 날 이후인 자동이체도 실행.");
+            List<AutoTransfer> futureTransfers = autoTransferRepository.findTransfersAfterDay(today.getDayOfMonth());
+            futureTransfers.forEach(transfer -> targetDays.add(transfer.getTransferDay()));
+        }
 
         System.out.println("자동이체 실행 - 오늘 날짜: " + today + ", 실행 대상 날짜: " + targetDays);
 
