@@ -2,6 +2,7 @@ package com.http200ok.finbuddy.security;
 
 import com.http200ok.finbuddy.member.domain.Member;
 import com.http200ok.finbuddy.member.repository.MemberRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,9 +21,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + email));
 
-        return User.builder()
-                .username(member.getEmail())
-                .password(member.getPassword()) // Spring Security가 내부적으로 검증
-                .build();
+//        return User.builder()
+//                .username(member.getEmail())
+//                .password(member.getPassword())
+//                .build();
+
+        return new CustomUserDetails(member.getId(), member.getEmail(), member.getPassword());
     }
+
 }

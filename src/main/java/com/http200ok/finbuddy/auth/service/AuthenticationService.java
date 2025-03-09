@@ -11,8 +11,10 @@ import com.http200ok.finbuddy.security.JwtTokenProvider;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,7 +35,7 @@ public class AuthenticationService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public SignInResponse signIn(SignInRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> signIn(SignInRequest request, HttpServletResponse response) {
         try {
             // 1. 사용자 인증 진행
             Authentication authentication = authenticationManager.authenticate(
@@ -60,21 +62,33 @@ public class AuthenticationService {
                         () -> refreshTokenRepository.save(new RefreshToken(member, refreshToken))
                 );
 
-        // 5. 리프레시 토큰을 HttpOnly 쿠키로 설정
-        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-        refreshCookie.setHttpOnly(true);
-        refreshCookie.setPath("/");
-        refreshCookie.setMaxAge(7 * 24 * 60 * 60); // 7일
-        response.addCookie(refreshCookie);
+        // 5. jwt 토큰을 HttpOnly 쿠키로 설정
+        Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setMaxAge(60 * 60); // 1시간
+//        accessTokenCookie.setSecure(false);
+//        accessTokenCookie.setAttribute("SameSite", "None");
 
-        // 6. 액세스 토큰을 응답으로 반환
-        return new SignInResponse(accessToken);
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60); // 7일
+//        refreshTokenCookie.setSecure(false);
+//        refreshTokenCookie.setAttribute("SameSite", "None");
+
+        response.addCookie(accessTokenCookie);
+        response.addCookie(refreshTokenCookie);
+
+        return ResponseEntity.ok().build(); // 응답 바디에는 아무것도 반환하지 않음
+
     }
 
 
 
     @Transactional
-    public TokenResponse refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
         // 1. 요청에서 리프레시 토큰 추출
         String refreshToken = extractRefreshToken(request);
 
@@ -98,7 +112,15 @@ public class AuthenticationService {
         // 4. 새 액세스 토큰 발급
         String newAccessToken = jwtTokenProvider.generateAccessToken(member.getId());
 
-        return new TokenResponse(newAccessToken);
+        // 5. 액세스 토큰을 HttpOnly 쿠키로 저장
+        Cookie accessTokenCookie = new Cookie("accessToken", newAccessToken);
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setMaxAge(60 * 60); // 1시간
+
+        response.addCookie(accessTokenCookie);
+
+        return ResponseEntity.ok().build(); // ✅ 응답 바디에는 아무것도 반환하지 않음
     }
 
     // 리프레시 토큰 추출
@@ -112,4 +134,6 @@ public class AuthenticationService {
         }
         return null;
     }
+
+
 }
