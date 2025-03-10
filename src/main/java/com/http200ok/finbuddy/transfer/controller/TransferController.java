@@ -3,10 +3,12 @@ package com.http200ok.finbuddy.transfer.controller;
 import com.http200ok.finbuddy.account.dto.CheckingAccountResponseDto;
 import com.http200ok.finbuddy.account.dto.ReceivingAccountResponseDto;
 import com.http200ok.finbuddy.budget.service.BudgetService;
+import com.http200ok.finbuddy.security.CustomUserDetails;
 import com.http200ok.finbuddy.transfer.dto.TransferRequestDto;
 import com.http200ok.finbuddy.transfer.service.TransferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -23,7 +25,8 @@ public class TransferController {
 
     // 이체 시 입출금 계좌 조회
     @GetMapping("/all/checking-account")
-    public ResponseEntity<List<CheckingAccountResponseDto>> getCheckingAccounts(@RequestParam("memberId") Long memberId) {
+    public ResponseEntity<List<CheckingAccountResponseDto>> getCheckingAccounts(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long memberId = userDetails.getMemberId();
         List<CheckingAccountResponseDto> checkingAccountList = transferService.getCheckingAccountList(memberId);
         return ResponseEntity.ok(checkingAccountList);
     }
@@ -38,7 +41,9 @@ public class TransferController {
 
     // 계좌 이체 API
     @PostMapping
-    public ResponseEntity<?> executeTransfer(@RequestBody TransferRequestDto transferRequestDto, @RequestParam("memberId") Long memberId) {
+    public ResponseEntity<?> executeTransfer(@RequestBody TransferRequestDto transferRequestDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long memberId = userDetails.getMemberId();
+
         boolean result = transferService.executeAccountTransfer(
                 memberId,
                 transferRequestDto.getFromAccountId(),

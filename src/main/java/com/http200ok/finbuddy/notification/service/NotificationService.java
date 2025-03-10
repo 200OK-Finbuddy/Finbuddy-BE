@@ -8,11 +8,11 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.util.List;
 
 public interface NotificationService {
-    SseEmitter subscribe(String memberId, String lastEventId);
+    SseEmitter subscribe(Long memberId, String lastEventId);
     void sendNotification(Member member, NotificationType notificationType, String content);
-    List<NotificationResponseDto> getNotifications(String memberId);
-    void markAsRead(Long notificationId);
-    void deleteNotification(Long notificationId);
-    void deleteAllNotifications(String memberId);
-    Long getUnreadCount(String memberId);
+    List<NotificationResponseDto> getNotifications(Long memberId);
+    void markAsRead(Long notificationId, Long memberId);
+    void deleteNotification(Long notificationId, Long memberId);
+    void deleteAllNotifications(Long memberId);
+    Long getUnreadCount(Long memberId);
 }

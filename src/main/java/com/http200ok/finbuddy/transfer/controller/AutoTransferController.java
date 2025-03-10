@@ -1,5 +1,6 @@
 package com.http200ok.finbuddy.transfer.controller;
 
+import com.http200ok.finbuddy.security.CustomUserDetails;
 import com.http200ok.finbuddy.transfer.domain.AutoTransfer;
 import com.http200ok.finbuddy.transfer.dto.AutoTransferCreateRequestDto;
 import com.http200ok.finbuddy.transfer.dto.AutoTransferResponseDto;
@@ -7,6 +8,7 @@ import com.http200ok.finbuddy.transfer.dto.AutoTransferUpdateRequestDto;
 import com.http200ok.finbuddy.transfer.service.AutoTransferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,8 +38,9 @@ public class AutoTransferController {
     }
 
     // 특정 회원의 자동이체 목록 조회 API
-    @GetMapping("/list/{memberId}")
-    public ResponseEntity<List<AutoTransferResponseDto>> getAutoTransfersByMember(@PathVariable("memberId") Long memberId) {
+    @GetMapping("/list")
+    public ResponseEntity<List<AutoTransferResponseDto>> getAutoTransfersByMember(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long memberId = userDetails.getMemberId();
         List<AutoTransferResponseDto> responseList = autoTransferService.getAutoTransfersByMember(memberId)
                 .stream()
                 .map(AutoTransferResponseDto::new)
