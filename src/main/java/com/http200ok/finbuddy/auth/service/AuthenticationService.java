@@ -136,4 +136,39 @@ public class AuthenticationService {
     }
 
 
+    @Transactional
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        // 1. 요청에서 리프레시 토큰 추출
+        String refreshToken = extractRefreshToken(request);
+
+        if (refreshToken != null) {
+            try {
+                // 2. 리프레시 토큰에서 사용자 ID 추출, 데이터베이스에서 리프레시 토큰 제거
+                Long memberId = jwtTokenProvider.getMemberIdFromRefreshToken(refreshToken);
+                memberRepository.findById(memberId).flatMap(refreshTokenRepository::findByMember)
+                        .ifPresent(refreshTokenRepository::delete);
+
+            } catch (Exception e) {
+                System.out.println("❌ [ERROR] 로그아웃 처리 중 오류 발생: " + e.getMessage());
+
+            }
+        }
+
+        // 4. 액세스 & 리프레시 토큰 쿠키 삭제 (브라우저에서 자동 삭제되도록 설정)
+        Cookie accessTokenCookie = new Cookie("accessToken", "");
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setMaxAge(0); // 즉시 만료
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", "");
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(0); // 즉시 만료
+
+        response.addCookie(accessTokenCookie);
+        response.addCookie(refreshTokenCookie);
+
+        return ResponseEntity.ok().build();
+    }
+
 }
