@@ -482,7 +482,7 @@ public class MyDataServiceImpl implements MyDataService {
                 mainProduct,
                 null,
                 mainProduct.getName(),
-                "CH" + generateRandomDigits(8),
+                generateRandomDigits(11),
                 passwordEncoder.encode("1234"),
                 AccountType.CHECKING,
                 randomAmount(5000, 10000) * 1000, // 메인 계좌는 더 많은 초기 잔액
@@ -503,7 +503,7 @@ public class MyDataServiceImpl implements MyDataService {
                     product,
                     null,
                     product.getName(),
-                    "CH" + generateRandomDigits(8),
+                    generateRandomDigits(11),
                     passwordEncoder.encode("1234"),
                     AccountType.CHECKING,
                     randomAmount(100, 800) * 1000, // 1000원 단위
@@ -553,7 +553,7 @@ public class MyDataServiceImpl implements MyDataService {
                         product,
                         option,
                         product.getName(), // 상품 이름 사용
-                        "DP" + generateRandomDigits(8),
+                        generateRandomDigits(12),
                         passwordEncoder.encode("1234"),
                         AccountType.DEPOSIT,
                         balance,
@@ -604,7 +604,7 @@ public class MyDataServiceImpl implements MyDataService {
                         product,
                         option,
                         product.getName(), // 상품 이름 사용
-                        "SV" + generateRandomDigits(8),
+                        generateRandomDigits(13),
                         passwordEncoder.encode("1234"),
                         AccountType.SAVING,
                         balance,
