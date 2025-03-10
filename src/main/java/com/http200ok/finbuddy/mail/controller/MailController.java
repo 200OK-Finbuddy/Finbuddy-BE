@@ -21,6 +21,7 @@ public class MailController {
     @PostMapping("/send")
     public ResponseEntity<Map<String, Object>> sendMail(@RequestBody MailRequestDto requestDto) {
         Map<String, Object> response = new HashMap<>();
+        System.out.println(requestDto.getMail());
         try {
             mailService.sendMail(requestDto.getMail());
             response.put("success", true);

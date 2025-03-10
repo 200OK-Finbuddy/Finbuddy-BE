@@ -57,11 +57,11 @@ public class BudgetController {
     }
 
     // 예산 초과 테스트 API (GET 요청)
-    @GetMapping("/test-exceeded/{memberId}")
-    public ResponseEntity<String> testExceededBudget(@PathVariable("memberId") Long memberId) {
-        budgetService.checkAndNotifyBudgetExceededOnTransaction(memberId);
-        return ResponseEntity.ok("예산 초과 체크를 수행했습니다.");
-    }
+//    @GetMapping("/test-exceeded/{memberId}")
+//    public ResponseEntity<String> testExceededBudget(@PathVariable("memberId") Long memberId) {
+//        budgetService.checkAndNotifyBudgetExceededOnTransaction(memberId);
+//        return ResponseEntity.ok("예산 초과 체크를 수행했습니다.");
+//    }
 
     @GetMapping("/checking/recent/{memberId}")
     public ResponseEntity<List<CheckingAccountTransactionResponseDto>> getLatestTransactionsForUserCheckingAccounts(@PathVariable("memberId") Long memberId) {
