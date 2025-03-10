@@ -1,8 +1,10 @@
 package com.http200ok.finbuddy.member.domain;
 
 import com.http200ok.finbuddy.account.domain.Account;
+import com.http200ok.finbuddy.auth.domain.RefreshToken;
 import com.http200ok.finbuddy.budget.domain.Budget;
 import com.http200ok.finbuddy.notification.domain.Notification;
+import com.http200ok.finbuddy.totp.domain.Otp;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import lombok.Builder;
@@ -55,6 +57,12 @@ public class Member {
 
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private RefreshToken refreshToken;
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Otp otp;
 
     @Builder
     public Member(String name, String email, String password, LocalDate birthDate, String sex, String job, String income) {

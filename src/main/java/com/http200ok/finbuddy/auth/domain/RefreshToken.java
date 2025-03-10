@@ -25,7 +25,7 @@ public class RefreshToken {
 
 //    @Column(nullable = false, unique = true, name = "member_id")
 //    private String memberId;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false, unique = true)
     private Member member;
 
