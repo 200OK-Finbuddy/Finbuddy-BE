@@ -33,13 +33,12 @@ public class RetryFailedAutoTransferTasklet implements Tasklet {
 
         for (AutoTransfer transfer : failedTransfers) {
             try {
-                boolean success = transferService.executeAccountTransfer(
+                boolean success = transferService.autoExecuteAccountTransfer(
                         transfer.getAccount().getMember().getId(),
                         transfer.getAccount().getId(),
                         transfer.getTargetBankName(),
                         transfer.getTargetAccountNumber(),
                         transfer.getAmount(),
-                        transfer.getAccount().getPassword(),
                         transfer.getAccount().getMember().getName(),
                         null
                 );
