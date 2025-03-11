@@ -69,13 +69,12 @@ public class AutoTransferTasklet implements Tasklet {
         for (AutoTransfer transfer : transfers) {
 
             try {
-                transferService.executeAccountTransfer(
+                transferService.autoExecuteAccountTransfer(
                         transfer.getAccount().getMember().getId(),
                         transfer.getAccount().getId(),
                         transfer.getTargetBankName(),
                         transfer.getTargetAccountNumber(),
                         transfer.getAmount(),
-                        transfer.getAccount().getPassword(),
                         transfer.getAccount().getMember().getName(),
                         null
                 );
@@ -85,7 +84,7 @@ public class AutoTransferTasklet implements Tasklet {
                 System.out.println("자동이체 실패(잔액 부족) ID: " + transfer.getId());
                 autoTransferService.markAsFailedAndSave(transfer);
             } catch (Exception e) {
-                System.out.println("자동이체 실패(기타 오류) ID: " + transfer.getId());
+                System.out.println("자동이체 실패(기타 오류) ID: " + transfer.getId() + e.getMessage());
                 autoTransferService.markAsFailedAndSave(transfer);
             }
         }
