@@ -15,96 +15,103 @@
 
 <br>
 
-## 주요 기술
+**회원가입 및 로그인**
+- JWT 기반 로그인 및 인증
+  - Access Token + HttpOnly Refresh Token 방식
+  - Spring Security 기반 인증 필터 체인
+- SMTP 이메일 기반 회원 가입
 
-### Frontend
-<table>
-  <tr>
-    <a href="https://skillicons.dev">
-      <td><img src="https://skillicons.dev/icons?i=react&theme=light" height="50px"/></td>
-      <td><img src="https://skillicons.dev/icons?i=javascript&theme=light" height="50px"/></td>
-      <td><img src="https://skillicons.dev/icons?i=vite&theme=light" height="50px"/></td>
-    </a>
-  </tr>
-  <tr>
-    <td>&nbsp;React</td>
-    <td>JavaScript</td>
-    <td>&nbsp;&nbsp;Vite</td>
-  </tr>
-</table>
+| 화면 |
+|--|
+| <img width="400" src="https://github.com/user-attachments/assets/736af21a-abed-4e94-84e2-d99468f7e811"/> &nbsp; <img width="400" src="https://github.com/user-attachments/assets/285f6754-cdb1-4c33-b4ef-9a194d754f54"/>  |
 
-### Backend
-<table>
-  <tr>
-    <a href="https://skillicons.dev">
-      <td><img src="https://skillicons.dev/icons?i=java&theme=light" height="50px"/></td>
-      <td><img src="https://skillicons.dev/icons?i=mysql&theme=light" height="50px"/></td>
-    </a>
-    <td><img src="https://github.com/user-attachments/assets/95f8a74a-0a3f-4ec1-8ba6-35d4f79c1401" height="48px"/></td>
-    <td><img src="https://github.com/user-attachments/assets/c44ee762-45f9-439e-8982-5d61b32d2f1c" height="50px"/></td>
-    <td><img src="https://github.com/user-attachments/assets/da0354a5-0ab0-4cbb-b27d-01502c2ba0dc" height="50px"/></td>
-    <td><img src="https://github.com/user-attachments/assets/b8adc781-1a81-47c6-a016-92358566e6f4" height="50px"/></td>
-    <td><img src="https://github.com/user-attachments/assets/7726fb42-fb04-4045-9a5a-8609704d2579" height="50px"/></td>
-  </tr>
-  <tr>
-    <td>&nbsp;&nbsp;Java</td>
-    <td>MySQL</td>
-    <td>&nbsp;&nbsp;Boot</td>
-    <td>Security</td>
-    <td>&nbsp;Batch</td>
-    <td>&nbsp;&nbsp;JPA</td>
-    <td>&nbsp;&nbsp;JWT</td>
-  </tr>
-</table>
+<br/>
 
+**마이데이터 연동 약관 동의**
+- 더미 데이터를 생성하여 사용자의 계좌 및 거래 내역 자동 연동
 
-### Infra
-<table>
-    <td><img src="https://github.com/user-attachments/assets/02ea1e71-ea8f-4bc3-9a53-0598484ef029" height="50px"/></td>
-    <a href="https://skillicons.dev">
-      <td><img src="https://skillicons.dev/icons?i=docker&theme=light" height="50px"/></td>
-      <td><img src="https://skillicons.dev/icons?i=nginx&theme=light" height="50px"/></td>
-    </a>
-    <td><img src="https://github.com/user-attachments/assets/cca6ff3c-b859-4013-9e57-e8d38b265652" height="50px"/></td>
-    <td><img src="https://github.com/user-attachments/assets/002875e2-856c-4127-b159-73b7f955c2f0" height="50px"/></td>
-    <td><img src="https://github.com/user-attachments/assets/7804be59-c295-4133-a39c-8afa357deb0a" height="50px"/></td>
-    <td><img src="https://github.com/user-attachments/assets/7ae2cc9d-14bc-4968-968a-80379965dbe3" height="50px"/></td>
-    <td><img src="https://github.com/user-attachments/assets/6033ed86-b7d1-41bc-b26c-8f6534e05d9c" height="50px"/></td>
-  </tr>
-  <tr>
-    <td>Git Actions</td>
-    <td>Docker</td>
-    <td>Nginx</td>
-    <td>Route 53</td>
-    <td>&nbsp;ACM</td>
-    <td>&nbsp;&nbsp;EC2</td>
-    <td>&nbsp;&nbsp;&nbsp;S3</td>
-    <td>&nbsp;RDS</td>
-  </tr>
-</table>
+| 화면 |
+|--|
+| <img width="400" src="https://github.com/user-attachments/assets/eb3dd398-7dc7-40a7-84b5-c0ea9d5a31a5" /> |
 
-### Tools
-<table>
-    <a href="https://skillicons.dev">
-      <td><img src="https://skillicons.dev/icons?i=figma&theme=light" height="50px"/></td>
-      <td><img src="https://skillicons.dev/icons?i=notion&theme=light" height="50px"/></td>
-      <td><img src="https://skillicons.dev/icons?i=github&theme=light" height="50px"/></td>
-      <td><img src="https://skillicons.dev/icons?i=vscode&theme=light" height="50px"/></td>
-      <td><img src="https://github.com/user-attachments/assets/e5fe7e62-545d-4197-a6ec-517536f089ce" height="50px"/></td>
-      <td><img src="https://skillicons.dev/icons?i=postman&theme=light" height="50px"/></td>
-      <td><img src="https://github.com/user-attachments/assets/5ca81869-63b9-4a5a-895f-e811e630ee5f" height="50px"/></td>
-    </a>
-  </tr>
-  <tr>
-    <td>Figma</td>
-    <td>Notion</td>
-    <td>Github</td>
-    <td>Vscode</td>
-    <td>IntelliJ</td>
-    <td>Postman</td>
-    <td>Swagger</td>
-  </tr>
-</table>
+<br/>
+
+**마이데이터 연동 약관 동의**
+- 사용자의 지출 및 수입 내역을 분류 및 통계화하여 시각화
+- 월별, 카테고리별 지출 분석 기능 제공 
+- React 기반 차트 라이브러리를 활용하여 동적 시각화 및 사용자 친화적인 UI 제공 
+- 예산 대비 지출 분석 제공, 실시간 데이터 반영으로 가시적인 소비 관리 가능
+  
+| 화면 |
+|--|
+| <img width="400" src="https://github.com/user-attachments/assets/07c54473-4bb7-49e8-afc3-14ef9bf1cd1f"/> &nbsp; <img width="400" src="https://github.com/user-attachments/assets/395ac1af-68de-4223-9d27-933ecba8f3fc"/> | 
+| <img width="400" src="https://github.com/user-attachments/assets/a53302c7-1ea5-46ef-bbd7-2a1b6e96258d"/> &nbsp; <img width="400" src="https://github.com/user-attachments/assets/e8ecde0e-3b1c-488d-a35a-aead2a8980dd"/> |
+
+<br/>
+
+**금융 상품 추천 및 조회**
+- 금융감독원 API를 이용한 예/적금 상품 조회
+
+| 화면 |
+|--|
+| <img width="400" src="https://github.com/user-attachments/assets/47b2512f-feb2-427d-8183-d32c5f231710"/> &nbsp; <img width="400" src="https://github.com/user-attachments/assets/0e89e75f-09ac-4156-be7f-25634a8ee798"/>  |
+
+<br/>
+
+**송금 기능 (OTP 설정 → 이체 정보 입력 → 비밀번호 입력)**
+1. OTP 인증 설정 확인 - 사용자가 OTP 인증(Google Authenticator)을 등록했는지 확인
+    - 미등록 시, OTP 설정 안내 페이지로 이동하여 OTP 등록 및 검증 과정 진행 
+2. 이체 정보 입력 - 이체할 수취인 계좌번호, 이체 금액, 이체 메모 등의 정보 입력
+    - 입력된 정보에 대해 프론트엔드 수준에서 유효성 검사 및 백엔드 검증 로직 수행 
+3. 이체 비밀번호 입력
+    - 이체 실행 전, 사용자가 등록한 이체용 비밀번호 입력
+    - 비밀번호는 단방향 해시(Bcrypt) 처리되어 저장되며, 해시 비교 방식으로 검증 
+4. OTP 인증 검증
+    - Google Authenticator에서 생성된 OTP 코드 입력
+    - 서버 측에서 TOTP 알고리즘 기반 OTP 검증 수행 
+5. 이체 실행
+    - 입력된 이체 정보를 바탕으로 내부 계좌 간 잔액 차감 및 이체 처리 수행
+    - 이체 성공 시 거래 내역 기록
+
+| 화면 |
+|--|
+| <img width="400" src="https://github.com/user-attachments/assets/8757df7b-6c33-48c9-b39b-2c233476cb10"/> &nbsp; <img width="400" src="https://github.com/user-attachments/assets/a31e521f-ea7f-4f8d-9825-dccb41296881"/> | 
+| <img width="400" src="https://github.com/user-attachments/assets/c47b226e-2a57-4892-8fb8-eedfb6b64c47"/> &nbsp; <img width="400" src="https://github.com/user-attachments/assets/81ffa202-03dc-4643-98ae-b08e71f57b4a"/> |
+
+<br/>
+
+**예산 관리**
+- 사용자별 월간 예산 설정 기능 제공
+- 설정된 예산 초과 지출 시 알림 기능 구현
+  - SSE(Server-Sent Events) 기반 실시간 예산 초과 알림 제공
+
+| 화면 |
+|--|
+| <img width="400" src="https://github.com/user-attachments/assets/ad2d346b-6d64-4079-a724-6c992dd24e11"/> &nbsp; <img width="200" src="https://github.com/user-attachments/assets/00dfad89-ea37-4006-be9c-83f049721b0c"/> | 
+
+<br/>
+
+**자동 이체 관리**
+- 정기 자동 이체 등록 및 실행 기능 구현
+- 설정 주기에 따른 자동 이체 실행
+  - 등록된 자동이체에 대해 Spring Batch를 활용한 배치 처리
+  - 자동 이체 성공 및 실패시 알림 기능
+- 자동 이체 내역 확인 및 수정/삭제 기능 제공
+
+| 화면 |
+|--|
+| <img width="400" src="https://github.com/user-attachments/assets/a3cbde25-ce7f-4eae-bba7-5d0c95bb534e"/> &nbsp; <img width="98" src="https://github.com/user-attachments/assets/165e3687-7f6e-4760-8aa7-c8cc9825c3e2"/> &nbsp; <img width="118" src="https://github.com/user-attachments/assets/cd8d4eee-7987-40fd-8a38-76ba80bbf7d3"/> | 
+
+<br>
+
+## Tech Stack
+
+| 구분             | 사용 기술                                         |
+|--|--|
+| **Frontend**  | React, JavaScript, Vitei |
+| **Backend**   | Java, Spring, Spring Boot, Spring Batch, JWT |
+| **Infra**   | Git Actions, Docker, Nginx, AWS RDS(MySQL), Route 53, ACM, EC2, S3 |
+| **Tools** | Figma, Notion, Github, Vscode, IntelliJ, Swagger |
 
 <br>
 
