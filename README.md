@@ -21,40 +21,40 @@
   - Spring Security 기반 인증 필터 체인
 - SMTP 이메일 기반 회원 가입
 
-| 화면 |
-|--|
-| <img width="400" src="https://github.com/user-attachments/assets/736af21a-abed-4e94-84e2-d99468f7e811"/> &nbsp; <img width="400" src="https://github.com/user-attachments/assets/285f6754-cdb1-4c33-b4ef-9a194d754f54"/>  |
+| 회원가입 | 로그인 |
+|--|--|
+| <img src="https://github.com/user-attachments/assets/736af21a-abed-4e94-84e2-d99468f7e811"/> | <img src="https://github.com/user-attachments/assets/285f6754-cdb1-4c33-b4ef-9a194d754f54"/>  |
 
 <br/>
 
 **마이데이터 연동 약관 동의**
 - 더미 데이터를 생성하여 사용자의 계좌 및 거래 내역 자동 연동
 
-| 화면 |
+| 마이데이터 연동 약관 동의 |
 |--|
 | <img width="400" src="https://github.com/user-attachments/assets/eb3dd398-7dc7-40a7-84b5-c0ea9d5a31a5" /> |
 
 <br/>
 
-**마이데이터 연동 약관 동의**
+**거래 내역 분석 및 시각화**
 - 사용자의 지출 및 수입 내역을 분류 및 통계화하여 시각화
 - 월별, 카테고리별 지출 분석 기능 제공 
 - React 기반 차트 라이브러리를 활용하여 동적 시각화 및 사용자 친화적인 UI 제공 
 - 예산 대비 지출 분석 제공, 실시간 데이터 반영으로 가시적인 소비 관리 가능
   
-| 화면 |
-|--|
-| <img width="400" src="https://github.com/user-attachments/assets/07c54473-4bb7-49e8-afc3-14ef9bf1cd1f"/> &nbsp; <img width="400" src="https://github.com/user-attachments/assets/395ac1af-68de-4223-9d27-933ecba8f3fc"/> | 
-| <img width="400" src="https://github.com/user-attachments/assets/a53302c7-1ea5-46ef-bbd7-2a1b6e96258d"/> &nbsp; <img width="400" src="https://github.com/user-attachments/assets/e8ecde0e-3b1c-488d-a35a-aead2a8980dd"/> |
+| 거래 내역 분석 및 시각화 |  |
+|--|--|
+| <img src="https://github.com/user-attachments/assets/07c54473-4bb7-49e8-afc3-14ef9bf1cd1f"/> | <img  src="https://github.com/user-attachments/assets/395ac1af-68de-4223-9d27-933ecba8f3fc"/> | 
+| <img src="https://github.com/user-attachments/assets/a53302c7-1ea5-46ef-bbd7-2a1b6e96258d"/> | <img src="https://github.com/user-attachments/assets/e8ecde0e-3b1c-488d-a35a-aead2a8980dd"/> |
 
 <br/>
 
 **금융 상품 추천 및 조회**
 - 금융감독원 API를 이용한 예/적금 상품 조회
 
-| 화면 |
-|--|
-| <img width="400" src="https://github.com/user-attachments/assets/47b2512f-feb2-427d-8183-d32c5f231710"/> &nbsp; <img width="400" src="https://github.com/user-attachments/assets/0e89e75f-09ac-4156-be7f-25634a8ee798"/>  |
+| 금융 상품 추천 및 조회 |  |
+|--|--|
+| <img src="https://github.com/user-attachments/assets/47b2512f-feb2-427d-8183-d32c5f231710"/> | <img src="https://github.com/user-attachments/assets/0e89e75f-09ac-4156-be7f-25634a8ee798"/>  |
 
 <br/>
 
@@ -73,10 +73,10 @@
     - 입력된 이체 정보를 바탕으로 내부 계좌 간 잔액 차감 및 이체 처리 수행
     - 이체 성공 시 거래 내역 기록
 
-| 화면 |
-|--|
-| <img width="400" src="https://github.com/user-attachments/assets/8757df7b-6c33-48c9-b39b-2c233476cb10"/> &nbsp; <img width="400" src="https://github.com/user-attachments/assets/a31e521f-ea7f-4f8d-9825-dccb41296881"/> | 
-| <img width="400" src="https://github.com/user-attachments/assets/c47b226e-2a57-4892-8fb8-eedfb6b64c47"/> &nbsp; <img width="400" src="https://github.com/user-attachments/assets/81ffa202-03dc-4643-98ae-b08e71f57b4a"/> |
+| 송금 기능 |  |
+|--| --|
+| <img src="https://github.com/user-attachments/assets/8757df7b-6c33-48c9-b39b-2c233476cb10"/> | <img src="https://github.com/user-attachments/assets/a31e521f-ea7f-4f8d-9825-dccb41296881"/> | 
+| <img src="https://github.com/user-attachments/assets/c47b226e-2a57-4892-8fb8-eedfb6b64c47"/> | <img src="https://github.com/user-attachments/assets/81ffa202-03dc-4643-98ae-b08e71f57b4a"/> |
 
 <br/>
 
@@ -85,7 +85,7 @@
 - 설정된 예산 초과 지출 시 알림 기능 구현
   - SSE(Server-Sent Events) 기반 실시간 예산 초과 알림 제공
 
-| 화면 |
+| 예산 관리 |
 |--|
 | <img width="400" src="https://github.com/user-attachments/assets/ad2d346b-6d64-4079-a724-6c992dd24e11"/> &nbsp; <img width="200" src="https://github.com/user-attachments/assets/00dfad89-ea37-4006-be9c-83f049721b0c"/> | 
 
@@ -98,7 +98,7 @@
   - 자동 이체 성공 및 실패시 알림 기능
 - 자동 이체 내역 확인 및 수정/삭제 기능 제공
 
-| 화면 |
+| 자동 이체 관리 |
 |--|
 | <img width="400" src="https://github.com/user-attachments/assets/a3cbde25-ce7f-4eae-bba7-5d0c95bb534e"/> &nbsp; <img width="98" src="https://github.com/user-attachments/assets/165e3687-7f6e-4760-8aa7-c8cc9825c3e2"/> &nbsp; <img width="118" src="https://github.com/user-attachments/assets/cd8d4eee-7987-40fd-8a38-76ba80bbf7d3"/> | 
 
