@@ -6,7 +6,7 @@
 ### 프로젝트 개요
 모든 계좌를 한 곳에서 조회하여 효율적으로 지출을 관리하고, 송금 및 자동 이체 등 안전한 금융 서비스를 제공합니다.
 
-### 주요 기능
+## 주요 기능
 - 마이데이터 연동 (더미데이터 생성)
 - 거래 내역 분석 및 시각화
 - 이체 및 자동 이체
@@ -108,7 +108,7 @@
 
 | 구분             | 사용 기술                                         |
 |--|--|
-| **Frontend**  | React, JavaScript, Vitei |
+| **Frontend**  | React, JavaScript, Vite |
 | **Backend**   | Java, Spring, Spring Boot, Spring Batch, JWT |
 | **Infra**   | Git Actions, Docker, Nginx, AWS RDS(MySQL), Route 53, ACM, EC2, S3 |
 | **Tools** | Figma, Notion, Github, Vscode, IntelliJ, Swagger |
